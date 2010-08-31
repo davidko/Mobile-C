@@ -1,0 +1,61 @@
+\rhead{\bf MC\_CondWait()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_CondWait()\index{MC\_CondWait()}}\\
+\addcontentsline{toc}{section}{MC\_CondWait()}
+\label{api:MC_CondWait()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_CondWait}({\bf MCAgency\_t} $agency$, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Cause the calling mobile agent or thread to wait on a Mobile-C condition 
+variable with the id specified by the argument.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 upon successful wakeup or non-zero if the condition 
+variable was not found. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & A Mobile-C agency. \\
+$id$ & The id of the condition variable to signal. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function blocks until the condition variable on which it is waiting is 
+signalled.
+If an invalid id is specified, the function returns 1 and does not block.
+The function is designed to enable synchronization possibilities between 
+threads and mobile agents without using poll-waiting loops.
+
+Note that if the same condition variable is to be used more than once,
+the function MC\_CondReset() must be called on the condition variable.\\
+
+\noindent
+{\bf Example}\\
+Please see Program \vref{prog:binary_cond_example_server} in Chapter
+\ref{chap:synchronization}.\\
+\noindent
+
+\noindent
+{\bf See Also}\\
+\texttt{
+MC\_CondDelete(), MC\_CondInit(), MC\_CondSignal(), 
+\linebreak MC\_CondWait().
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

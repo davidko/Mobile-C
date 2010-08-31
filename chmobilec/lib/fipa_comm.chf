@@ -1,0 +1,1015 @@
+/***********************************************
+ * file: fipa_comm.chf
+ *
+ * This file provides all of the function 
+ *   definitions for the FIPA communication 
+ *   module.
+ **********************************************/
+
+#include <stdlib.h>    // for malloc
+#include <stdarg.h>    // for va_list
+
+#include <fipa_comm.h>
+
+#define CHECK_PERFORMATIVE_TYPE(type) \
+{ \
+ if(type <= FIPA_ERROR || type > MC_NUM_PERFORMATIVES) \
+   return FIPA_ERROR; \
+}
+
+#define CHECK_PROTOCOL_TYPE(type) \
+{ \
+ if(type <= FIPA_PROTOCOL_ERROR || type > FIPA_PROTOCOL_END) \
+   return FIPA_PROTOCOL_ERROR; \
+}
+
+/*************************************************************
+ * mc_FIPAComm_New
+ * 
+ * arguments:
+ *    none
+ *
+ * return:
+ *    fipa_comm_p
+ *************************************************************/
+fipa_comm_p mc_FIPAComm_New(void)
+{
+  fipa_comm_p fcomm = (fipa_comm_p)malloc(sizeof(fipa_comm_s));
+  memset(fcomm, 0, sizeof(fipa_comm_s));
+  return fcomm;
+}
+
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_New
+ * 
+ * arguments:
+ *    none
+ *
+ * return:
+ *    fipa_comm_p
+ *************************************************************/
+
+int mc_FIPAComm_SetDebug(fipa_comm_p fcomm)
+{
+  fcomm->debug = 1;
+  return 0;
+}
+
+/*************************************************************/
+
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_RegisterPerformative(
+  fipa_comm_p fcomm, 
+  enum fipa_performative_e type)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+
+  CHECK_PERFORMATIVE_TYPE(type);
+  if(fcomm->performative[type]) return -1; // Already registered
+
+  fcomm->performative[type] = 
+    (fipa_comm_performative_p)malloc(sizeof(fipa_comm_performative_s));
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_DeregisterPerformative(fipa_comm_p fcomm, enum fipa_performative_e type)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+
+  CHECK_PERFORMATIVE_TYPE(type);
+  if(fcomm->performative[type])
+  {
+    fipa_comm_action_p action = fcomm->performative[type]->action_list;
+    fipa_comm_action_p paction;
+    while(action)
+    {
+      fipa_comm_message_check_p check = action->check_list;
+      fipa_comm_message_check_p pcheck;
+      while(check)
+      {
+        free(check->macro);
+        pcheck = check;
+        check = check->next;
+        free(pcheck);
+      }
+
+      if(action->reply)
+      {
+        free(action->reply->content);
+        free(action->reply);
+      }
+
+      paction = action;
+      action = action->next;
+      free(paction);
+    }
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_SetDefaultReply(
+  fipa_comm_p fcomm, 
+  enum fipa_performative_e type, 
+  char* content)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+
+  if(!fcomm->default_reply) 
+    fcomm->default_reply = 
+       (fipa_comm_reply_p)malloc(sizeof(fipa_comm_reply_s));
+
+  if(content)
+  {
+    if(fcomm->default_reply->content) 
+      free(fcomm->default_reply->content);
+
+    fcomm->default_reply->content = 
+      (char*)malloc(sizeof(content)*(strlen(content)+1));
+    strncpy(fcomm->default_reply->content, content, strlen(content)+1);
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+} 
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_SetPerformativeDefaultReply(
+  fipa_comm_p fcomm, 
+  enum fipa_performative_e ptype, 
+  enum fipa_performative_e rtype, 
+  char* content)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  fipa_comm_performative_p per;
+
+  CHECK_PERFORMATIVE_TYPE(ptype);
+
+  if(!fcomm->performative[ptype]) 
+    mc_FIPAComm_RegisterPerformative(fcomm, ptype);
+  per = fcomm->performative[ptype];
+
+  if(!per->default_reply) 
+    per->default_reply = (fipa_comm_reply_p)malloc(sizeof(fipa_comm_reply_s));
+  per->default_reply->type = rtype;
+
+  if(content)
+  {
+    if(per->default_reply->content)  
+       free(per->default_reply->content);
+    per->default_reply->content = 
+      (char*)malloc(sizeof(content)*(strlen(content)+1));
+    strncpy(per->default_reply->content, content, strlen(content)+1);
+  }
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_SetAgent(
+  fipa_comm_p fcomm, 
+  void* agent,
+  char* agent_name, 
+  char* agent_address)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  if(!agent_name || !agent_address) return (fcomm->error = 1);
+
+  fcomm->agent_name = agent_name;
+  fcomm->agent_address = agent_address;
+  //if(fcomm->agent_name)    free(fcomm->agent_name);
+  //if(fcomm->agent_address) free(fcomm->agent_address);
+  //fcomm->agent_name    = (char*)malloc(sizeof(char)*(strlen(agent_name)+1));
+  //fcomm->agent_address = (char*)malloc(strlen(agent_address)+1);
+  //strncpy(fcomm->agent_name, agent_name, strlen(agent_name)+1);
+  //strncpy(fcomm->agent_address, agent_address, strlen(agent_address)+1);
+  fcomm->agent = agent;
+ 
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_RegisterActionS(enum fipa_performative_e type, fipa_comm_action_p act)
+{
+   // Make a copy of the action and return 
+   return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+void mc_FIPAComm_Destroy(fipa_comm_p fcomm)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  // Free memory
+  int i;
+  for(i=0;i<MC_NUM_PERFORMATIVES;i++)
+    if(fcomm->performative[i]) mc_FIPAComm_DeregisterPerformative(fcomm, i);
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+
+int mc_FIPAComm_HandleMessageOnce(fipa_comm_p fcomm)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  if(!fcomm->agent) return -1;
+  fipa_acl_message_p acl;
+  if((acl = mc_AclRetrieve(fcomm->agent)))
+  {
+    if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+    return mc_FIPAComm_HandleMessage(fcomm, acl);
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+
+int mc_FIPAComm_HandleMessageWait(fipa_comm_p fcomm)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  if(!fcomm->agent) 
+  {
+    printf("FCOMM: No agent has been set\n");
+    return -1;
+  }
+
+  fipa_acl_message_p acl = mc_AclWaitRetrieve(fcomm->agent);
+
+  if(fcomm->debug) 
+  {
+   printf("FCOMM: Got a message from\n\t%s@%s\n", 
+     acl->sender->name, acl->sender->addresses->urls[0]->str);
+   if(acl->content) printf("\tcontents '%s'\n", acl->content->content);
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return mc_FIPAComm_HandleMessage(fcomm, acl);
+}
+/*************************************************************/
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_HandleMessage(fipa_comm_p fcomm, fipa_acl_message_p acl)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  enum fipa_performative_e type = acl->performative;
+  fipa_comm_action_p action;
+  CHECK_PERFORMATIVE_TYPE(type);
+
+  // Deal with protocols first
+  if(acl->protocol)
+  {
+    mc_FIPAComm_HandleProtocol(fcomm, acl);
+    return 0;
+  }
+
+  if(!fcomm->performative[type]) return 0;
+
+  action = fcomm->performative[type]->action_list;
+
+  // Any actions are registered
+  if(action)
+  {
+    fipa_comm_message_check_p check;
+    char pass = 0;
+
+    while(action)
+    {
+      pass = 1;
+
+      check = action->check_list;
+      //  Any check?
+      if(check)
+      {
+        // Do the check tests
+        switch(check->type)
+        {
+          case FIPA_COMM_CHECK_SENDER_NAME:
+            {
+              if(!strstr(acl->sender->name, check->macro)) pass = 0;
+              break;
+            }
+          case FIPA_COMM_CHECK_SENDER_ADDRESS:
+            {
+              if(!strstr(acl->sender->addresses->urls[0]->str, check->macro)) pass = 0;
+              break;
+            }
+          case FIPA_COMM_CHECK_CONTENT:
+            {
+              if(!strstr(acl->content->content, check->macro)) pass = 0;
+              break;
+            }
+          case FIPA_COMM_CHECK_CONVERSATIONID:
+            {
+              //if(strcmp(acl->conversation_id->number->str, check->macro)) pass = 0;
+              break;
+            }
+          case FIPA_COMM_CHECK_LANGUAGE:
+            {
+              break;
+            }
+          case FIPA_COMM_CHECK_ONTOLOGY:
+            {
+              break;
+            }
+          case FIPA_COMM_CHECK_ENCODING:
+            {
+              break;
+            }
+        }
+        check = check->next;
+      }
+
+      if(pass) // Did we pass the checks
+      {
+        switch(action->type)
+        {
+          case FIPA_COMM_ACTION_CALLBACK:
+            {
+              // call the callback
+              char* content;
+              action->callback(acl->content->content, &content); 
+              if(content) free(content);
+              break;
+            }
+          case FIPA_COMM_ACTION_BOTH:
+            {
+              char* content;
+              fipa_acl_message_p reply = mc_AclReply(acl);
+
+              // call the callback
+              action->callback(acl->content->content, &content); 
+
+              // setup the reply message
+              mc_AclSetPerformative(reply, action->reply->type);
+              mc_AclSetContent(reply, content);
+              mc_AclSetSender(reply, fcomm->agent_name, fcomm->agent_address);
+              mc_AclSend(reply);
+              mc_AclDestroy(reply);
+              free(content);
+              break;
+            }
+          case FIPA_COMM_ACTION_REPLY:
+            {
+              fipa_acl_message_p reply = mc_AclReply(acl);
+              mc_AclSetPerformative(reply, action->reply->type);
+              if(action->reply->content)
+                mc_AclSetContent(reply, action->reply->content);
+              mc_AclSetSender(reply, fcomm->agent_name, fcomm->agent_address);
+              mc_AclSend(reply);
+              mc_AclDestroy(reply);
+              break;
+            }
+        }
+      }
+      action = action->next;
+    }
+  }
+  else if(fcomm->performative[type]->default_reply)
+  {
+    // do the default reply
+    fipa_acl_message_p reply = mc_AclReply(acl);
+    mc_AclSetPerformative(reply, fcomm->performative[type]->default_reply->type);
+    if(fcomm->performative[type]->default_reply->content)
+      mc_AclSetContent(reply, fcomm->performative[type]->default_reply->content);
+    mc_AclSetSender(reply, fcomm->agent_name, fcomm->agent_address);
+    mc_AclSend(reply);
+    mc_AclDestroy(reply);
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_RegisterAction(
+  fipa_comm_p fcomm, 
+  enum fipa_performative_e performativeType, 
+  enum fipa_comm_action_type_e actionType, ...)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  CHECK_PERFORMATIVE_TYPE(performativeType);
+  va_list valist;
+  char done = 0;
+
+  if(!fcomm->performative[performativeType])
+    mc_FIPAComm_RegisterPerformative(fcomm, performativeType);
+
+  fipa_comm_action_p action = fcomm->performative[performativeType]->action_list;
+  if(!action)
+  {
+    fcomm->performative[performativeType]->action_list = (fipa_comm_action_p)malloc(sizeof(fipa_comm_action_s));
+    action = fcomm->performative[performativeType]->action_list;
+  }
+  else
+  {
+    while(action->next) 
+      action = action->next;
+    action->next = (fipa_comm_action_p)malloc(sizeof(fipa_comm_action_s));
+    action = action->next;
+    action->next = NULL;
+  }
+
+  action->type = actionType;
+
+  va_start(valist, actionType);
+  enum fipa_comm_type_e type;
+  while((type = va_arg(valist, enum fipa_comm_type_e))!= FIPA_COMM_END)
+  {
+    switch(type)
+    {
+      case FIPA_COMM_CHECK:
+        {
+          char* macro;
+          fipa_comm_message_check_p check = action->check_list;
+
+          if(!check)
+          {
+            action->check_list = 
+              (fipa_comm_message_check_p)malloc(sizeof(fipa_comm_message_check_s));
+            check = action->check_list;
+          }
+          else
+          {
+            while(check->next) check = check->next;
+            check->next = 
+              (fipa_comm_message_check_p)malloc(sizeof(fipa_comm_message_check_s));
+            check = check->next;
+          }
+
+          check->type = va_arg(valist, enum fipa_comm_check_type_e);
+          macro = va_arg(valist, char*); 
+          check->macro = (char*)malloc(strlen(macro)+1);
+          strncpy(check->macro, macro, strlen(macro)+1);
+          break;
+        }
+      case FIPA_COMM_REPLY:
+        {
+          enum fipa_performative_e type;
+          char* content;
+
+          if(action->reply)
+          {
+            if(action->reply->content) 
+              free(action->reply->content);
+          }
+          else
+            action->reply = (fipa_comm_reply_p)malloc(sizeof(fipa_comm_reply_s));
+
+          type = va_arg(valist, enum fipa_performative_e);
+          action->reply->type = type;
+
+          content = va_arg(valist, char*);
+          if(content)
+          {
+            action->reply->content = (char*)malloc(strlen(content)+1);
+            strncpy(action->reply->content, content, strlen(content)+1);
+          }
+
+          break;
+        }
+      case FIPA_COMM_CALLBACK:
+        {
+          fipa_comm_callback func;
+          func = va_arg(valist, fipa_comm_callback);
+          action->callback = func;
+          break;
+        }
+      default: 
+        {
+          return -1;
+        }
+    }
+  }
+  va_end(valist);
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+
+
+/*************************************************************/
+
+/****************  PROTOCOL FUNCTIONS  ***********************/
+
+fipa_comm_protocol_p mc_FIPAProtocol_New()
+{
+  fipa_comm_protocol_p fproto = 
+    (fipa_comm_protocol_p)malloc(sizeof(fipa_comm_protocol_s));
+  memset(fproto, 0, sizeof(fipa_comm_protocol_s));
+  return fproto;
+}
+
+int mc_FIPAComm_RegisterProtocolCallback(
+  fipa_comm_p fcomm, 
+  enum fipa_protocol_e protocolType, 
+  fipa_comm_callback func)
+{
+  CHECK_PROTOCOL_TYPE(protocolType);
+  fcomm->pCallbacks[protocolType] = (void*)func;
+  return 0;
+}
+
+int mc_FIPAComm_RegisterProtocol(
+  fipa_comm_p fcomm, 
+  enum fipa_protocol_e protocolType, 
+  char* protocolID, void* info, char* network) // remove char* network once broadcast is working
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+
+  CHECK_PROTOCOL_TYPE(protocolType);
+
+  fipa_comm_protocol_p protocol = fcomm->protocol[protocolType];
+  if(!protocol)
+  {
+   // create a new one
+   fcomm->protocol[protocolType] = mc_FIPAProtocol_New();
+   protocol = fcomm->protocol[protocolType];
+  }
+  else
+  {
+    while(protocol->next)
+    {
+      if(strcmp(protocol->conversation_id, protocolID)) return -1; // already registered
+      protocol = protocol->next;
+    }
+
+    // Protocol ID not registered
+    //   create a new one
+    protocol->next = mc_FIPAProtocol_New();
+    protocol = protocol->next;
+  }
+
+  protocol->conversation_id    = (char*)malloc(strlen(protocolID)+1);
+  strncpy(protocol->conversation_id, protocolID, strlen(protocolID)+1);
+  protocol->type  = protocolType;
+  protocol->state = FIPA_COMM_PROTOCOL_CN_START;
+
+  // Removing the following once broadcast is available
+  //   network is a list of addresses on the ntework
+  //   "name@http://####:###/acc name@http://####:###/acc"
+  protocol->network   = (char*)malloc(strlen(network)+1);
+  strncpy(protocol->network, network, strlen(network)+1);
+
+  fipa_comm_protocol_info_COPY(protocol, info);
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+
+void fipa_comm_protocol_info_COPY(fipa_comm_protocol_p proto, void* info)
+{
+  switch(proto->type)
+  {
+    case FIPA_PROTOCOL_CONTRACT_NET:
+    {
+      fipa_comm_protocol_cn_p src_cn = 
+        (fipa_comm_protocol_cn_p)info;
+
+      fipa_comm_protocol_cn_p des_cn = 
+        (fipa_comm_protocol_cn_p)malloc(sizeof(fipa_comm_protocol_cn_s));
+
+      memcpy(des_cn, src_cn, (sizeof(fipa_comm_protocol_cn_s)));
+      des_cn->cfp_request = (char*)malloc(strlen(src_cn->cfp_request)+1);
+      strncpy(des_cn->cfp_request, src_cn->cfp_request, strlen(src_cn->cfp_request)+1);
+      proto->info = (void*)des_cn;
+      break;
+    }
+    // FIXME: add other protocols
+  }
+
+  return;
+}
+
+int fipa_list_Add(fipa_list_p* list, fipa_acl_message_p acl)
+{
+  fipa_list_p head = *list;
+  if(!(*list)) // list is NULL
+  {
+    (*list) = (fipa_list_p)malloc(sizeof(fipa_list_s));
+    head = *list;
+  }
+  else
+  {
+    while(head->next) head=head->next;
+    head->next = (fipa_list_p)malloc(sizeof(fipa_list_s));
+    head = head->next;
+  }
+
+  head->data = (void*)acl;
+
+  return 0;
+}
+
+int mc_FIPAComm_StartProtocol(
+  fipa_comm_p fcomm, 
+  enum fipa_protocol_e type,
+  char* id)
+{
+  char a_name[100];
+  char a_addr[100];
+  char* temp;
+
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  CHECK_PROTOCOL_TYPE(type);
+
+  fipa_comm_protocol_p protocol = fcomm->protocol[type];
+  while(protocol)
+  {
+    if(!strcmp(protocol->conversation_id,id)) break;
+    protocol = protocol->next;
+  }
+  if(!protocol)
+    return 0; // couldn't find protocol with given id
+
+  switch(type)
+  {
+    case FIPA_PROTOCOL_CONTRACT_NET:
+    {
+      if(protocol->state != FIPA_COMM_PROTOCOL_CN_START) return -1;
+
+      fipa_comm_protocol_cn_p contract = 
+        (fipa_comm_protocol_cn_p)(protocol->info);
+
+      // Send out CFP
+      fipa_acl_message_p acl = mc_AclNew();
+      mc_AclSetSender(acl, fcomm->agent_name, fcomm->agent_address);
+      mc_AclSetPerformative(acl, FIPA_CALL_FOR_PROPOSAL);
+      mc_AclSetProtocol(acl, protocol->type);
+      mc_AclSetConversationID(acl, protocol->conversation_id);
+      printf("%s: Sending proposals to\n", mc_agent_name);
+      foreach(temp;protocol->network)
+      {
+        strncpy(a_name, temp, strstr(temp, "@")-temp);
+        strncpy(a_addr, strstr(temp, "@")+1, strlen(temp)-strlen(a_name)-1);
+        if(!strcmp(a_name, fcomm->agent_name) && !strcmp(a_addr, fcomm->agent_name)) 
+          continue;
+        mc_AclAddReceiver(acl, a_name, stradd(a_addr, "/acc"));
+        printf("\t %s @ %s\n", a_name, a_addr);
+      }
+      mc_AclSetContent(acl,contract->cfp_request);
+      mc_AclSend(acl);
+      mc_AclDestroy(acl);
+
+      // wait for time out
+      sleep(contract->time_out);
+
+      fipa_acl_message_p message;
+      int numBids = 0;
+      int numQueue = 0;
+      while((message = mc_AclRetrieve(fcomm->agent)))
+      {
+        if((message->protocol == protocol->type) &&
+           !strcmp(message->conversation_id->content.string->content,
+                   protocol->conversation_id))
+        {
+          fipa_list_Add(&contract->replies, message);
+          numBids++;
+        }
+        else
+        {
+          fipa_list_Add(&contract->queue, message);
+          numQueue++;
+        }
+      }
+
+      if(numBids)
+      {
+        char* winners = (char*)malloc(numBids);
+        char** bids = (char**)malloc(numBids);
+        fipa_acl_message_p reply;
+        fipa_list_p cReply;
+        fipa_list_p pReply;
+        int i;
+
+        cReply = contract->replies;
+        for(i=0;i<numBids;i++)
+        {
+          reply = (fipa_acl_message_p)cReply->data;
+          bids[i] = (char*)malloc(strlen(reply->content->content)+1);
+          strncpy(bids[i], reply->content->content, strlen(reply->content->content)+1);
+          cReply = cReply->next;
+        }
+        memset(winners, 0, numBids);
+        contract->contract_func(numBids, bids, winners);
+
+        // reply to bidders
+        cReply = contract->replies;
+        for(i=0;i<numBids;i++)
+        {
+          reply = mc_AclReply((fipa_acl_message_p)cReply->data);
+          mc_AclSetSender(reply, fcomm->agent_name, fcomm->agent_address);
+
+          if(winners[i])
+            mc_AclSetPerformative(reply, FIPA_ACCEPT_PROPOSAL);
+          else
+            mc_AclSetPerformative(reply, FIPA_REJECT_PROPOSAL);
+          mc_AclSend(reply);
+          mc_AclDestroy(reply);
+
+          cReply = cReply->next;
+        }
+
+        cReply = contract->replies;
+        while(cReply)
+        {
+          pReply = cReply;
+          cReply = cReply->next;
+          mc_AclDestroy((fipa_acl_message_p)pReply->data);
+          free(pReply);
+        }
+      }
+
+      if(numQueue)
+      {
+        fipa_list_p cQueue = contract->queue;
+        fipa_list_p pQueue;
+        while(cQueue)
+        {
+          mc_AclPost(fcomm->agent, (fipa_acl_message_p)cQueue->data);
+          pQueue = cQueue;
+          cQueue = cQueue->next;
+          mc_AclDestroy((fipa_acl_message_p)pQueue->data);
+          free(pQueue);
+        }
+      }
+      break;
+    }
+  }
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_HandleProtocol(
+  fipa_comm_p fcomm, 
+  fipa_acl_message_p acl)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  CHECK_PROTOCOL_TYPE(acl->protocol);
+
+  switch(acl->protocol)
+  {
+    case FIPA_PROTOCOL_CONTRACT_NET:
+      mc_FIPAComm_FSM_CN(fcomm, acl);
+      break;
+  }
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+/*************************************************************
+ * mc_FIPAComm_RegisterPerformative
+ * 
+ * arguments:
+ *    
+ *
+ * return:
+ *    int
+ *************************************************************/
+int mc_FIPAComm_FSM_CN(
+  fipa_comm_p fcomm, 
+  fipa_acl_message_p acl)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+
+  fipa_comm_protocol_p protocol = fcomm->protocol[acl->protocol];
+
+  while(protocol)
+  {
+    if(!strcmp(protocol->conversation_id, 
+      acl->conversation_id->content.string->content)) break;
+    protocol = protocol->next;
+  }
+
+  if(!protocol)
+  {
+    if(fcomm->debug) printf("FCOMM: %s: Protocol not in list\n", __func__);
+
+    if(fcomm->pCallbacks[acl->protocol])
+    {
+      if(fcomm->debug) printf("FCOMM: %s: Call registered callback\n", __func__);
+
+      fipa_comm_callback func = fcomm->pCallbacks[acl->protocol];
+      char* content = NULL;
+
+      fipa_acl_message_p reply = mc_AclReply(acl);
+      mc_AclSetPerformative(reply, FIPA_PROPOSE);
+      mc_AclSetSender(reply, fcomm->agent_name, fcomm->agent_address);
+      func(acl->content->content, &content);
+      if(!content) { printf("FCOMM: Error: Null content\n"); return -1;}
+      mc_AclSetContent(reply, content);
+      mc_AclSend(reply);
+      mc_AclDestroy(reply);
+      free(content);
+
+      protocol = mc_FIPAComm_AddNewProtocol(
+         fcomm, 
+         FIPA_PROTOCOL_CONTRACT_NET, 
+         acl->conversation_id->content.string->content);
+      mc_FIPAComm_SetProtocolState(protocol, FIPA_COMM_PROTOCOL_CN_RESULT);
+    }
+    else
+    {
+      if(fcomm->debug) printf("FCOMM: %s: No registered callback\n", __func__);
+      // Refuse
+      fipa_acl_message_p reply = mc_AclReply(acl);
+      mc_AclSetPerformative(reply, FIPA_REJECT_PROPOSAL);
+      mc_AclSend(reply);
+      mc_AclDestroy(reply);
+    }
+  }
+  else
+  {
+    switch(protocol->state)
+    {
+      case FIPA_COMM_PROTOCOL_CN_START:
+        break;
+
+      case FIPA_COMM_PROTOCOL_CN_CFP:
+        break;
+
+      case FIPA_COMM_PROTOCOL_CN_BID:
+        break;
+
+      case FIPA_COMM_PROTOCOL_CN_RESULT:
+        if(acl->performative == FIPA_ACCEPT_PROPOSAL)
+          printf("FCOMM: Proposal Accepted\n");
+        if(acl->performative == FIPA_REJECT_PROPOSAL)
+          printf("FCOMM: Proposal Rejected\n");
+        break;
+
+      case FIPA_COMM_PROTOCOL_CN_DONE:
+        break;
+
+      default:
+        printf("FCOMM: %s: Protocol '%s' defunct\n", protocol->conversation_id);
+    }
+  }
+
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return 0;
+}
+/*************************************************************/
+
+fipa_comm_protocol_p mc_FIPAComm_AddNewProtocol(
+  fipa_comm_p fcomm, enum fipa_protocol_e type, char* id)
+{
+  if(fcomm->debug) printf("FCOMM: Start %s\n", __func__);
+  fipa_comm_protocol_p protocol = fcomm->protocol[type];
+
+  if(!protocol)
+  {
+    fcomm->protocol[type] = mc_FIPAComm_NewProtocol(type, id);
+    if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+    return fcomm->protocol[type];
+  }
+
+  while(protocol->next) protocol = protocol->next;
+  protocol->next = mc_FIPAComm_NewProtocol(type, id);
+  if(fcomm->debug) printf("FCOMM: End %s\n", __func__);
+  return protocol->next;
+}
+
+fipa_comm_protocol_p mc_FIPAComm_NewProtocol(enum fipa_protocol_e type, char* id)
+{
+  fipa_comm_protocol_p protocol;
+  if(!id)
+  {
+    printf("FCOMM: %s: Passed NULL Conversation ID\n", __func__);
+    return NULL;
+  }
+
+  protocol = (fipa_comm_protocol_p) malloc(sizeof(fipa_comm_protocol_s));
+  protocol->type = type;
+  protocol->conversation_id = (char*)malloc(strlen(id)+1);
+  strncpy(protocol->conversation_id, id, strlen(id)+1);
+
+  return protocol;
+}
+
+int mc_FIPAComm_SetProtocolState(
+  fipa_comm_protocol_p protocol, 
+  char state)
+{
+  protocol->state = state;
+  return 0;
+}
+
+/****************  PROTOCOL FUNCTIONS  ***********************/

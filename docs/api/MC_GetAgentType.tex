@@ -1,0 +1,75 @@
+\rhead{\bf MC\_GetAgentType()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_GetAgentType()\index{MC\_GetAgentType()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_GetAgentType()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf enum MC\_AgentType\_e MC\_GetAgentType}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+This function blocks until one of a specified number of signals is signalled.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns an enumerated value of type MC\_AgentType\_e.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle associated with a running agency.\\ 
+$signals$ & A combination of signals specified by the enum MC\_Signal\_e.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to determine the type of agent that input argument 
+'agent' is.
+It is useful for use in determining if the agent is an active agent of type 
+'MOBILE\_AGENT', or a return agent containing return data of type 
+'RETURN\_AGENT'.\\
+
+\noindent
+{\bf Example}\\
+\begin{verbatim}
+MCAgent_t agent;
+enum MC_AgentType_e type;
+
+/* Code here which assign an agent to variable 'agent' */
+type = MC_GetAgentType(agent);
+switch(type) {
+    case MOBILE_AGENT:
+        printf("Received a mobile agent.\n");
+        break;
+    case RETURN_AGENT:
+        printf("Received a return agent.\n");
+        break;
+    default:
+        printf("Received an agent of other type.\n");
+        break;
+}
+\end{verbatim}
+\noindent
+The above code determines whether a mobile agent is a return agent or a 
+normal agent to be executed, and prints the result to the standard output.\\
+
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

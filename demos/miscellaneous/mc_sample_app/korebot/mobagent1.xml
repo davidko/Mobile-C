@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>10.0.0.11:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA number_of_elements="0" 
+           name="no-return" 
+           complete="0" 
+           server="10.0.0.15:5050">
+     </DATA>
+     <AGENT_CODE>
+      <![CDATA[
+#include <unistd.h>
+
+struct Robot {
+  int tabsens[9];
+  int left_speed;
+  int right_speed;
+};
+
+int main() {
+  MCAgent_t agent, agent2;
+  int retval;
+  char **agentName;
+  char **serviceName;
+  int *agentID;
+  int numResult;
+  struct Robot system;
+  int i, mutex_id;
+
+  mutex_id = mc_SyncInit(55);
+
+  mc_SearchForService("InitRobot",
+                      &agentName,
+                      &serviceName,
+                      &agentID,
+                      &numResult);
+  agent = mc_FindAgentByID(agentID[0]);
+  mc_CallAgentFunc(agent, "InitRobot", &retval, NULL);
+
+  for(i=0; i<numResult; i++) {
+    free(agentName[i]);
+    free(serviceName[i]);
+  }
+  free(agentName);
+  free(serviceName);
+  free(agentID);
+
+  while(mc_GetAgentStatus(mc_current_agent) == MC_AGENT_ACTIVE) {
+    mc_CallAgentFunc(agent, "SensorMatrix", &retval, &system);
+
+    mc_MutexLock(mutex_id);
+    mc_SearchForService("RobotBehaviour",
+                        &agentName,
+                        &serviceName,
+                        &agentID,
+                        &numResult);
+    while(numResult == 0) {
+      mc_MutexUnlock(mutex_id);
+      mc_MutexLock(mutex_id);
+      mc_SearchForService("RobotBehaviour",
+                          &agentName,
+                          &serviceName,
+                          &agentID,
+                          &numResult);
+    }
+    agent2 = mc_FindAgentByID(agentID[0]);
+    mc_CallAgentFunc(agent2, "RobotBehaviour", &retval, &system);
+    mc_MutexUnlock(mutex_id);
+    mc_CallAgentFunc(agent, "MoveRobot", &retval, &system);
+
+    for(i=0; i<numResult; i++) {
+      free(agentName[i]);
+      free(serviceName[i]);
+    }
+    free(agentName);
+    free(serviceName);
+    free(agentID);
+
+    usleep(100000);
+  }
+
+  mc_CallAgentFunc(agent, "StopRobot", &retval, NULL);
+
+  mc_SetAgentStatus(mc_current_agent, MC_WAIT_FINISHED);
+
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

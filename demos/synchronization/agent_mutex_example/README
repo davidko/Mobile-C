@@ -1,0 +1,30 @@
+agent_mutex_example
+
+See 'INSTALL' for compilation instructions.
+
+This is a sample test program that demonstrates the usage of MobileC
+mutex variables. 
+
+*** Test Execution
+To run the test, one should:
+
+execute 'mc_server', and
+execute 'mc_client'. i.e. in a Unix Bash shell, one may type
+
+    ./mc_server &
+    ./mc_client
+
+The test program does the following things.
+
+1. An agent is sent to the test agency. This first agent, called Agent 1,
+    initializes a new MobileC synchronization variable uses it as a 
+    mutex variable. The agent locks the mutex variable and begins to 
+    sleep for 5 seconds. This is to simulate performing a long operation
+    on a protected resource.
+2. After a two second delay, a second agent is sent to the agency. The
+    second agent should arrive after the first agent has already locked 
+    the mutex in the middle of its simulated protected operation. The
+    second agent tries to lock the mutex and is blocked.
+3. The first agent finishes its task and unlocks the mutex. The second agent
+    continues and locks the mutex, performs it's operation and releases the 
+    mutex. Both agents should exit gracefully at this point.

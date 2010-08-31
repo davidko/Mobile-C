@@ -1,0 +1,61 @@
+\rhead{\bf MC\_ComposeAgentFromFileWithWorkgroup()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_ComposeAgentFromFileWithWorkgroup()\index{MC\_ComposeAgentFromFileWithWorkgroup()}} \\
+\addcontentsline{toc}{section}{MC\_ComposeAgentFromFileWithWorkgroup()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf MCAgent\_t MC\_ComposeAgentFromFileWithWorkgroup}({\bf const char*} $name$, 
+                                  {\bf const char*} $home$,
+                                  {\bf const char*} $owner$,
+                                  {\bf const char*} $filename$,
+                                  {\bf const char*} $return\_var\_name$,
+                                  {\bf const char*} $server$,
+                                  {\bf int} $persistent$,
+                                  {\bf const char*} $workgroup\_code$
+																	);\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to compose an agent from a source code file.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns a valid agent on success and NULL otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{30 mm}p{125 mm}} 
+$name$ & The name to assign to the new agent.\\
+$home$ & The home of the new agent.\\
+$owner$ & The owner of the new agent.\\
+$filename$ & The file name containing agent C/C++ code.\\
+$return\_var\_name$ & (optional) The name of the agent's return variable.\\
+$server$ & The name of the destination server to send the agent.\\
+$persistent$ & Whether or not the created agent should be persistent.\\
+$workgroup\_code$ & (optional) The workgroup code of the agent. Only agents with matching workgroup codes are allowed to interact with each other.\\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to create an agent C/C++ source code. 
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_comm/server.c}}
+
+\noindent
+{\bf See Also}\\
+\texttt{MC\_ComposeAgentFromFile()}, \texttt{MC\_ComposeAgent()}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

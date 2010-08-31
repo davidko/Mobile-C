@@ -1,0 +1,49 @@
+\rhead{\bf MC\_SetAgentStatus()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_SetAgentStatus()\index{MC\_SetAgentStatus()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SetAgentStatus()}
+\label{api:MC_SetAgentStatus()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SetAgentStatus}({\bf MCAgent\_t} $agent$, {\bf int} $status$);\\
+
+\noindent
+{\bf Purpose}\\
+Set the status of a mobile agent in an agency.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agent$ & The mobile agent whose status is to be assigned.\\
+$status$ & An integer representing the status to be assinged to a mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function returns an integer of enumerated type
+{\texttt enum MC\_AgentStatus\_e}. Details about this enumerated type may be
+found in Table \ref{mobilec_macro} on page \pageref{mobilec_macro}.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/multiple_agency_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

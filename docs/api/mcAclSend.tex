@@ -1,0 +1,55 @@
+\rhead{\bf mc\_AclSend()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AclSend()\index{mc\_AclSend()}}\\
+\addcontentsline{toc}{section}{mc\_AclSend()}
+\label{api:mc_AclSend()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AclSend}({\bf MCAgency\_t} $attr$, {\bf fipa\_acl\_message\_t*} $acl$);\\
+
+\noindent
+{\bf Purpose}\\
+Send an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success, non-zero on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$attr$ & An initialized Mobile-C agency handle.\\
+$message$ & The ACL message to send. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function will compose a fully compliant FIPA Acl message
+and send it to the destinations as specified by the 'receiver' field of
+the acl message. The function also creates a FIPA compliant
+xml envelope which is attached to the message. The message is sent
+using the FIPA compliant HTTP Message Transport Protocol.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  mc\_AclNew(), mc\_AclPost(), mc\_AclReply(), mc\_AclRetrieve(), 
+    \linebreak mc\_AclWaitRetrieve()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

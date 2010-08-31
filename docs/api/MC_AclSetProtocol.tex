@@ -1,0 +1,66 @@
+\rhead{\bf MC\_AclSetProtocol()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclSetProtocol()\index{MC\_AclSetProtocol()}}\\
+\addcontentsline{toc}{section}{MC\_AclSetProtocol()}
+\label{api:MC_Acl_SetProtocol()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AclSetProtocol}({\bf fipa\_acl\_message\_t*} acl, {\bf enum fipa\_protocol\_e} protocol);\\
+
+\noindent
+{\bf Purpose}\\
+Set the protocol on an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success or non-zero on failure.
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. \\
+$protocol$ & The FIPA protocol you wish the message to contain.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to set the FIPA ACL protocol on an ACL message. 
+The protocol may be any valid FIPA protocol listed in the table 
+below. The protocol field is not required to be set for a valid ACL
+message. \\
+\begin{tabular}{ll}
+Enumerated Value & FIPA Protocol \\ \hline
+\texttt{FIPA\_PROTOCOL\_REQUEST} & FIPA \texttt{request} protocol. \\
+\texttt{FIPA\_PROTOCOL\_QUERY} & FIPA \texttt{query} protocol. \\
+\texttt{FIPA\_PROTOCOL\_REQUEST\_WHEN} & FIPA \texttt{request-when} protocol. \\
+\texttt{FIPA\_PROTOCOL\_CONTRACT\_NET} & FIPA \texttt{contract-net} protocol. \\
+\texttt{FIPA\_PROTOCOL\_ITERATED\_CONTRACT\_NET} & FIPA \texttt{iterated-contract-net} protocol. \\
+\texttt{FIPA\_PROTOCOL\_ENGLISH\_AUCTION} & FIPA \texttt{english-auction} protocol.\\
+\texttt{FIPA\_PROTOCOL\_DUTCH\_AUCTION} & FIPA \texttt{dutch-auction} protocol. \\
+\texttt{FIPA\_PROTOCOL\_BROKERING} & FIPA \texttt{brokering} protocol. \\
+\texttt{FIPA\_PROTOCOL\_RECRUITING} & FIPA \texttt{recruiting} protocol. \\
+\texttt{FIPA\_PROTOCOL\_SUBSCRIBE} & FIPA \texttt{subscribe} protocol. \\
+\texttt{FIPA\_PROTOCOL\_PROPOSE} & FIPA \texttt{propose} protocol. \\
+\end{tabular}
+Please refer to the FIPA protocol specifications at \texttt{http://www.fipa.org} for 
+more details about each of these protocols.
+
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclSetSender(), MC\_AclAddReceiver(), MC\_AclAddReplyTo(), \linebreak 
+    MC\_AclSetContent()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

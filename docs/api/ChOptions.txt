@@ -1,0 +1,4 @@
+typedef struct ChOptions{
+    int shelltype;   // shell type
+    char *chhome;    // Embedded Ch home directory
+} ChOptions_t;

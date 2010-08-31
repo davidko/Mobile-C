@@ -1,0 +1,49 @@
+\rhead{\bf MC\_InitializeAgencyOptions()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_InitializeAgencyOptions()\index{MC\_InitializeAgencyOptions()}}\\
+\addcontentsline{toc}{section}{MC\_InitializeAgencyOptions()}
+\label{api:MC_InitializeAgencyOptions()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_InitializeAgencyOptions}({\bf struct MCAgencyOptions\_s* } options);\\
+
+\noindent
+{\bf Purpose}\\
+Initialize the agency options structure to default values. \\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$options$ & An uninitialized reference to a \texttt{struct MCAgencyOptions\_s} type variable.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function fills the agency options struct with default values. This
+function will overwrite any values that have already been set in the
+struct. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/mc_sample_app/mc_sample_app.c}}
+
+\noindent
+{\bf See Also}\\
+MC\_Initialize().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

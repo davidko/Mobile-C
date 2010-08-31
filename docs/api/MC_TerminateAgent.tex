@@ -1,0 +1,50 @@
+\rhead{\bf MC\_TerminateAgent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_TerminateAgent()\index{MC\_TerminateAgent()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_TerminateAgent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_TerminateAgent}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Terminate the execution of a mobile agent in an agency.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and an error code on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agent$ & A valid mobile agent. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function halts a running mobile agent. 
+The Ch interpreter is left intact. 
+The mobile agent may still reside in the agency in MC\_AGENT\_NEUTRAL mode if 
+the mobile agent is tagged as 'persistent', or is terminated and flushed 
+otherwise.\\
+
+\noindent
+{\bf Example}\\
+This function is identical to the agent-space counterpart. Please see the example
+listed under mc\_TerminateAgent() on page \pageref{api:mc_TerminateAgent()}.\\
+\noindent
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

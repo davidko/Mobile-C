@@ -1,0 +1,20 @@
+libmc_sync
+
+This is a sub-library of MobileC. 
+
+This library is meant to manipulate a linked list of mutexes and condition 
+variables that any process may create and use. Specifically, it enables a way
+for agents in Mobile C to create and share mutexes and condition variables
+with each other, thereby providing a level of syncronization among seperate
+agents. 
+
+The linked list is a standard singly linked list. The library comes with some
+simple routines used for adding new nodes, finding nodes, deleting nodes, etc.
+
+Each node contains a mutex variable, a condition variable, and an integer
+variable used as an identifying number. Each node in the list must have a 
+unique identifying number. 
+
+The condition and mutex variables within the nodes may be used as the user sees
+fit. The user may only use the mutex, or use the mutex in conjunction with 
+the condition variable. 

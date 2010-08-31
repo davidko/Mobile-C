@@ -1,0 +1,50 @@
+\rhead{\bf MC\_GetAgentExecEngine()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_GetAgentExecEngine()\index{MC\_GetAgentExecEngine()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_GetAgentExecEngine()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf ChInterp\_t MC\_GetAgentExecEngine}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Get the AEE associated with a mobile agent in an agency.\\
+
+\noindent
+{\bf Return Value}\\
+The functions returns a Ch interpreter on success and NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agent$ & A valid mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve a Ch interpreter from a mobile agent. 
+The mobile agent must be a valid mobile agent that has not been terminated 
+at the time of this function call. 
+The Ch interpreter may be used by the Embedded Ch API to execute functions, 
+retrieve data, and other various tasks.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/cspace-agentspace_interface/persistent_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+MC\_CallAgentFunc()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

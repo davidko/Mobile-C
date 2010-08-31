@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Need to touch all files in the way shown below.
+# touch *, touch */*, touch */*/*, touch */*/*/* 
+
+# KOREBOT_CHHOME is the directory containing Ch files built for korebot.
+# KOREBOT_TOOLCHAINHOME is the directory containing cross compiler related files for korebot.
+# Need to change the following two paths accordingly to make them match the accurate paths in your system.
+KOREBOT_CHHOME='/usr/local/korebot_ch'
+KOREBOT_TOOLCHAINHOME='/usr/local/korebot'
+
+CFLAGS=-I$KOREBOT_CHHOME'/extern/include -fPIC'
+LDFLAGS=-L$KOREBOT_CHHOME/extern/lib
+CC=$KOREBOT_TOOLCHAINHOME/korebot-tools-0.1.2/bin/arm-linux-gcc
+export CFLAGS 
+export LDFLAGS
+export CC
+
+# Cross compiler
+PATH=$PATH:$KOREBOT_TOOLCHAINHOME/korebot-tools-0.1.2/bin
+export PATH
+
+if [ -e korebot_mc ] 
+then
+  rm -rf korebot_mc
+fi
+
+#cd src/security/xyssl-0.7
+#make
+#cd -
+
+dir=`pwd`
+
+if [ ! -e Makefile ] 
+then
+./configure --host=arm-linux --prefix=$dir/korebot_mc
+fi
+
+make && make install

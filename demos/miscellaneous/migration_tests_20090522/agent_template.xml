@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>TEMPLATE_AGENT_NAME</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>TEMPLATE_AGENT_HOME</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" return="no-return" complete="0" server="TEMPLATE_INIT_HOST" code_id="1"></TASK>
+     <AGENT_CODE id="1">
+      <![CDATA[
+#include <stdio.h>
+#include <fipa_acl.h>
+
+const char* NEXTAGENT_NAME = "TEMPLATE_NEXTAGENT_NAME";
+const int TRIGGER = TEMPLATE_TRIGGER;
+const int MAXLAPS  = TEMPLATE_MAXLAPS;
+
+char *hosts[] = TEMPLATE_HOSTLIST;
+int num_hosts = TEMPLATE_NUMHOSTS;
+int progress = TEMPLATE_INITPROGRESS;
+int tourcount = 0;
+
+int agentnumber = TEMPLATE_AGENTNUMBER;
+int finallap_agentnumber = TEMPLATE_FINALLAP_AGENTNUMBER;
+int tourcount_stop = TEMPLATE_TOURCOUNT_STOP;
+
+int pass_relay(const char* agent_name) {
+  /* Construct a fipa acl message and send it */
+  fipa_acl_message_t *msg;
+  msg = mc_AclNew();
+  mc_AclSetPerformative( msg, FIPA_INFORM );
+  mc_AclAddReceiver(
+    msg,
+    agent_name,
+    NULL );
+  mc_AclSetContent(
+    msg,
+    "Baton passed." );
+  mc_AclSend(msg);
+  mc_AclDestroy(msg);
+
+  return 0;
+}
+
+int main() {
+  char* hostname;
+  char* portstr;
+  int port;
+  int err;
+  int* retrieved_progress = mc_AgentVariableRetrieve(mc_current_agent, "progress", 0);
+  int* retrieved_tourcount = mc_AgentVariableRetrieve(mc_current_agent, "tourcount", 0);
+  fipa_acl_message_t* msg;
+
+  //printf("%s arrived.\n", mc_agent_name);
+
+  if(retrieved_progress == NULL) {
+    /* Do something if this is a trigger agent */
+    if(TRIGGER) {
+      mc_Barrier(555);
+      pass_relay(NEXTAGENT_NAME);
+    }
+  }
+  else {
+    progress = *retrieved_progress;
+  }
+
+  if(retrieved_tourcount == NULL) {
+    if(tourcount_stop == 0) {
+      //printf("%s: tourcount_stop == 0\n", mc_agent_name);
+      exit(0);
+    }
+  }
+  else {
+    tourcount = *retrieved_tourcount;
+    if(tourcount != tourcount_stop) {
+      /* Signal the next runner in our team. */
+      pass_relay(NEXTAGENT_NAME);
+    }
+    else {
+      if(agentnumber != finallap_agentnumber) {
+        pass_relay(NEXTAGENT_NAME);
+      }
+      else {
+        mc_Barrier(556);
+      }
+      sleep(5);
+      //printf("%s Exit!\n", mc_agent_name);
+      exit(0); 
+    }
+  }
+
+  /* Wait for a signal from the previous runner */
+  msg = mc_AclWaitRetrieve(mc_current_agent);
+  if(msg != NULL) {
+    mc_AclDestroy(msg);
+  } 
+  else {
+    printf("ERROR: Could not receive message!\n");
+  }
+
+  /* Save the progress meter */
+  progress++;
+  mc_AgentVariableSave(mc_current_agent, "progress");
+
+  /* Save the tourcount */
+  tourcount++;
+  mc_AgentVariableSave(mc_current_agent, "tourcount");
+
+  /* Migrate to the next host */
+  hostname = strtok(hosts[progress % num_hosts], ":");
+  portstr = strtok(NULL, ":");
+  sscanf(portstr, "%d", &port);
+  mc_MigrateAgent(mc_current_agent, hostname, port);
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

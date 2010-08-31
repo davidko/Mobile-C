@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+       <DATA dim="0" name="no-return" >
+       </DATA>
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+#ifndef _WIN32_
+#pragma package "/usr/local/ch/package/chmobilec"
+#else
+#pragma package "C:\\ch\\package\\chmobilec"
+#endif
+
+#include <math.h>
+#include <fipa_acl.h>
+int main()
+{
+    fipa_acl_message_t* tmp;
+    printf("mobagent2 Creating new ACL message...\n");
+    tmp = mc_AclNew();
+
+    mc_AclSetPerformative(
+        tmp,
+        FIPA_QUERY_REF );
+
+    mc_AclSetSender(
+        tmp,
+        "mobagent1",
+        "http://localhost:5050/acc" );
+
+    mc_AclAddReceiver(
+        tmp,
+        "pingme@snake.engr.ucdavis.edu:1099/JADE",
+        "http://localhost:7778/acc" );
+
+    mc_AclSetContent(
+        tmp,
+        "ping" );
+
+    printf("mobagent2 sending ACL message...\n");
+    mc_AclSend(tmp);
+
+    mc_AclDestroy(tmp);
+
+    /* Now wait for a message to come back */
+    tmp = mc_AclWaitRetrieve(mc_current_agent);
+
+    printf("Received a message from %s.\n", tmp->sender->name);
+    printf("Content is '%s'.\n", tmp->content->content);
+
+    mc_AclDestroy(tmp);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

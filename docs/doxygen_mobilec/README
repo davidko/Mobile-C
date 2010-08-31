@@ -1,0 +1,20 @@
+Doxygen guide
+
+
+Important parts of the Mobile-C source code are doxygen enabled for quick and
+easy reference. In order to generate the doxygen reference, simply run
+  doxygen Doxyfile
+from this directory. This should generate a directory named 'html' and another 
+named 'latex'. To use the html documentation, simply open the file 
+'html/index.html' with your favorite web browser. To view the latex 
+documentation, build the documentation by these commands:
+  cd latex
+  make
+The file 'refman.pdf' will be produced.
+
+Note that the file 'refman.pdf' in the same directory as this README file is
+an up-to-date copy of the file that is produced by typing 'make' within the
+'latex' directory.
+
+If you do not have the 'doxygen' program, it may be obtained at
+http://www.doxygen.org

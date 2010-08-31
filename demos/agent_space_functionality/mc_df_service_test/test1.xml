@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+    <MOBILE_AGENT>
+     <AGENT_DATA>
+       <NAME>mobagent1</NAME>
+       <OWNER>IEL</OWNER>
+       <HOME>localhost:5051</HOME>
+       <TASKS task="1" num="0">
+        <TASK num="0" complete="0" server="127.0.0.1:5050">
+        </TASK>
+	  <AGENT_CODE>
+          <![CDATA[
+#include <stdio.h>
+int main()
+{
+    MCAgent_t agent;
+    int retval;
+    /* Search Return Variables */
+    char** agentNames;
+    char** serviceNames;
+    int *agentIDs;
+    int numResults;
+    int a, b;
+
+    /* Search for addition service */
+    printf("\n\n\nSearching for addition service.\n");
+    mc_SearchForService(
+            "addition", 
+            &agentNames,
+            &serviceNames,
+            &agentIDs,
+            &numResults );
+    printf("Done searching.\n");
+    if (numResults < 1) {
+        printf("No agents with service 'addition' found.\n");
+        exit(0);
+    }
+
+    /* Just get the first hit */
+    printf("Using agent %s for addition.\n", agentNames[0]); 
+    agent = mc_FindAgentByID(agentIDs[0]);
+    
+    a = 44;
+    b = 45;
+    mc_CallAgentFunc(agent, "addition", &retval, a, b);
+    printf("Result of addition %d + %d is %d.\n", a, b, retval);
+
+    /* Now search for multiplication service */
+    printf("\n\n Searching for Multiplication service...\n");
+    mc_SearchForService(
+            "multiplication",
+            &agentNames,
+            &serviceNames,
+            &agentIDs,
+            &numResults );
+
+    if (numResults < 1) {
+        printf("No agents with service 'multiplication' found.\n");
+        exit(0);
+    }
+
+    printf("Using agent %s for multiplication.\n", agentNames[0]);
+    agent = mc_FindAgentByID(agentIDs[0]);
+    mc_CallAgentFunc(agent, "multiplication", &retval, a, b);
+    printf("Result of multiplication %d * %d is %d.\n", a, b, retval);
+
+    /* Now lets try to deregister a service */
+    mc_DeregisterService(
+            agentIDs[0],
+            serviceNames[0]
+            );
+    
+    return 0;
+}
+        ]]>
+        </AGENT_CODE>
+      </TASKS>
+      </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>

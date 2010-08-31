@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+//#include <stdio.h>
+#ifndef _WIN32_
+#pragma package "/usr/local/ch/package/mobilec"
+#else
+#pragma package "C:\\ch\\package\\mobilec"
+#endif
+
+#include <math.h>
+#include <fipa_acl.h>
+int main()
+{
+    fipa_acl_message_t* message;
+    fipa_acl_message_t* reply;
+
+    printf("\n%s: Arrived at %s.\n", mc_agent_name, mc_agent_address);
+
+    printf("%s: Waiting for a message.\n", mc_agent_name);
+    message = mc_AclWaitRetrieve(mc_current_agent);
+
+    printf("%s: Received a message from %s.\n", mc_agent_name, message->sender->name);
+    printf("\tContent is '%s'.\n", message->content->content);
+    printf("\tProtocol is '%d'.\n", message->protocol);
+    printf("\tConverationID is '%s'.\n", message->conversation_id->content.string->content);
+
+    printf("%s: Generating a reply message.\n", mc_agent_name);
+    reply = mc_AclReply(message);
+    mc_AclSetPerformative(reply,FIPA_INFORM );
+    mc_AclSetSender(reply, mc_agent_name, mc_agent_address);
+    mc_AclSetContent(reply, "Reply from agent1." );
+
+    printf("%s: Sending message...\n", mc_agent_name);
+    mc_AclSend(reply);
+
+    mc_AclDestroy(message);
+    mc_AclDestroy(reply);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

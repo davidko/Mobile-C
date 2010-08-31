@@ -1,0 +1,53 @@
+\rhead{\bf mc\_SyncDelete()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_SyncDelete()\index{mc\_SyncDelete()}}\\
+\addcontentsline{toc}{section}{mc\_SyncDelete()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_SyncDelete}({\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Delete a previously initialized synchronization variable.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and nonzero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$id$ & The id of the condition variable to delete.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to delete and deallocate a previously initialized 
+Mobile-C synchronization variable.\\
+ 
+\noindent
+{\bf Example}\\
+Please see the example for MC\_SyncDelete() on page
+\pageref{api:MC_SyncDelete()}.\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+mc\_SyncInit().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

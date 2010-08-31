@@ -1,0 +1,64 @@
+\rhead{\bf MC\_GetAgentNumTasks()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_GetAgentNumTasks()\index{MC\_GetAgentNumTasks()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_GetAgentNumTasks()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_GetAgentNumTasks}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Return the total number of tasks a mobile agent has. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns a non negative integer on success and a negative 
+integer on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agent$ & A MobileC agent. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function returns the total number of tasks that an agent has. 
+It counts all tasks: those that have been completed, those that are in 
+progress, and those that have not yet started.\\
+
+\noindent
+{\bf Example}
+\begin{verbatim}
+int i;
+MCAgent_t agent;
+
+/* More code here */
+
+i = MC_GetAgentNumTasks(agent);
+printf("The agent has %d tasks.\n", i);
+\end{verbatim}
+
+\noindent
+The previous piece of code retrieves the nuber of tasks that an agent has and
+prints it to standard output.\\
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

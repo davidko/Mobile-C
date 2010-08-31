@@ -1,0 +1,53 @@
+\rhead{\bf mc\_AclRetrieve()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AclRetrieve()\index{mc\_AclRetrieve()}}\\
+\addcontentsline{toc}{section}{mc\_AclRetrieve()}
+\label{api:mc_AclRetrieve()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AclRetrieve}({\bf MCAgent\_t} agent);\\
+
+\noindent
+{\bf Purpose}\\
+Retrieve a message from an agent's mailbox.\\
+
+\noindent
+{\bf Return Value}\\
+An ACL message on success, or NULL if no messages are in the 
+mailbox.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve a message from an agent's mailbox. The
+message are retrieved in FIFO order. If there are no messages in the
+mailbox, the function will return NULL.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test1.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  mc\_AclNew(), mc\_AclPost(), mc\_AclReply(), mc\_AclSend(), 
+    \linebreak mc\_AclWaitRetrieve()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

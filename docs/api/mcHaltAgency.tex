@@ -1,0 +1,48 @@
+\rhead{\bf mc\_HaltAgency()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_HaltAgency()\index{mc\_HaltAgency()}}\\
+\addcontentsline{toc}{section}{mc\_HaltAgency()}
+\label{api:mc_HaltAgency()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_HaltAgency}({void});\\
+
+\noindent
+{\bf Purpose}\\
+This function halts the execution of an agency. \\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+None.\\
+
+\noindent
+{\bf Description}\\
+This function halts the primary threads of an agency, such as the ACC, AMS,
+message handlers, etc. If any thread is busy with
+a particular task, it will halt as soon as the task is finished. Note that
+this function does not halt the execution of any agents which may be 
+performing tasks. Agents performing tasks may not rely on the primary 
+Mobile-C threads, such as the ACC, AMS, etc., and thus may not halt upon
+calling this function. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+% FIXME: Need an example here
+%{\footnotesize\verbatiminput{../demos/multiple_agency_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+mc\_ResumeAgency().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,61 @@
+<!-- File: mc_array_return_example/return_agent.xml -->
+
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+  <MESSAGE message="RETURN_MSG">
+    <MOBILE_AGENT>
+      <AGENT_DATA>
+        <NAME>mobagent1</NAME>
+        <OWNER>IEL</OWNER>
+        <HOME>localhost:5051</HOME>
+        <WG_CODE />
+        <TASKS task="1" num="1">
+          <TASK num="0" server="localhost:5050" return="a">
+            <DATA name="a" dim="3" type="short">
+              <ROW index="0">
+                <ROW index="0">
+                  <ROW index="0"> 0,1,</ROW>
+                  <ROW index="1"> 2,3,</ROW>
+                  <ROW index="2"> 4,5,</ROW>
+                </ROW>
+                <ROW index="1">
+                  <ROW index="0"> 6,7,</ROW>
+                  <ROW index="1"> 8,9,</ROW>
+                  <ROW index="2"> 10,11,</ROW>
+                </ROW>
+              </ROW>
+            </DATA>
+          </TASK>
+          <AGENT_CODE><![CDATA[
+#include <stdio.h>
+short a[2][3][2];
+int main()
+{
+    int i, j, k, l;
+    k = 0;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 3; j++) {
+            for(l = 0; l < 2; l++) {
+                a[i][j][l] = k;
+                k++;
+                printf("%d ", i+j);
+            }
+        }
+    }
+    printf("\nThis is a mobile agent from port 5050.\n");
+    printf("I am performing the task on the agency at port 5051 now.\n");
+    sleep(1);
+
+    return 0;
+}
+         ]]>
+          </AGENT_CODE>
+        </TASKS>
+      </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>
+
+

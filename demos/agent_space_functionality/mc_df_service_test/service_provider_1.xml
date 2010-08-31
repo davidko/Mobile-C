@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>service_provider_1</NAME> 
+    <OWNER>IEL</OWNER> 
+    <HOME>localhost:5051</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0"complete="0" server="localhost:5050" persistent="1" name="no-return">
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+
+int main() {
+    char **services;
+    int i;
+    services = malloc(sizeof(char*)*2);
+    for(i = 0; i < 2; i++) {
+        services[i] = malloc(40);
+    }
+    strcpy(services[0], "addition");
+    strcpy(services[1], "subtraction");
+    printf("Service provider 1 has arrived.\n");
+    printf("I provide addition and subtraction service.\n");
+    mc_RegisterService( mc_current_agent, services, 2);
+    return 0;
+}
+
+int addition(int a, int b) {
+    printf("Adding %d and %d...\n", a, b);
+    return a + b;
+}
+
+int subtraction(int a, int b) {
+    printf("Subtracting %d - %d...\n", a, b);
+    return a - b;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

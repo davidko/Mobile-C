@@ -1,0 +1,53 @@
+\rhead{\bf mc\_RetrieveAgentCode()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf mc\_RetrieveAgentCode()\index{mc\_RetrieveAgentCode()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{mc\_RetrieveAgentCode()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf char *mc\_RetrieveAgentCode}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Retrieve a mobile agent code in the form of a character string.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns an allocated character array on success and NULL on 
+failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agent$ & The mobile agent from which to retrieve the code.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function retrieves a mobile agent code. 
+The return pointer is allocated by 'malloc()' and must be freed by the user.\\
+
+\noindent
+{\bf Example}\\
+Please see the example under MC\_RetrieveAgentCode() on page
+\pageref{api:MC_RetrieveAgentCode()}.\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

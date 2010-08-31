@@ -1,0 +1,72 @@
+\rhead{\bf MC\_SetThreadOn()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_SetThreadOn()\index{MC\_SetThreadOn()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SetThreadOn()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SetThreadOn}({\bf MCAgencyOptions\_t} $*options$, {\bf enum threadIndex\_e} $thread$);\\
+
+\noindent
+{\bf Purpose}\\
+Sets a particular thread to execute upon Mobile C initialization.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$options$ & An allocated MCAgencyOptions\_t variable.\\
+$thread$ & A thread index.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to modify the Mobile-C startup options. 
+It is used to enable threads that may otherwise be disabled. 
+The threads which may be modified are
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{40 mm}p{125 mm}}
+MC\_THREAD\_AI : & Agent Initializing Thread - Create agent from incoming messages.\\
+MC\_THREAD\_AM : & Agent Managing Thread - Manage active agents.\\
+MC\_THREAD\_CL : & Connection Listening Thread - Listen incoming connections.\\
+MC\_THREAD\_MR : & Message Receiving Thread - Handle incoming connections and recieve agent messages.\\
+MC\_THREAD\_MS : & Message Sending Thread - Handle outgoing connections and send agent messages.\\
+MC\_THREAD\_CP : & Command Prompt Thread - Handle an interactive user command prompt.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Example}\\
+\noindent
+\begin{verbatim}
+MCAgencyOptions_t options;
+MCAgency_t agency;
+
+/* Turn the command prompt thread on */
+MC_SetThreadOn(&options, MC_THREAD_CP);
+
+/* Start the agency with a command prompt on port 5050 */
+agency = MC_Initialize(5050, &options);
+
+/* etc ... */
+\end{verbatim}
+
+\noindent
+{\bf See Also}\\
+MC\_SetThreadOff()\\
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\
+

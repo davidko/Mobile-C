@@ -1,0 +1,54 @@
+\rhead{\bf mc\_SetDefaultAgentStatus()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf mc\_SetDefaultAgentStatus()\index{mc\_SetDefaultAgentStatus()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{mc\_SetDefaultAgentStatus()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_SetDefaultAgentStatus}({\bf int} $status$);\\
+
+\noindent
+{\bf Purpose}\\
+Set the default status of any incoming mobile agents.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$status$ & An integer representing the status to be assinged to any incoming
+mobile agents as their default status.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function sets the default status of any incoming mobile agents by one of 
+the enumerated values of type {\texttt enum mc\_AgentStatus\_e}. See Table
+\vref{tab:agent_status_enums} for a complete listing of the enumerated type.
+
+\noindent
+{\bf Example}\\
+Please see the example for MC\_SetDefaultAgentStatus() on page
+\pageref{api:MC_SetDefaultAgentStatus()}.
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,37 @@
+Mobile-C is developed with idea, vision, and design by Professor Harry H. Cheng
+
+
+People who helped to make Mobile-C the real thing (if you noticed that some 
+names are missing, please mail to mobilec@iel.ucdavis.edu)
+--------------------------------------------------------------------------------
+Name                   Company                      Remarks
+                       (during contribution)
+--------------------------------------------------------------------------------
+Bertocco, Cristian     Univ. of California, Davis   Design and implementation 
+cbertocco@dei.unipd.it                              of encryption for security 
+                                                    in Mobile-C
+
+Chen, Bo               Univ. of California, Davis   Design and implementation 
+bochen@mtu.edu                                      of Mobile-C
+
+Chou, Yu-Cheng         Univ. of California, Davis   Design and implementation
+cycchou@ucdavis.edu                                 of the Mobile-C library
+
+Honda, Jason           Sandia National Laboratories
+jhonda@sandia.gov
+
+Ko, David              Univ. of California, Davis   Design and implementation
+dko@ucdavis.edu                                     of the Mobile-C library
+
+Linz, David            Univ. of California, Davis   Design and implementation 
+ddlinz@gmail.com                                    of Mobile-C
+
+Malik, Najmus S.,      Univ. of California, Davis   Design and implementation
+najam.malik@gmail.com                               of the Mobile-C Security
+                                                    Module.
+
+Nestinger, Stephen S., Univ. of California, Davis   Webmaster of 
+ssnestinger@ucdavis.edu                             http://www.mobilec.org 
+
+Stark, Douglas P.      Sandia National Laboratories Design and implementation 
+dpstark@sandia.gov                                  of .NET interface

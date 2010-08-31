@@ -1,0 +1,54 @@
+\rhead{\bf MC\_SearchForService()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_SearchForService()\index{MC\_SearchForService()}}\\
+\addcontentsline{toc}{section}{MC\_SearchForService()}
+\label{api:MC_SearchForService()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SearchForService}({\bf MCAgency\_t} $agency$, {\bf char*} SearchString,  {\bf char***} $agentNames$, {\bf char***} serviceNames, {\bf int **} agentIDs,{\bf int*} numResults);\\
+
+\noindent
+{\bf Purpose}\\
+Searches the Directory Facilitator for a service.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{23 mm}p{145 mm}} 
+$agency$ & An initialized agency handle.\\
+$searchString$ & (in) A search substring. All services names registered with the Directory Facilitator with a matching substring will be a hit. \\
+$agentNames$ & (out) A newly allocated array of agent names of agents that provide services matching the search string. \\
+$serviceNames$ & (out) A newly allocated array of service names matching the search substring. \\
+$AgentIDs$ & (out) A newly allocated array of agent IDs of matching agents. \\
+$numServices$ & (out) The number of services listed in the previous argument.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to search the Directory Facilitator for a service.
+The function will return all services if any part of the service name 
+matches the search string. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/agent_space_functionality/mc_df_example/agent3.xml}}
+
+\noindent
+{\bf See Also}\\
+MC\_RegisterService(), MC\_DeregisterService().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

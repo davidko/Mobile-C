@@ -1,0 +1,51 @@
+\rhead{\bf MC\_AgentReturnDataType()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnDataType()\index{MC\_AgentReturnDataType()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnDataType()}
+\label{api:MC_AgentReturnDataType()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf ChType\_t MC\_AgentReturnDataType}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Get the data type of an array returned by a returning agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns a positive value of -1 on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the datasize.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function returns the Ch datatype of an agent's return variable. The
+\texttt{ChType\_t} type is defined in ``ch.h'' header file, typically
+located in the \texttt{<CHHOME>/extern/include} directory.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayDim(), MC\_AgentReturnArrayExtent(), MC\_AgentReturnArrayNum(),
+  MC\_AgentReturnDataGetSymbolAddr(), MC\_AgentReturnDataSize(),
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

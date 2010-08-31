@@ -1,0 +1,284 @@
+%%%%%%%%%%%%%%%%%% the following is new defintion for D manual %%%%%%%
+
+\newcommand{\arrayb}{{\bf array}}
+\newcommand{\class}{{\bf class}}
+\newcommand{\stringt}{{\bf string\_t}}
+\newcommand{\Include}[1]{{\bf \#include $<$#1$>$}}
+%%% bold page numbers
+\newcommand{\bp}[1]{{\bf #1}}
+
+
+\newcommand{\D}{{\bf D}}
+\newcommand{\CC}{\mbox{C+\hspace{0.02cm}+}}
+\newcommand{\CH}{${\rm C}^{\rm H}$}
+\newcommand{\bfCH}{\mbox {${\mbox{$ {\rm\bf C}^{\rm\bf H} $}} $} }
+\newcommand{\Ch}{Ch}
+\newcommand{\bfCh}{\bf Ch}
+
+\newcommand{\Inf}{\rm Inf}
+\newcommand{\NaN}{\rm NaN}
+
+\newcommand{\coend}{\verb+>>+}
+\newcommand{\block}{{\bf \{}}
+\newcommand{\blockend}{{\bf \}}}
+\newcommand{\assign}{{\bf =}}
+\newcommand{\for}{{\bf for}}
+\newcommand{\while}{{\bf while}}
+\newcommand{\switch}{{\bf switch}}
+\newcommand{\return}{{\bf return}}
+\newcommand{\pause}{{\bf pause}}
+
+\newcommand{\approach}{{\bf appro}}
+\newcommand{\grasp}{{\bf grasp}}
+\newcommand{\sensor}{{\bf sensor}}
+\newcommand{\dac}{{\bf dac}}
+
+\newcommand{\abort}{{\bf abort}}
+\newcommand{\signal}{{\bf signal}}
+\newcommand{\wait}{{\bf wait}}
+\newcommand{\enable}{{\bf enable}}
+\newcommand{\disable}{{\bf disable}}
+\newcommand{\move}{{\bf move}}
+\newcommand{\moves}{{\bf moves}}
+\newcommand{\moveby}{{\bf moveb}}
+\newcommand{\movesby}{{\bf movesb}}
+\newcommand{\departure}{{\bf depart}}
+\newcommand{\base}{{\bf base}}
+\newcommand{\tool}{{\bf tool}}
+\newcommand{\release}{{\bf release}}
+\newcommand{\brake}{{\bf brake}}
+\newcommand{\payload}{{\bf payload}}
+\newcommand{\popen}{{\bf popen}}
+\newcommand{\open}{{\bf open}}
+\newcommand{\close}{{\bf close}}
+\newcommand{\speed}{{\bf speed}}
+\newcommand{\accel}{{\bf accel}}
+\newcommand{\decel}{{\bf decel}} 
+\newcommand{\free}{{\bf free}}
+\newcommand{\affix}{{\bf affix}}
+\newcommand{\unfix}{{\bf unfix}}
+\newcommand{\chkey}{{\bf chkey}}
+\newcommand{\addkey}{{\bf addkey}}
+\newcommand{\remkey}{{\bf remkey}}
+\newcommand{\iskey}{{\bf iskey}}
+\newcommand{\isvar}{{\bf isvar}}
+\newcommand{\casesen}{{\bf casesen}}
+\newcommand{\floatconst}{{\bf floatconst}}
+\newcommand{\case}{{\bf case}}
+\newcommand{\default}{{\bf default}}
+\newcommand{\step}{{\bf step}}
+\newcommand{\cp}{{\bf cp}}
+\newcommand{\simulation}{{\bf sim}}
+\newcommand{\servo}{{\bf servo}}
+\newcommand{\tune}{{\bf tune}}
+\newcommand{\smoothaccel}{{\bf smoothaccel}}
+\newcommand{\smoothdecel}{{\bf smoothdecel}}
+\newcommand{\servotp}{{\bf servotp}}
+\newcommand{\simtp}{{\bf simtp}}
+\newcommand{\cj}{{\bf cj}}
+\newcommand{\collect}{{\bf collect}}
+\newcommand{\fstop}{{\bf fstop}}
+\newcommand{\fxstop}{{\bf fxstop}}
+\newcommand{\fystop}{{\b fystop}}
+\newcommand{\fzstop}{{\bf fzstop}}
+
+\newcommand{\force}{{\bf force}}
+\newcommand{\torque}{{\bf torque}}
+
+\newcommand{\var}{{\bf var}}		
+\newcommand{\void}{{\bf void}}
+\newcommand{\strng}{{\bf string}}
+\newcommand{\short}{{\bf short}}
+\newcommand{\float}{{\bf float}}
+\newcommand{\double}{{\bf double}}
+\newcommand{\complex}{{\bf complex}}
+\newcommand{\dual}{{\bf dual}}
+\newcommand{\vect}{{\bf vect}}
+\newcommand{\quat}{{\bf quat}}
+\newcommand{\trans}{{\bf trans}}
+\newcommand{\event}{{\bf event}}
+\newcommand{\file}{{\bf file}}
+\newcommand{\joint}{{\bf joint}}
+\newcommand{\actuat}{{\bf actuat}}
+\newcommand{\spline}{{\bf spline}}
+\newcommand{\image}{{\bf image}}
+  
+\newcommand{\sizeof}{{\bf sizeof}}
+\newcommand{\unitv}{{\bf unit}}
+\newcommand{\vmagn}{{\bf nortm}}
+\newcommand{\tpos}{{\bf pos}}
+\newcommand{\torient}{{\bf rot}}
+\newcommand{\tinvrt}{{\bf inv}}
+\newcommand{\raan}{{\bf raan}}
+\newcommand{\xyz}{{\bf rxyz}}
+\newcommand{\constr}{{\bf txyp}}
+\newcommand{\query}{{\bf query}}
+\newcommand{\getnum}{{\bf getnum}}
+\newcommand{\putenv}{{\bf putenv}}
+\newcommand{\getenv}{{\bf getenv}}
+\newcommand{\remenv}{{\bf remenv}}
+\newcommand{\isenv}{{\bf isenv}}
+\newcommand{\malloc}{{\bf malloc}}
+\newcommand{\calloc}{{\bf calloc}}
+\newcommand{\realloc}{{\bf realloc}}
+\newcommand{\memcpy}{{\bf memcpy}}
+\newcommand{\memmove}{{\bf memmove}}
+\newcommand{\fclose}{{\bf fclose}}
+\newcommand{\system}{{\bf system}}
+\newcommand{\unlink}{{\bf unlink}}
+\newcommand{\rename}{{\bf rename}}
+\newcommand{\getchar}{{\bf getchar}}
+\newcommand{\getc}{{\bf getc}}
+\newcommand{\fgetc}{{\bf fgetc}}
+\newcommand{\putc}{{\bf putc}}
+\newcommand{\fputc}{{\bf fputc}}
+\newcommand{\ungetc}{{\bf ungetc}}
+\newcommand{\ggets}{{\bf ggets}}
+\newcommand{\fgets}{{\bf fgets}}
+\newcommand{\puts}{{\bf puts}}
+\newcommand{\fputs}{{\bf fputs}}
+\newcommand{\printf}{{\bf printf}}
+\newcommand{\scanf}{{\bf scanf}}
+\newcommand{\fscanf}{{\bf fscanf}}
+\newcommand{\sscanf}{{\bf sscanf}}
+\newcommand{\fopen}{{\bf fopen}}
+\newcommand{\fprintf}{{\bf fprintf}}
+\newcommand{\sprintf}{{\bf sprintf}}
+\newcommand{\fopendatalog}{{\bf fopendatalog}}
+\newcommand{\fclosedatalog}{{\bf fclosedatalog}}
+\newcommand{\isalnum}{{\bf isalnum}}
+\newcommand{\isalpha}{{\bf isalpha}}
+\newcommand{\iscntrl}{{\bf iscntrl}}
+\newcommand{\isdigit}{{\bf isdigit}}
+\newcommand{\isgraph}{{\bf isgraph}}
+\newcommand{\islower}{{\bf islower}}
+\newcommand{\isprint}{{\bf isprint}}
+\newcommand{\ispunct}{{\bf ispunct}}
+\newcommand{\isspace}{{\bf isspace}}
+\newcommand{\isupper}{{\bf isupper}}
+\newcommand{\isxdigit}{{\bf isxdigit}}
+\newcommand{\isascii}{{\bf isascii}}
+\newcommand{\tolower}{{\bf tolower}}
+\newcommand{\toupper}{{\bf toupper}}
+\newcommand{\toascii}{{\bf toascii}}
+\newcommand{\stradd}{{\bf stradd}}
+\newcommand{\isinteger}{{\bf isinteger}}
+\newcommand{\ishex}{{\bf ishex}}
+\newcommand{\isnumber}{{\bf isnumber}}
+\newcommand{\strlen}{{\bf strlen}}
+\newcommand{\gradientim}{{\bf gradientim}}
+\newcommand{\gradientxim}{{\bf gradientxim}}
+\newcommand{\gradientyim}{{\bf gradientyim}}
+\newcommand{\createconstim}{{\bf createconstim}}
+\newcommand{\createcircim}{{\bf createcircim}}
+\newcommand{\createrectim}{{\bf createrectim}}
+\newcommand{\real}{{\bf real}}
+\newcommand{\primary}{{\bf primary}}
+\newcommand{\imag}{{\bf imag}}
+\newcommand{\imaginary}{{\bf imaginary}}
+\newcommand{\conjg}{{\bf conjg}}
+\newcommand{\conjugate}{{\bf conjugate}}
+\newcommand{\polar}{{\bf polar}}
+\newcommand{\transpose}{{\bf transpose}}
+\newcommand{\inverse}{{\bf inverse}}
+\newcommand{\linearsolver}{{\bf linearsolver}}
+\newcommand{\access}{{\bf access}}
+\newcommand{\umask}{{\bf umask}}
+\newcommand{\remvar}{{\bf remvar}}
+\newcommand{\alias}{{\bf alias}}
+\newcommand{\unalias}{{\bf unalias}}
+\newcommand{\getalias}{{\bf getalias}}
+
+\newcommand{\edit}{{\bf edit}}
+\newcommand{\unix}{{\bf unix}}		
+\newcommand{\save}{{\bf save}}
+\newcommand{\run}{{\bf \run}}
+\newcommand{\record}{{\bf record}}
+\newcommand{\calibrate}{{\bf calibrate}}
+\newcommand{\exit}{{\bf exit}}
+\newcommand{\help}{{\bf help}}
+\newcommand{\data}{{\bf data?}}
+\newcommand{\func}{{\bf func?}}
+\newcommand{\stmnt}{{\bf stmnt?}}
+\newcommand{\struct}{{\bf struct?}}
+\newcommand{\const}{{\bf const?}}
+
+%%%%%%%%%%%%%%%%%% the consistency purpose defined as ...b %%%%%%%
+
+\newcommand{\powb}{{\bf pow}} 
+\newcommand{\absb}{{\bf abs}} 
+\newcommand{\fabsb}{{\bf fabs}} 
+\newcommand{\asinb}{{\bf asin}} 
+\newcommand{\acosb}{{\bf acos}} 
+\newcommand{\atanb}{{\bf atan}}
+\newcommand{\atant}{{\bf atan2}} %% cannot define \atan2
+\newcommand{\logg}{{\bf log10}} %% cannot define \log10
+\newcommand{\sinhb}{{\bf sinh}}
+\newcommand{\coshb}{{\bf cosh}}
+\newcommand{\tanhb}{{\bf tanh}}
+\newcommand{\asinhb}{{\bf asinh}}
+\newcommand{\acoshb}{{\bf acosh}}
+\newcommand{\atanhb}{{\bf atanh}}
+\newcommand{\ceilb}{{\bf ceil}}
+\newcommand{\floorb}{{\bf floor}}
+\newcommand{\fmodb}{{\bf fmod}}
+\newcommand{\ldexpb}{{\bf ldexp}}
+\newcommand{\frexpb}{{\bf frexp}}
+\newcommand{\modfb}{{\bf modf}}
+
+%%%%%%%%%%%%%%%%%% the following def is already used by LaTeX %%%%%%%
+
+\newcommand{\maxb}{{\bf max}} 
+\newcommand{\minb}{{\bf min}} 
+\newcommand{\sqrtb}{{\bf sqrt}} 
+\newcommand{\logb}{{\bf log}} 
+\newcommand{\expb}{{\bf exp}} 
+\newcommand{\sinb}{{\bf sin}} 
+\newcommand{\cosb}{{\bf cos}} 
+\newcommand{\tanb}{{\bf tan}} 
+
+\newcommand{\includeb}{{\bf include}}
+\newcommand{\dob}{{\bf do}}
+\newcommand{\ifb}{{\bf if}}
+\newcommand{\readb}{{\bf read}}
+\newcommand{\stopb}{{\bf stop}}
+\newcommand{\breakb}{{\bf breack}}
+\newcommand{\elseb}{{\bf else}}
+\newcommand{\tob}{{\bf to}}
+\newcommand{\loadb}{{\bf load}}
+\newcommand{\longb}{{\bf long}}
+\newcommand{\charb}{{\bf char}}
+\newcommand{\intb}{{\bf int}}
+\newcommand{\frameb}{{\bf frame}}
+\newcommand{\circb}{{\bf circ}}
+\newcommand{\removeb}{{\bf remove}}
+\newcommand{\setbaseb}{{\bf setbase}}
+\newcommand{\inputb}{{\bf input}}
+\newcommand{\outputb}{{\bf output}}
+\newcommand{\fcloseb}{{\bf fclose}}
+
+%%%%%%%%%%%% arrays %%%%%%%%%%%%
+\newcommand{\reshape}{{\bf reshape}}
+
+%%%%%%%%%%%%% folloing is used in paper only %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Begin reference style %%%%%%%%%%%%%%%%
+%   from article.sty *, modified for SIAM head:
+\def\thebibliography#1{\vspace*{.5ex}  \list
+ {\arabic{enumi}.}{\settowidth\labelwidth{#1.}\leftmargin\labelwidth
+%\def\thebibliography#1{\vspace*{.5ex} \begin{center} REFERENCES \end{center} \par \list
+%{[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus -.07em}
+ \sloppy
+ \sfcode`\.=1000\relax}
+
+% changed from report.sty, article.sty
+\def\contentsname{\centerline{Table of Contents} \\ \vspace{4.5cm}
+  {Section} \hfill {Page} \vspace*{- 4.5cm}}
+\def\listtablename{\centerline{List of Tables} \\ \vspace{4.5cm}
+  {Table} \hfill Title \hfill {Page} \vspace*{- 4.5cm}}
+\def\listfigurename{\centerline{List of Figures} \\ \vspace*{4.5cm}
+  {Figure} \hfill Title \hfill {Page}  \vspace*{- 4.5cm}}
+%%%%%%%%%%%%%%%%%% end reference style %%%%%%%%%%%%%%%%
+

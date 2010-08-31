@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>bird1.engr.ucdavis.edu:5126</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" return="a" complete="0" server="iel2.engr.ucdavis.edu:5131" />
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+#include <math.h>
+double a;
+int main()
+{
+    printf("This is mobagent1 from the agency at port 5126.\n");
+    a = 3.5;  
+    printf("\n a = %f\n", a);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

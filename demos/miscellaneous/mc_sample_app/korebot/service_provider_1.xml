@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>service_provider_1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>10.0.0.11:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA persistent="1" 
+           number_of_elements="0" 
+           name="no-return" 
+           complete="0" 
+           server="10.0.0.15:5050">
+     </DATA>
+     <AGENT_CODE>
+      <![CDATA[
+#include <korebot/korebot.h>
+
+#define MAXBUFFERSIZE 100
+#define BR_IRGAIN 10
+#define fwSpeed 50
+
+static knet_dev_t *dsPic;
+static knet_dev_t *mot1;
+static knet_dev_t *mot2;
+
+int Connections_A[9] = {5, 1, 2, 5, -15, -6, -2, 2, 7};
+int Connections_B[9] = {2, -2, -6, -15, 5, 2, 1, 5, 7};
+
+struct Robot {
+  int tabsens[9];
+  int left_speed;
+  int right_speed;
+};
+
+int InitRobot(void *arg) {
+  kh3_init();
+  dsPic = knet_open("Khepera3:dsPic", KNET_BUS_I2C, 0, NULL);
+  mot1 = knet_open("Khepera3:mot1", KNET_BUS_I2C, 0, NULL);
+  mot2 = knet_open("Khepera3:mot2", KNET_BUS_I2C, 0, NULL);
+  if(!dsPic || !mot1 || !mot2) 
+    return -1;
+  return 0;
+}
+
+int SensorMatrix(struct Robot *system) {
+  int i, buflen, sensval;
+  unsigned char buffer[MAXBUFFERSIZE];
+  unsigned char *scan;
+  char cmd[3] = {2, 'N', 0};
+
+  kh3_sendcommand(dsPic, cmd);
+  while(!kb_gpio_get(KNET_INT0));
+  buflen = knet_llread(dsPic, buffer, 30);
+  scan = buffer+3;
+  if(buffer[0] == 0x1b) {
+    for(i=0; i<9; i++) {
+      sensval = *(scan) | (*(scan+1)) << 8;
+      if(sensval > 2000) {
+        system->tabsens[1] = 500;
+      }
+      else {
+        system->tabsens[i] = sensval >> 2;
+      }
+      scan = scan + 2;
+    }
+  }
+  else {
+    exit(-1);
+  }
+  return 0;
+}
+
+int RobotBehaviour(struct Robot *system) {
+  long int lspeed16, rspeed16;
+  int i;
+
+  lspeed16 = 0;
+  rspeed16 = 0;
+
+  for(i=0; i<9; i++) {
+    lspeed16 += Connections_A[i] * system->tabsens[i];
+    rspeed16 += Connections_B[i] * system->tabsens[i];
+  }
+  system->left_speed = ((lspeed16 / BR_IRGAIN) + fwSpeed);
+  system->right_speed = ((rspeed16 / BR_IRGAIN) + fwSpeed);
+
+  if(system->left_speed > 0 && system->left_speed < 30)
+    system->left_speed = 30;
+  if(system->left_speed < 0 && system->left_speed > -30)
+    system->left_speed = -30;
+  if(system->right_speed > 0 && system->right_speed < 30)
+    system->right_speed = 30;
+  if(system->right_speed < 0 && system->right_speed > -30)
+    system->right_speed = -30;
+
+  return 0;
+}
+
+int MoveRobot(struct Robot *system) {
+  kmot_SetPoint(mot1, kMotRegSpeed, system->left_speed);
+  kmot_SetPoint(mot2, kMotRegSpeed, system->right_speed);
+  return 0;
+}
+
+int StopRobot(void *arg) {
+  if(mot1!=0 && mot2!=0) {
+    kmot_SetMode(mot1, kMotModeStopMotor);
+    kmot_SetMode(mot2, kMotModeStopMotor);
+    return 0;
+  }
+  else {
+    return -1;
+  }
+}
+
+int main(int arc, char *argv[]) {
+  char **service;
+  int num = 5, i;
+
+  service = (char **)malloc(sizeof(char *)*num);
+  for(i=0; i<num; i++) {
+    service[i] = (char *)malloc(sizeof(char)*20);
+  }
+
+  strcpy(service[0], "InitRobot");
+  strcpy(service[1], "SensorMatrix");
+  strcpy(service[2], "RobotBehaviour");
+  strcpy(service[3], "MoveRobot");
+  strcpy(service[4], "StopRobot");
+  mc_RegisterService(mc_current_agent, service, num);
+
+  printf("Service provider 1 has arrived.\n");
+  printf("Services provided:\n"); 
+  for(i=0; i<num; i++) {
+    printf("%s\n", service[i]);
+  }
+
+  for(i=0; i<num; i++) {
+    free(service[i]);
+  }
+  free(service);
+ 
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

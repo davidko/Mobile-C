@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>TEMPLATE_AGENT_NAME</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>bird2.engr.ucdavis.edu:5050</HOME>
+    <TASKS task="5" num="0">
+     <TASK num="0" server="TEMPLATE_SERVER1" code_id="0">
+       <DATA dim="0" name="no-return" complete="0" />
+     </TASK>
+
+     <TASK num="1" server="TEMPLATE_SERVER2" code_id="1">
+       <DATA dim="0" name="no-return" complete="0" />
+     </TASK>
+
+     <TASK num="2" server="TEMPLATE_SERVER3" code_id="1">
+       <DATA dim="0" name="no-return" complete="0" />
+     </TASK>
+
+     <TASK num="3" server="TEMPLATE_SERVER4" code_id="1">
+       <DATA dim="0" name="no-return" complete="0" />
+     </TASK>
+
+     <TASK num="4" server="TEMPLATE_SERVER1" code_id="2">
+       <DATA dim="0" name="no-return" complete="0" />
+     </TASK>
+
+     <AGENT_CODE id="0">
+      <![CDATA[
+#include <stdio.h>
+#define COND_1 TEMPLATE_COND1
+#define COND_2 TEMPLATE_COND2 
+int main() {
+  printf("This is TEMPLATE_AGENT_NAME.\n");
+  mc_CondWait(COND_1);
+  mc_CondReset(COND_1);
+  mc_CondSignal(COND_2);
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+     <AGENT_CODE id="1">
+      <![CDATA[
+#include <stdio.h>
+#define COND_1 TEMPLATE_COND1
+#define COND_2 TEMPLATE_COND2
+int main() {
+  printf("This is TEMPLATE_AGENT_NAME.\n");
+  mc_CondSignal(COND_1);
+  mc_CondWait(COND_2);
+  mc_CondReset(COND_2);
+
+  mc_CondWait(COND_1);
+  mc_CondReset(COND_1);
+  mc_CondSignal(COND_2);
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+     <AGENT_CODE id="2">
+      <![CDATA[
+#include <stdio.h>
+int main() {
+  printf("This is TEMPLATE_AGENT_NAME.\n");
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

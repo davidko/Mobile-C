@@ -1,0 +1,55 @@
+\rhead{\bf mc\_SendAgentMigrationMessageFile()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{.01in}
+\noindent
+{\LARGE \bf mc\_SendAgentMigrationMessageFile()\index{mc\_SendAgentMigrationMessageFile()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{mc\_SendAgentMigrationMessageFile()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_SendAgentMigrationMessageFile}({\bf const char *}$filename$, {\bf const char *}$hostname$, {\bf int} $port$);\\
+
+\noindent
+{\bf Purpose}\\
+Send an ACL mobile agent message saved as a file to a remote agency.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{20 mm}p{135 mm}}
+$filename$ & The ACL mobile agent message file to be sent.\\
+$hostname$ & The hostname of the remote agency. It can be in number-dot 
+format or hostname format, i.e., 169.237.104.199 or machine.ucdavis.edu.\\
+$port$ & The port number on which the remote agency is listening. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to send an XML based ACL mobile agent message, which 
+is saved as a file, to a remote agency.\\ 
+
+\noindent
+{\bf Example}\\
+Please see the example for MC\_SendAgentMigrationMessageFile() on page
+\pageref{api:MC_SendAgentMigrationMessageFile()}.
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

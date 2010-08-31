@@ -1,0 +1,50 @@
+\rhead{\bf MC\_SendAgentFile()} 
+\noindent
+\vspace{5pt}
+\rule{6.5in}{.01in}
+\noindent
+{\LARGE \bf MC\_SendAgentFile()\index{MC\_SendAgentFile()}}\\ 
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SendAgentFile()}
+\label{api:MC_SendAgentFile()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SendAgentFile}({\bf MCAgency\_t} $agency$, {\bf char *}$filename$);\\
+
+\noindent
+{\bf Purpose}\\
+Send an ACL mobile agent message saved as a file to a remote agency.
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{20 mm}p{135 mm}}
+$agency$ & A handle associated with an agency from which to send the ACL 
+mobile agent message. A NULL pointer can be used to send the ACL message 
+from an unspecified agency.\\ 
+$filename$ & The ACL mobile agent message file to be sent.\\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to send an XML based ACL mobile agent message, which 
+is saved as a file, to a remote agency. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/getting_started/hello_world/client.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

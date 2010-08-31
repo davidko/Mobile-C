@@ -1,0 +1,46 @@
+<!-- File: mc_array_return_example/agent.xml -->
+
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+    <MOBILE_AGENT>
+     <AGENT_DATA>
+       <NAME>mobagent1</NAME>
+       <OWNER>IEL</OWNER>
+       <HOME>localhost:5051</HOME>
+       <TASKS task="1" num="0">
+        <TASK num="0" complete="0" server="localhost:5050" return="a">
+        </TASK>
+	  <AGENT_CODE>
+          <![CDATA[
+#include <stdio.h>
+int a[2][3][2];
+int main()
+{
+    int i, j, k, l;
+    k = 0;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 3; j++) {
+            for(l = 0; l < 2; l++) {
+                a[i][j][l] = k;
+                k++;
+                printf("%d ", i+j);
+            }
+        }
+    }
+    printf("\nThis is a mobile agent from port 5050.\n");
+    printf("I am performing the task on the agency at port 5051 now.\n");
+    sleep(1);
+    
+    return 0;
+}
+        ]]>
+        </AGENT_CODE>
+      </TASKS>
+      </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>

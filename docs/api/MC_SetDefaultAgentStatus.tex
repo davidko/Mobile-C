@@ -1,0 +1,63 @@
+\rhead{\bf MC\_SetDefaultAgentStatus()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_SetDefaultAgentStatus()\index{MC\_SetDefaultAgentStatus()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SetDefaultAgentStatus()}
+\label{api:MC_SetDefaultAgentStatus()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SetDefaultAgentStatus}({\bf MCAgency\_t} $agency$, {\bf int} $status$);\\
+
+\noindent
+{\bf Purpose}\\
+Set the default status of any incoming mobile agents.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle to a running agency.\\
+$status$ & An integer representing the status to be assinged to any incoming 
+mobile agents as their default status.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to set the default agent status for all incoming
+agents in an agency. By default, every incoming agent is set to status
+``MC\_WAIT\_CH'', but that may be changed with this function.
+The agent status is an enumerated type ``enum MC\_AgentStatus\_e'', which
+may be seen in Table \vref{mobilec_macro}.
+
+\noindent
+{\bf Example}\\
+\begin{verbatim}
+MCAgency_t agency;
+agency = MC_Initialize(5050, NULL);
+MC_SetDefaultAgentStatus(agency, MC_AGENT_NEUTRAL);
+
+/* etc... */
+\end{verbatim}\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_GetAgentStatus()
+

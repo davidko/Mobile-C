@@ -1,0 +1,51 @@
+\rhead{\bf MC\_AgentReturnArrayNum()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnArrayNum()\index{MC\_AgentReturnArrayNum()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnArrayNum()}
+\label{api:MC_AgentReturnArrayNum()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentReturnArrayNum}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Get the total number of elements in an array returned by a returning agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns the total number of elements in the array, or
+-1 on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the number of array elements.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function is used to find the total number of elements of a returned 
+array. For example, if a 3 by 4 two-dimensional array is returned, this
+function will report that there are 12 elements in the array.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayDim(), MC\_AgentReturnArrayExtent()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

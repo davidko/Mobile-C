@@ -1,0 +1,7 @@
+typedef struct ChOptions{
+    int shelltype;   // shell type
+    int chrc;        // TRUE to execute startup file, deprecated
+    char *chrcname;  // user’s startup file , deprecated
+    char *chhome;    // Embedded Ch home directory
+    char *chmtdir;   // dir for lib chmt1.dl, deprecated
+} ChOptions_t;

@@ -1,0 +1,61 @@
+\rhead{\bf MC\_AddStationaryAgent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AddStationaryAgent()\index{MC\_AddStationaryAgent()}}\\
+\addcontentsline{toc}{section}{MC\_AddStationaryAgent()}
+\label{api:MC_AddStationaryAgent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AddStationaryAgent}({\bf MCAgency\_t} $agency$, {\bf void* (} *agent\_thread {\bf)(struct agent\_thread\_arg\_s*)}, {\bf MCAgent\_t} $agent$);\\
+\noindent
+{\bf Purpose}\\
+Add a stationary binary-thread agent into an agency.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{20 mm}p{145 mm}} 
+$agency$ & An initialized agency handle to add an agent to.\\
+$agent\_thread$ & A C function to act as a local, stationary, binary agent.\\
+$agent\_args$ & Additional data to be provided to a stationary agent. This
+argument may be retrieved from within the agent using the function call
+\texttt{MC\_AgentInfo\_GetAgentArg()}. \\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+The \texttt{agent\_thread} function is executed in its own thread and treated as an agent. The
+stationary binary agent has access to all the standard Foundation for
+Intelligent Physical Agents Agent Communication Langpage (FIPA ACL) API. More
+information regarding FIPA ACL messages are located in chapter
+\ref{chap:fipa} of this document.
+
+The return value of the \texttt{agent\_thread} function is currently ignored by Mobile-C, and
+it is recommended that all stationary agent threads return \texttt{NULL} upon completion.
+
+Additional data may be provided to the agent thread by using the
+\texttt{agent\_args} argument in the function call. This argument may be
+retrieved by the agent function by using the function
+\texttt{MC\_AgentInfo\_GetAgentArgs()}. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/binary_stationary_agents/stationary_agent_communication/server.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

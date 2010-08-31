@@ -1,0 +1,55 @@
+\rhead{\bf MC\_Barrier()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_Barrier()\index{MC\_Barrier()}}\\
+\addcontentsline{toc}{section}{MC\_Barrier()}
+\label{api:MC_Barrier()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_Barrier}({\bf MCAgency\_t} agency, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+This function blocks the calling thread until all registered threads and
+agents have been blocked. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or non-zero if the id could not be found. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & The agency in which to find the barrier to lock.\\
+$id$ & The id of the barrier to wait on. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to synchronize a number of agents and threads. Each barrier
+is initialized so that it will block the execution of threads and agents until 
+a predetermined number of threads or agents have activated the barrier, at which
+point all blocked threads and agents will be released simultaneously. 
+    \\
+
+\noindent
+{\bf Example}\\
+Please see the example located at the directory
+\texttt{ mobilec/demos/mc\_barrier\_example/ }. \\
+
+\noindent
+
+\noindent
+{\bf See Also}\\
+MC\_BarrierDelete(), MC\_BarrierInit(). \\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

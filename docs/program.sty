@@ -1,0 +1,32 @@
+%%%%%%%%%%%%% Program Environment %%%%%%%%%%%%%%%%%%%%%
+\def\listProgramname{\centerline{List of Programs} \\ \vspace*{4.5cm}
+{Program} \hfill Title \hfill {Page}  \vspace*{- 4.5cm}}
+\def\Programname{Program}
+
+\def\listofPrograms{\section*{\listProgramname
+  \@mkboth{\uppercase{\listProgramname}}{\uppercase{\listProgramname}}}%
+  \@starttoc{lop}}
+\def\l@Program{\@dottedtocline{1}{1.5em}{2.3em}}
+\let\l@table\l@Program
+%\newcounter{Program}[section]
+\newcounter{Program}
+\def\theProgram{\@arabic\c@Program}
+%\def\theProgram{\thesection.\@arabic\c@Program}
+
+\def\fps@Program{tbp}
+\def\ftype@Program{1}
+\def\ext@Program{lop}
+\def\fnum@Program{\Programname~\theProgram}
+\def\Program{\@float{Program}}
+\let\endProgram\end@float
+\@namedef{Program*}{\@dblfloat{Program}}
+\@namedef{endProgram*}{\end@dblfloat}
+%%%%%%%%%%%%% Program Environment %%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% Program Environment HEAD %%%%%%%%%%%%%%%%%%%%%
+\def\listProgramname{\centerline{LIST OF PROGRAMS} \\ \vspace*{4.5cm}
+{PROGRAM} \hfill %Title
+\hfill {PAGE}  \vspace*{- 4.5cm}}
+\def\Programname{Program}
+%%%%%%%%%%%%% Program Environment  HEAD %%%%%%%%%%%%%%%%%%%%%

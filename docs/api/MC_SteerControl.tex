@@ -1,0 +1,52 @@
+\rhead{\bf MC\_SteerControl()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_SteerControl()\index{MC\_SteerControl()}}\\
+\addcontentsline{toc}{section}{MC\_SteerControl()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SteerControl}({\bf void});\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to enable Mobile-C as a steerable computational
+platform. See the example following for more information, as well
+as the demo provided in the directory demos/steer\_example.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns the current steer command. The command is of type
+{\bf enum MC\_Steer\_Command\_e}. This enumerated type contains the following 
+definitions:\\
+\begin{tabular}{p{55 mm}p{120 mm}}
+MC\_RUN & Continue the algorithm. \\
+MC\_SUSPEND & Pause the algorithm. \\
+MC\_RESTART & Restart the algorithm from the beginning. \\
+MC\_STOP & Stop the algorithm.
+\end{tabular}\\
+
+\noindent
+{\bf Description}\\
+{\bf MC\_SteerControl} controls the execution of an algorithm in binary space. 
+This function is meant to retrieve the current requested command for the algorithm,
+but it is up to the algorithm implementation to actually implement these
+behaviours. See the example and the demo for more details.\\ \noindent
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/miscellaneous/steer_example/server.c}}
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_Steer()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

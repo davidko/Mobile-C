@@ -1,0 +1,17 @@
+AUTOMAKE_OPTS = gnu
+noinst_PROGRAMS = server server2 client
+INCLUDES = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/mxml-2.2.2 -I$(top_srcdir)/src/mc_sync -I$(top_srcdir)/src/mc_list
+
+server_SOURCES = server.c
+server_LDADD = $(top_srcdir)/src/libmc.la -lm  
+server_LIBS = -lpthread -ldl -lembedch
+
+server2_SOURCES = server2.c
+server2_LDADD = $(top_srcdir)/src/libmc.la -lm  
+server2_LIBS = -lpthread -ldl -lembedch
+
+client_SOURCES = client.c
+client_LDADD = $(top_srcdir)/src/libmc.la -lm 
+client_LIBS = -lpthread -ldl -lembedch
+
+

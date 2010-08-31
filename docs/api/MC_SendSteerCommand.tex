@@ -1,0 +1,48 @@
+\rhead{\bf MC\_SendSteerCommand()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_SendSteerCommand()\index{MC\_SendSteerCommand()}}\\
+\addcontentsline{toc}{section}{MC\_SendSteerCommand()}
+\label{api:MC_SendSteerCommand()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SendSteerCommand}({\bf MCAgency\_t} $agency$, {\bf enum MC\_SteerCommand\_e} cmd);\\
+
+\noindent
+{\bf Purpose}\\
+Send a steering command to a Mobile-C computational steering algorithm.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & An initialized agency handle to add an agent to.\\
+$cmd$ & The command to send.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function sends a steering command to a Mobile-C steerable algorithm.
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/steer_example/suspend.xml}}
+
+\noindent
+{\bf See Also}\\
+MC\_Steer(), MC\_SteerControl().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

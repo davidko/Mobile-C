@@ -1,0 +1,315 @@
+\lhead{Mobile-C API in the C/C++ Script Space}
+\noindent
+The prototypes of Mobile-C functions used in the C/C++ script space are 
+declared in {\bf agent.c} 
+Furthermore, a number of enumerations, data types, and special variables are 
+declared in {\bf agent.c} for each agent interpreter by the agency. 
+These enums, data types, special variables, and functions are all considered 
+``built-in'' in the mobile agent space as no header file or extra code is 
+needed to access them. 
+They are declared through Embedded Ch functions, 
+{\bf Ch\_DeclareFunc()}, {\bf Ch\_DeclareVar()} and 
+{\bf Ch\_DeclareTypedef()}~\cite{EmbeddedCh}
+Note that the C/C++ script space is also referred to the mobile agent space 
+in this user's guide.
+
+All enumerations and special variables nay be found in Tables
+\ref{tab:agent_space_enums}, \ref{tab:agent_status_enums} 
+and \ref{tab:agent_space_variables}, respectively.
+The defined data type and function prototypes are listed in 
+Tables \ref{chmobilec_datatype} and \ref{chmobilec_api_cscript}, respectively. 
+{\bf agent.c} can be found in directories 'src'. 
+\begin{table}[p]
+\capstart
+\begin{center}
+\caption{enum MC\_SteerCommand\_e : This enumerated type lists commands that may
+  be used with the mc\_SendSteerCommand() function.}
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Data Type & Description \\
+\hline
+MC\_RUN \index{MC\_RUN} & Start/continue an algorithm. \\
+MC\_SUSPEND \index{MC\_SUSPEND}& Pause an algorithm. \\
+MC\_RESTART \index{MC\_RESTART}& Restart an algorithm for initial values. \\
+MC\_STOP \index{MC\_STOP}& Stop an algorithm.\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:agent_space_enums}
+\end{table}
+\begin{table}[p]
+\capstart
+\begin{center}
+\caption{enum mc\_AgentStatus\_e: This enumerated type defines the current execucion
+  state of a mobile agent.}
+\begin{tabular}{p{55 mm}p{120 mm}}
+0 , MC\_WAIT\_CH : & Mobile agent is currently waiting to be executed.\\
+1 , MC\_WAIT\_MESSGSEND : & Mobile agent is currently waiting to be exported to another agency.\\
+2 , MC\_AGENT\_ACTIVE : & Mobile agent is currently being executed.\\
+3 , MC\_AGENT\_NEUTRAL : & Mobile agent is waiting for an unspecified reason.\\
+4 , MC\_AGENT\_SUSPENDED : & Mobile agent is currently being suspended.\\
+5 , MC\_WAIT\_FINISHED : & Mobile agent has finished execution and is waiting for removal.
+\end{tabular}
+\end{center}
+\label{tab:agent_status_enums}
+\end{table}
+
+\begin{table}[p]
+\capstart
+\begin{center}
+\caption{A table of pre-defined agent-space variables. These are considered 'built-in'
+in agent space as no additional header file is required to access these variables.}
+\begin{tabular}{ll}
+\hline
+Variable Name& Description \\
+\hline
+int mc\_agent\_id \index{mc\_agent\_id}& Holds the unique integer id assigned by the Agency to the agent.\\
+char mc\_agent\_name[] \index{mc\_agent\_name} & Holds the agent's name. \\
+void* mc\_current\_agent \index{mc\_current\_agent}& Holds a pointer itself. \\
+char mc\_host\_name[] \index{mc\_host\_name} & Holds the agency's hostname. \\
+int mc\_host\_port \index{mc\_host\_port} & Holds the port of the current agency. \\
+int mc\_task\_progress \index{mc\_task\_progress} & Contains the current task number of the agent. \\
+int mc\_num\_tasks \index{mc\_num\_tasks} & Contains the total number of tasks an agent has. \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:agent_space_variables}
+\end{table}
+
+\begin{table}[p]
+\capstart
+\begin{center}
+\caption{Data type for functions in the C/C++ script space.}
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Data Type & Description \\
+\hline
+{\bf MCAgent\_t} \index{MCAgent\_t} & A void pointer for a mobile agent. \\
+\hline
+\end{tabular}
+\end{center}
+\label{chmobilec_datatype}
+\end{table}
+\pagebreak
+
+\begin{table}[!h]
+\capstart
+\begin{center}
+\caption{Functions in the C/C++ script space.}
+\begin{tabular}{p{63 mm}p{97 mm}}
+%\begin{tabular}{ll}
+\hline
+Function & Description \\
+\hline
+{\bf mc\_AclAddReceiver()} & Add a receiver to a FIPA ACL message. \\
+{\bf mc\_AclAddReplyTo()} & Add a reply-to address to a FIPA ACL message. \\
+{\bf mc\_AclNew()} & Allocate a new empty FIPA ACL message. \\
+{\bf mc\_AclPost()} & Post a FIPA ACL message. \\
+{\bf mc\_AclReply()} & Generate a reply to a FIPA ACL message. \\
+{\bf mc\_AclRetrieve()} & Retrieve a FIPA ACL message from the mailbox. \\
+{\bf mc\_AclSend()} & Send a FIPA ACL message. \\
+{\bf mc\_AclSetContent()} & Set the content of a FIPA ACL message. \\
+{\bf mc\_AclSetPerformative()} & Set the performative of a FIPA ACL message. \\
+{\bf mc\_AclSetProtocol()} & Set the protocol of a FIPA ACL message. \\
+{\bf mc\_AclSetSender()} & Set the sender of a FIPA ACL message.\\
+{\bf mc\_AclWaitRetrieve()} & Wait for the arrival of a new FIPA ACL message. \\
+{\bf mc\_AddAgent()} & Add a mobile agent into an agency. \\
+{\bf mc\_AgentVariableSave()} & Save a variable to an agent's datastate. \\
+{\bf mc\_AgentVariableRetrieve()} & Retrieve a previously saved variable. \\
+{\bf mc\_Barrier()} & Block until all agents in an agency have called this function. \\
+{\bf mc\_BarrierDelete()} & Delete a Mobile-C barrier. \\
+{\bf mc\_BarrierInit()} & Initialize a Mobile-C barrier. \\
+{\bf mc\_CallAgentFunc()} & Call a function defined in an agent. \\
+{\bf mc\_ComposeAgent()} & Compose an agent from program source code. \\
+{\bf mc\_ComposeAgentS()} & Compose an agent from program source code with a workgroup code. \\
+{\bf mc\_ComposeAgentFile()} & Compose an agent from a program source code file. \\
+{\bf mc\_ComposeAgentFileS()} & Compose an agent from a program source code file with a workgroup code. \\
+{\bf mc\_CondBroadcast()} & Wake up all agents/threads waiting on a condition variable. \\
+{\bf mc\_CondReset()} & Reset a Mobile-C condition variable. \\
+{\bf mc\_CondSignal()} & Signal another agent that is waiting on a condition variable. \\
+{\bf mc\_CondWait()} & Cause the calling agent or thread to wait on a Mobile C condition variable with the ID specified by the argument. \\
+{\bf mc\_DeleteAgent()} & Stop and remove an agent from an agency. \\
+{\bf mc\_DeregisterService()} & Deregister a service with the Directory Facilitator. \\
+{\bf mc\_End()} & Terminate a Mobile-C agency. \\
+{\bf mc\_FindAgentByID()} & Find a mobile agent by its ID in an agency. \\
+{\bf mc\_FindAgentByName()} & Find a mobile agent by its name in an agency. \\
+{\bf mc\_GetAgentArrivalTime()} & Get the time when an agent arrives an agency. \\
+{\bf mc\_GetAgentExecEngine()} & Get the AEE associated with a mobile agent in an agency. \\
+{\bf mc\_GetAgentID()} & Get the ID of an agent. \\
+{\bf mc\_GetAgentName()} & Get the name of an agent. \\
+\hline
+\end{tabular}
+\end{center}
+\label{chmobilec_api_cscript}
+\end{table}
+\pagebreak
+
+\addtocounter{table}{-1} 
+\begin{table}[!h]
+\capstart
+\begin{center}
+\caption{Functions in the C/C++ script space (contd.).}
+\begin{tabular}{p{63 mm}p{97 mm}}
+%\begin{tabular}{ll}
+\hline
+Function & Description \\
+\hline
+{\bf mc\_MigrateAgent()} & Migrate an agent. \\
+{\bf mc\_ResumeAgency()} &  Resume an agency's operation. \\
+{\bf mc\_RetrieveAgent()} & Retrieve the first neutral mobile agent from the mobile agent list. \\
+{\bf mc\_RetrieveAgentCode()} & Retrieve a mobile agent code in the form of a character string. \\
+{\bf mc\_SearchForService()} & Search the Directory Facilitator for a service. \\
+{\bf mc\_SemaphorePost()} & Unlock one resource from a Mobile-C semaphore. \\
+{\bf mc\_SemaphoreWait()} & Allocate one resource from a Mobile-C synchronization \\
+  & semaphore variable. \\
+{\bf mc\_SendAgentMigrationMessage()} & Send an ACL mobile agent message to a remote agency. \\
+{\bf mc\_SendAgentMigrationMessageFile()} & Send an ACL mobile agent message saved as a file to a remote agency. \\
+{\bf mc\_SendSteerCommand()} & Send a command to control a steerable binary space function. \\
+{\bf mc\_SetAgentStatus()} & Set the status of a mobile agent in an agency. \\
+{\bf mc\_SetDefaultAgentStatus()} & Assign a user defined default status to all incoming mobile agents. \\
+{\bf mc\_SyncDelete()} & Delete a previously initialized synchronization variable. \\
+{\bf mc\_SyncInit()} & Initialize a new synchronization variable. \\
+{\bf mc\_TerminateAgent()} & Terminate the execution of a mobile agent in an agency. \\
+{\bf mc\_GetAgentNumTasks()} & Get the number of tasks a mobile agent has. \\
+{\bf mc\_GetAgentReturnData()} & Get the return data of a mobile agent. \\
+{\bf mc\_GetAgentStatus()} & Get the status of a mobile agent in an agency. \\
+{\bf mc\_GetAgentType()} & Get the type of a mobile agent. \\
+{\bf mc\_GetAgentXMLString()} & Retrieve a mobile agent message in XML format as a character string. \\
+{\bf mc\_GetAllAgents()} & Obtain all the agents in an agency. \\
+{\bf mc\_HaltAgency()} & Halt an agency's operation. \\
+{\bf mc\_MutexLock()} & Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
+{\bf mc\_MutexUnlock()} & Unlock a locked Mobile-C synchronization variable. \\
+{\bf mc\_PrintAgentCode()} & Print a mobile agent code for inspection. \\
+{\bf mc\_RegisterService()} &  Register a new service with the Directory Facilitator. \\
+\hline
+\end{tabular}
+\end{center}
+\label{chmobilec_api_cscript}
+\end{table}
+\pagebreak
+
+\input{api/mcAclAddReceiver} %53
+\pagebreak
+\input{api/mcAclAddReceiver} %53
+\pagebreak
+\input{api/mcAclAddReplyTo} %54
+\pagebreak
+\input{api/mcAclNew} %45
+\pagebreak
+\input{api/mcAclPost} %51
+\pagebreak
+\input{api/mcAclReply} %52
+\pagebreak
+\input{api/mcAclRetrieve}
+\pagebreak
+\input{api/mcAclSend}
+\pagebreak
+\input{api/mcAclSetContent}
+\pagebreak
+\input{api/mcAclSetPerformative}
+\pagebreak
+\input{api/mcAclSetSender}
+\pagebreak
+\input{api/mcAclWaitRetrieve}
+\pagebreak
+\input{api/mcAddAgent}
+\pagebreak
+\input{api/mcAgentVariableRetrieve}
+\pagebreak
+\input{api/mcAgentVariableSave}
+\pagebreak
+\input{api/mcBarrier}
+\pagebreak
+\input{api/mcBarrierDelete}
+\pagebreak
+\input{api/mcBarrierInit}
+\pagebreak
+\input{api/mcCallAgentFunc}
+\pagebreak
+\input{api/mcComposeAgent}
+\pagebreak
+\input{api/mcComposeAgentS}
+\pagebreak
+\input{api/mcComposeAgentFromFile}
+\pagebreak
+\input{api/mcComposeAgentFromFileS}
+\pagebreak
+\input{api/mcCondBroadcast}
+\pagebreak
+\input{api/mcCondReset}
+\pagebreak
+\input{api/mcCondSignal}
+\pagebreak
+\input{api/mcCondWait}
+\pagebreak
+\input{api/mcDeleteAgent}
+\pagebreak
+\input{api/mcDeregisterService}
+\pagebreak
+\input{api/mcEnd}
+\pagebreak
+\input{api/mcFindAgentByID}
+\pagebreak
+\input{api/mcFindAgentByName}
+\pagebreak
+%\input{api/mcGetAgentArrivalTime}
+%\pagebreak
+%\input{api/mcGetAgentExecEngine}
+%\pagebreak
+\input{api/mcGetAgentID}
+\pagebreak
+\input{api/mcGetAgentName}
+\pagebreak
+\input{api/mcGetAgentNumTasks}
+\pagebreak
+%\input{api/mcGetAgentReturnData}
+%\pagebreak
+\input{api/mcGetAgentStatus}
+\pagebreak
+%\input{api/mcGetAgentType}
+%\pagebreak
+\input{api/mcGetAgentXMLString}
+\pagebreak
+%\input{api/mcGetAllAgents}
+%\pagebreak
+\input{api/mcHaltAgency}
+\pagebreak
+\input{api/mcMigrateAgent}
+\pagebreak
+\input{api/mcMutexLock}
+\pagebreak
+\input{api/mcMutexUnlock}
+\pagebreak
+\input{api/mcPrintAgentCode}
+\pagebreak
+\input{api/mcRegisterService}
+\pagebreak
+\input{api/mcResumeAgency}
+\pagebreak
+\input{api/mcRetrieveAgent}
+\pagebreak
+\input{api/mcRetrieveAgentCode}
+\pagebreak
+\input{api/mcSearchForService}
+\pagebreak
+\input{api/mcSemaphorePost}
+\pagebreak
+\input{api/mcSemaphoreWait}
+\pagebreak
+\input{api/mcSendAgentMigrationMessage}
+\pagebreak
+\input{api/mcSendAgentMigrationMessageFile}
+\pagebreak
+\input{api/mcSendSteerCommand}
+\pagebreak
+\input{api/mcSetAgentStatus}
+\pagebreak
+\input{api/mcSetDefaultAgentStatus}
+\pagebreak
+\input{api/mcSyncDelete}
+\pagebreak
+\input{api/mcSyncInit}
+\pagebreak
+\input{api/mcTerminateAgent}
+\pagebreak
+

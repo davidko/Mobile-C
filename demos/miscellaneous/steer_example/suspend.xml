@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>suspend_agent</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5051</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0"
+           complete="0" 
+           server="localhost:5050">
+       <DATA name="no-return" >
+       </DATA>
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+int main() {
+  int mutex_id = 55;
+  mc_MutexLock(mutex_id);
+  printf("Suspending...\n");
+  mc_SendSteerCommand(MC_SUSPEND);
+  sleep(10);
+  mc_MutexUnlock(mutex_id);
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

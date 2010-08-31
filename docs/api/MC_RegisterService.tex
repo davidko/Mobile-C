@@ -1,0 +1,56 @@
+\rhead{\bf MC\_RegisterService()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_RegisterService()\index{MC\_RegisterService()}}\\
+\addcontentsline{toc}{section}{MC\_RegisterService()}
+\label{api:MC_RegisterService()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_RegisterService}({\bf MCAgency\_t} $agency$, {\bf MCAgent\_t} $agent$, {\bf int} agentID, {\bf const char} agentName, {\bf char**} serviceNames, {\bf int} numServices);\\
+
+\noindent
+{\bf Purpose}\\
+Registers an agent service with an agency Directory Facilitator.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{23 mm}p{145 mm}} 
+$agency$ & An initialized agency handle to add an agent to.\\
+$agent$ & (Optional) An initialized mobile agent. \\
+$agentID$ & (Optional) An agent id. \\
+$agentName$ & (Optional) An agent name. \\
+$serviceNames$ & A list of descriptive names for agent services. \\
+$numServices$ & The number of services listed in the previous argument.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to register agent services with an agency. Among
+the optional arguments, either a valid agent must be supplied, or both
+an agent ID and an agent name. Thus, services may be registered to an
+agent which has not yet arrived at an agency by specifying the ID and name
+of the agent.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/agent_space_functionality/mc_df_example/agent1.xml}}
+
+\noindent
+{\bf See Also}\\
+mc\_RegisterService(), MC\_DeregisterService().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

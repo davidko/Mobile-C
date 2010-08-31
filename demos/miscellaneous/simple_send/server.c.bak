@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <libmc.h>
+
+int main(int argc, char *argv[]) 
+{
+  MCAgency_t agency;
+  int local_port = 5051;
+  
+  agency = MC_Initialize(local_port, NULL);
+
+  printf("Mobile-C Started\n");
+  MC_Wait(agency);
+  return 0;
+}

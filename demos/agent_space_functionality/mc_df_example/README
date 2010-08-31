@@ -1,0 +1,27 @@
+agent_cond_example
+
+See 'INSTALL' for compilation instructions.
+
+This is a sample test program that demonstrates the usage of MobileC
+condition variables. 
+
+*** Test Execution
+To run the test, one should:
+
+execute 'mc_server', and
+execute 'mc_client'. i.e. in a Unix Bash shell, one may type
+
+    ./mc_server &
+    ./mc_client
+
+The test program does the following things.
+
+1. An agent is sent to the test agency. This first agent, called Agent 1,
+    initializes a new MobileC synchronization variable uses it as a 
+    condition variable. The agent sleeps on the variable, waiting for 
+    another thread/agent to signal it.
+2. After a five second delay, a second agent is sent to the agency. The
+    second agent finds the synchronization variable that the
+    first agent had initialized and signals it.
+3. At this point, the first agent should wake up and both agents should
+    exit gracefully.

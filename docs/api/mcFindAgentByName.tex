@@ -1,0 +1,46 @@
+\rhead{\bf mc\_FindAgentByName()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf mc\_FindAgentByName()\index{mc\_FindAgentByName()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{mc\_FindAgentByName()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf MCAgent\_t mc\_FindAgentByName}({\bf const char *}$name$);\\
+
+\noindent
+{\bf Purpose}\\
+Find a mobile agent by its name in an agency.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns an {\bf MCAgent\_t} object on success or NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$name$ & A character string containing the mobile agent's name.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to find and retrieve a pointer to an existing running 
+mobile agent in an agency by the mobile agent's given name.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/cspace-agentspace_interface/persistent_example/test3.xml}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent3</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+       <DATA dim="0" name="no-return" >
+       </DATA>
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+int main()
+{
+    MCAgent_t tmp;
+    tmp = mc_FindAgentByName("mobagent1");
+    printf("Agent mobagent1 is at address %x\n", tmp);
+    if (tmp == NULL) {
+        printf("Agent not found. Terminating...\n");
+        return 0;
+    }
+    mc_TerminateAgent(tmp);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

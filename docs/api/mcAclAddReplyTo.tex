@@ -1,0 +1,55 @@
+\rhead{\bf mc\_AclAddReplyTo()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AclAddReplyTo()\index{mc\_AclAddReplyTo()}}\\
+\addcontentsline{toc}{section}{mc\_AclAddReplyTo()}
+\label{api:mc_Acl_AddReplyTo()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AclAddReplyTo}({\bf fipa\_acl\_message\_t*} acl, {\bf const char*} name, {\bf const char*} address );\\
+
+\noindent
+{\bf Purpose}\\
+Add a reply-to address to the ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success or non-zero on failure. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. \\
+$name$ & Sets the name of the reply-to destination. \\
+$address$ & Sets the address of the reply-to destination. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to add a reply-to address to an ACL message. This function 
+may be called multiple times on an ACL message. each time this function is 
+called, a new reply-to address is appended to the list of intended reply-to
+addresses for the ACL message. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  mc\_AclSetPerformative(), mc\_AclSetSender(), mc\_AclAddReceiver(), 
+    \linebreak mc\_AclSetContent()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,65 @@
+\rhead{\bf MC\_SyncInit()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_SyncInit()\index{MC\_SyncInit()}}\\
+\addcontentsline{toc}{section}{MC\_SyncInit()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SyncInit}({\bf MCAgency\_t} $agency$, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Initialize a new synchronization variable.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns the allocated id of the synchronization variable. Note 
+that the allocated id may not necessarily be the same as the requested
+id. See the description below for more details.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & The agency in which the new synchronization variable should be 
+initialized.\\
+$id$ & A requested synchronization variable id. A random id will be assigned 
+if the value passed is 0 or if there is a conflicting id.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function initializes a generic Mobile-C synchonization node for use
+by agents and the agency. 
+Each node contains a mutex, a condition variable, and a semaphore. 
+Upon initialization, each variable is initialized to default values: 
+The mutex is unlocked and the semaphore has a value of zero.
+Each node may be used as a mutex, condition variable, or semaphore. 
+Though it is possible to use multiple synchronization variables in a single 
+node, this is discouraged as it may lead to unpredictable results. 
+
+Each synchronization variable created by this function is effectively global
+across the agency and therefore must have a unique identifying number. If
+this function is called requesting an id that is already registered,
+the function will automatically ignore the requested value and allocate
+a synchronization variable with a randomly generated id.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see Chapter \ref{chap:synchronization} on synchronization on page
+\pageref{chap:synchronization} for more details about using this function.\\
+
+\noindent
+{\bf See Also}\\
+MC\_CondSignal(), MC\_CondWait(), MC\_MutexLock(), MC\_MutexUnlock(), MC\_SemaphorePost(),\\ MC\_SemaphoreWait(), MC\_SyncDelete().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

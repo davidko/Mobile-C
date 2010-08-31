@@ -1,0 +1,57 @@
+\rhead{\bf mc\_CondWait()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_CondWait()\index{mc\_CondWait()}}\\
+\addcontentsline{toc}{section}{mc\_CondWait()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_CondWait}({\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Cause the calling mobile agent or thread to wait on a Mobile-C 
+condition variable with the id specified by the argument.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 upon successful wakeup or non-zero if the condition 
+variable was not found. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$id$ & The id of the condition variable to signal.
+\end{tabular} 
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function blocks until the condition variable on which it is waiting is 
+signalled.
+If an invalid id is specified, the function returns 1 and does not block.
+The function is designed to enable synchronization possibilities between 
+threads and mobile agents without using poll-waiting loops.
+Note that although a MobileC synchronization variable may act as a mutex, 
+condition variable, or semaphore, once it is used as a condition variable,
+it should only be used as a condition variable for the remainder of it's 
+life cycle.\\
+
+\noindent
+{\bf Example}\\
+See Program \vref{prog:cond_agent_1} and Program
+\vref{prog:cond_agent_2} in Chapter \ref{chap:synchronization}.\\
+\noindent
+
+\noindent
+{\bf See Also}\\
+mc\_CondDelete(), mc\_CondInit(), mc\_CondSignal().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

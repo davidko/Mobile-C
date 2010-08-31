@@ -1,0 +1,51 @@
+\rhead{\bf MC\_AgentReturnArrayDim()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnArrayDim()\index{MC\_AgentReturnArrayDim()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnArrayDim()}
+\label{api:MC_AgentReturnArrayDim()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentReturnArrayDim}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Get the dimension of an array contained within a return agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns the dimension of the array or -1 on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the array dimension.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function finds the array dimension of an array contained within a return
+agent. An agent may have multiple tasks, each with its own return value. The
+\texttt{task\_num} argument chooses which task within an agent to obtain
+information about.
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/composing_agents/multi_task_example/client.c}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayExtent(), MC\_AgentReturnArrayNum()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

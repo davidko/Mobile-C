@@ -1,0 +1,48 @@
+\rhead{\bf MC\_AclGetConversationID()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclGetConversationID()\index{MC\_AclGetConversationID()}}\\
+\addcontentsline{toc}{section}{MC\_AclGetConversationID()}
+\label{api:MC_Acl_GetConversationID()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf const char* MC\_AclGetConversationID}({\bf fipa\_acl\_message\_t*} acl);\\
+
+\noindent
+{\bf Purpose}\\
+Get the conversation id of an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns a character string on success of NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function gets the ``conversation-id'' field from an ACL message. 
+The conversation ID is used to differentiate multiple agent conversations which
+may be happening simultaneously between two agents. For more details, please
+consult the FIPA specifications at \texttt{http://www.fipa.org}.\\
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclSetPerformative(), MC\_AclSetSender(), MC\_AclAddReceiver(), 
+    \linebreak MC\_AclAddReplyTo()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

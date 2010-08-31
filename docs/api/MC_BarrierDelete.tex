@@ -1,0 +1,54 @@
+\rhead{\bf MC\_BarrierDelete()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_BarrierDelete()\index{MC\_BarrierDelete()}}\\
+\addcontentsline{toc}{section}{MC\_BarrierDelete()}
+\label{api:MC_BarrierDelete()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_BarrierDelete}({\bf MCAgency\_t} agency, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+This function deletes a previously initialized Mobile-C Barrier variable.
+ \\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or non-zero if the id could not be found. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & The agency in which to find the barrier to delete.\\
+$id$ & The id of the barrier to delete. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function deletes a previously initialized variable. Care should be taken
+when calling this function. If there are any agents or threads blocked
+by a barrier that is deleted, they may remain blocked forever.
+    \\
+
+\noindent
+{\bf Example}\\
+Please see the example located at the directory
+\texttt{ mobilec/demos/mc\_barrier\_example/ }. \\
+
+\noindent
+
+\noindent
+{\bf See Also}\\
+MC\_Barrier(), MC\_BarrierInit(). \\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

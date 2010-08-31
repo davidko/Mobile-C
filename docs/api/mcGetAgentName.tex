@@ -1,0 +1,50 @@
+\rhead{\bf mc\_GetAgentName()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_GetAgentName()\index{mc\_GetAgentName()}}\\
+\addcontentsline{toc}{section}{mc\_GetAgentName()}
+\label{api:mc_GetAgentName()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_GetAgentName}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Get an agent's name. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns an agent's name. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function returns an agent's name. All agents have a self defined
+descriptive name that may not be unique. This function gets the name of
+an agent.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+% FIXME: Example needed
+%{\footnotesize\verbatiminput{../demos/mc_sample_app/korebot/service_provider_2.xml}}
+
+\noindent
+{\bf See Also}\\
+mc\_GetAgentID().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,15 @@
+Running the demo:
+----------------------------------------------------------------
+Run
+  $ make
+to build the exacutable.
+The run
+  $ ./server
+
+
+List of files and directories
+----------------------------------------------------------------
+Makefile  --- Makefile to build the server exacutable
+server    --- The server exacutable
+agents/   --- Directory of agent code
+src/      --- Source code for the server exacutable

@@ -1,0 +1,29 @@
+( inform
+  :sender ( agent-identifier
+    :name Bob
+  )
+  :receiver ( set 
+    ( agent-identifier
+     :name Will
+     :resolvers ( sequence
+       ( agent-identifier
+        :name Lou
+       )
+       ( agent-identifier
+        :name Max
+       )
+     )
+    )
+  )
+  :reply-by 20080212T153000000
+  :content "hello there!"
+  :reply-to ( set 
+    ( agent-identifier
+      :name aoeu
+    )
+    ( agent-identifier
+      :name poop
+    )
+  )
+  :reply-with 123
+)

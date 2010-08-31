@@ -1,0 +1,12 @@
+# Package Information for pkg-config
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Mobile-C
+Description:
+Version: 2.0.0
+Libs: -L${libdir} -lmc -lmc_list -lmc_sync -lmxml
+Cflags: -I${includedir}

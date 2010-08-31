@@ -1,0 +1,79 @@
+\rhead{\bf mc\_AclSetPerformative()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AclSetPerformative()\index{mc\_AclSetPerformative()}}\\
+\addcontentsline{toc}{section}{mc\_AclSetPerformative()}
+\label{api:mc_AclSetPerformative()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AclSetPerformative}({\bf fipa\_acl\_message\_t*} acl, enum fipa\_performative\_e performative);\\
+
+\noindent
+{\bf Purpose}\\
+Set the performative on an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success or non-zero on failure.
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. \\
+$performative$ & The FIPA performative you wish the message to contain.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to set the FIPA ACL performative on an ACL message. 
+The performative may be any valid FIPA performative listed in the table 
+below. \\
+\begin{tabular}{ll}
+Enumerated Value & FIPA Perfomative \\ \hline
+\texttt{FIPA\_ACCEPT\_PROPOSAL} & accept-proposal \\
+\texttt{FIPA\_AGREE} & agree \\
+\texttt{FIPA\_CANCEL} & cancel\\
+\texttt{FIPA\_CALL\_FOR\_PROPOSAL} & call-for-proposal \\
+\texttt{FIPA\_CONFIRM} & confirm\\
+\texttt{FIPA\_DISCONFIRM} & disconfirm \\
+\texttt{FIPA\_FAILURE} & failure \\
+\texttt{FIPA\_INFORM} & inform \\
+\texttt{FIPA\_INFORM\_IF} & inform-if \\
+\texttt{FIPA\_INFORM\_REF} & inform-ref \\
+\texttt{FIPA\_NOT\_UNDERSTOOD} & not-understood \\
+\texttt{FIPA\_PROPOGATE} & propogate \\
+\texttt{FIPA\_PROPOSE} & propose \\
+\texttt{FIPA\_PROXY} & proxy \\
+\texttt{FIPA\_QUERY\_IF} & query-if \\
+\texttt{FIPA\_QUERY\_REF} & query-ref \\
+\texttt{FIPA\_REFUSE} & refuse \\
+\texttt{FIPA\_REJECT\_PROPOSAL} & reject-proposal \\
+\texttt{FIPA\_REQUEST} & request \\
+\texttt{FIPA\_REQUEST\_WHEN} & request-when \\
+\texttt{FIPA\_REQUEST\_WHENEVER} & request-whenever \\
+\texttt{FIPA\_SUBSCRIBE} & subscribe
+\end{tabular}
+
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  mc\_AclSetSender(), mc\_AclAddReceiver(), mc\_AclAddReplyTo(), 
+    \linebreak mc\_AclSetContent()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

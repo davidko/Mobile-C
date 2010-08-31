@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Need to touch all files in the way shown below.
+# touch *, touch */*, touch */*/*, touch */*/*/* 
+
+# GUMSTIX_CHHOME is the directory containing Ch files built for gumstix.
+# GUMSTIX_TOOLCHAINHOME is the directory containing cross compiler related files for gumstix.
+# Need to change the following two paths accordingly to make them match the accurate paths in your system.
+GUMSTIX_CHHOME='/usr/local/gumstix_ch/ch'
+GUMSTIX_TOOLCHAINHOME='/usr/local/gumstix/gumstix-buildroot'
+
+CFLAGS=-I$GUMSTIX_CHHOME'/extern/include -fPIC'
+LDFLAGS="-L$GUMSTIX_CHHOME/extern/lib -rdynamic"
+CC=$GUMSTIX_TOOLCHAINHOME/build_arm_nofpu/staging_dir/bin/arm-linux-gcc
+export CFLAGS 
+export LDFLAGS
+export CC
+
+# Cross compiler
+PATH=$PATH:$GUMSTIX_TOOLCHAINHOME/build_arm_nofpu/staging_dir/bin
+export PATH
+
+if [ -e gumstix_mc ] 
+then
+  rm -rf gumstix_mc
+fi
+
+#cd src/security/xyssl-0.7
+#make
+#cd -
+
+dir=`pwd`
+
+./configure --host=arm-linux --prefix=$dir/gumstix_mc --disable-shared --enable-static
+
+make && make install

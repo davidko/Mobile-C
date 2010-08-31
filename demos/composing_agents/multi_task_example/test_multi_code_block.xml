@@ -1,0 +1,119 @@
+<!-- File: multi_task_example/test_multi_code_block.xml -->
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+    <MOBILE_AGENT>
+     <AGENT_DATA>
+       <NAME>mobagent3</NAME>
+       <OWNER>IEL</OWNER>
+       <HOME>localhost:5050</HOME>
+       <TASKS task="2" num="0">
+          <TASK num="0" return="results_iel2" complete="0" server="localhost:5051" code_id="1" />
+          <TASK num="1" return="results_ch" complete="0" server="localhost:5052" code_id="2" />
+          <AGENT_CODE id="1">
+          <![CDATA[
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+double results_iel2;
+
+int main()
+{
+    FILE * fptr;
+    char line[1024];
+    double velocity, count = 0, sum = 0;
+
+    printf("\nThis is the mobile agent 3 from the bird1 machine.\n\n");
+    printf("My task on the %s is to find the average velocity of ", mc_host_name);
+    printf("vehicles passed under the %s detection station.\n\n", mc_host_name);
+    if((fptr = fopen("ChDataFile_iel2", "r")) == NULL) 
+    {
+      printf("Error: could not open file 'ChDataFile_iel2'.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    fgets(line, sizeof(line), fptr);
+    while(!feof(fptr)) 
+    {
+      velocity = atof(strrchr(line, ',') + 1);
+      sum += velocity;
+      count++;
+      fgets(line, sizeof(line), fptr);
+    }
+    if(count != 0) 
+    { 
+      results_iel2 = sum/count;
+
+      printf("The average velocity under the detection station is %f.\n\n", sum/count);
+    }
+    else 
+    {
+      results_iel2 = 0;
+      printf("There is no vehicle passed under the detection station.\n\n");
+    }
+
+    fclose(fptr);
+    printf("I am leaving to go to the next host.\n");
+
+    return 0;
+}
+          ]]>
+          </AGENT_CODE>
+          <AGENT_CODE id="2">
+          <![CDATA[
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+double results_ch;
+
+int main()
+{
+    FILE * fptr;
+    char line[1024];
+    double velocity, count = 0, sum = 0;
+
+    printf("\nThis is the mobile agent 3 from the bird1 machine.\n\n");
+    printf("My task on the %s is to find the average velocity of ", mc_host_name);
+    printf("vehicles passed under the %s detection station.\n\n", mc_host_name);
+    if((fptr = fopen("ChDataFile_ch", "r")) == NULL) 
+    {
+      printf("Error: could not open file 'ChDataFile_ch'.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    fgets(line, sizeof(line), fptr);
+    while(!feof(fptr)) 
+    {
+        velocity = atof(strrchr(line, ',') + 1);
+        sum += velocity;
+        count++;
+        fgets(line, sizeof(line), fptr);
+    }
+    if(count != 0) 
+    { 
+      results_ch = sum/count;
+      printf("The average velocity under the detection station is %f.\n\n", sum/count);
+    }
+    else 
+    {
+      results_ch = 0;
+      printf("There is no vehicle passed under the detection station.\n\n");
+    }
+
+    fclose(fptr);
+    printf("I am leaving to go to the next host.\n");
+
+    return 0;
+}
+            ]]>
+            </AGENT_CODE>
+       </TASKS>
+     </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>

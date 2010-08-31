@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+       <DATA dim="0" name="no-return" >
+       </DATA>
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+//#include <stdio.h>
+#include <math.h>
+struct mytime{
+  unsigned long sec;
+  long usec;
+};
+
+int main()
+{
+  struct mytime t;
+    mc_gettimeofday(&t);
+    printf("The time is %d, %d", t.sec, t.usec);
+    printf("Hello World!\n");
+    printf("This is mobagent1 from the agency at port 5050.\n");
+    printf("I am performing the task on the agency at port 5051 now.\n");
+    printf("%f\n", hypot(1,2)); 
+    mc_gettimeofday(&t);
+    printf("The time is %d, %d", t.sec, t.usec);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

@@ -1,0 +1,43 @@
+Doxygen guide
+
+The LibMC.NET source code and demo programs are doxygen enabled for quick and easy reference. 
+In order to generate the doxygen reference, simply run
+
+doxygen Doxyfile
+
+from this directory. This should generate a directory named 'html' and another named 'latex'.
+To use the html documentation, simply open the file 'html/index.html' with your favorite web browser.
+To view the latex documentation, build the documentation by these commands:
+
+cd latex
+make
+
+The file 'refman.pdf' will be produced.
+
+To build the demo program documentation, run the same commands from the directory ../../../demos/win32/LibMC.Net.
+The two documents can be linked together by running the following commands from the directory this file is located in:
+
+cd html
+perl installdox -l demos.tag@file:///path/to/mobilec/demos/win32/LibMC.Net/html
+
+where "/path/to/mobilec/" is the directory mobilec was checked out into on your system.
+As an example, this command may look like this:
+
+perl installdox -l demos.tag@file:///C:/mobilec/demos/win32/LibMC.Net/html
+
+on a Windows system or:
+
+perl installdox -l demos.tag@/home/dpstark/mobilec/demos/win32/LibMC.Net/html
+
+on a Linux system. The path may need to be adjusted to work properly in your web browser.
+
+For more information on doxygen, please see
+http://www.doxygen.org
+Doxygen source and precompiled packages can be found at:
+http://www.stack.nl/~dimitri/doxygen/download.html#latestsrc
+
+For a Windows version of LaTeX, please see
+http://www.ifs.hr/~mpinter/miktex.html
+
+For a Windows version of perl, please see
+http://www.activestate.com/Products/activeperl/

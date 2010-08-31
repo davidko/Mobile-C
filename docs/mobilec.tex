@@ -1,0 +1,2695 @@
+% Mobile-C Library 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Preamble {{{
+%\documentclass[11pt]{article}
+\documentclass[11pt]{report}
+\usepackage{varioref}
+\usepackage{times,here,verbatim,fancyheadings,makeidx}
+%\usepackage{psfig}
+\usepackage[pdftex]{hyperref}
+\usepackage{hypcap}
+\usepackage{fullpage}
+\usepackage{amssymb,amsmath}
+\usepackage{graphicx}
+\usepackage{program}
+\headrulewidth 0.0pt
+\hoffset=-0.0625in
+%\voffset=0pt
+\setlength{\textheight}{9in}
+\setlength{\textwidth}{6.5in}
+\topmargin=0.05in
+\makeindex
+% }}} Preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title Page {{{
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+\includegraphics[width=1.8in]{figure/mobilec_logo.png}
+
+
+\vspace{0.5in}
+{\Huge\sf\bf Mobile-C} \\
+\vspace{0.1in}
+{\LARGE\sf\bf -- A Multi-Agent Platform for Mobile C/C++ Agents} \\
+\vspace{0.4in}
+{\LARGE\sf\bf User's Guide} \\
+\vspace{0.4in}
+{\LARGE\sf\bf Version 2.0.2} \\
+\vspace{1.0in}
+{\Large\sf\bf Harry H. Cheng} \\
+\vspace{1.0in}
+{\large\sf\bf Mobile-C User's Guide version 2.0.2 prepared by:} \\
+\vspace{0.2in}
+David Ko\\
+Harry H. Cheng
+\vspace{1in}
+
+\vspace{2.0in}
+{\large\sf\bf\today}
+%September 20, 2007
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contributors {{{
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Major contributors}
+\pagebreak
+\noindent
+{\LARGE\sf\bf Major Contributors (in alphabetical order)} \\
+{\small
+\verbatiminput{../AUTHORS}
+}
+% }}} Contributors 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright {{{
+\thispagestyle{empty}
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Copyright}
+\noindent
+{\Large\bf Copyright}\\
+\verbatiminput{../Copyright}
+% }}} Copyright 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagebreak
+% }}} Title Page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract {{{
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Abstract}
+\begin{abstract} 
+Mobile-C is an IEEE FIPA (Foundation for Intelligent Physical Agents) standard 
+compliant multi-agent platform for supporting C/C++ mobile agents in networked 
+intelligent mechatronic and embedded systems. Although it is a general-purpose 
+multi-agent platform, Mobile-C is specifically designed for real-time and 
+resource constrained applications with interface to hardware. Mobile agents 
+are software components that are able to move between different execution 
+environments. Mobile agents in a multi-agent system communicate and work 
+collaboratively with other agents to achieve a global goal. It allows a 
+mechatronic or embedded system to adapt to a dynamically changing environment.
+
+\vspace{1in}
+%%%%%%%%%%%%%%%%%%%% begin figure %%%%%%%%%%%%%%%%%%%% 
+%\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{figure/coverfigure}}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%% end figure %%%%%%%%%%%%%%%%%%%%%%
+\end{abstract}
+\pagebreak
+% Abstract }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents {{{
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+\pagebreak
+% }}} Table of Contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Part 1 {{{
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagebreak
+% }}} Part 1 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introduction {{{
+%\pagenumbering{arabic}
+%\setcounter{page}{1}
+%\pagestyle{fancy}
+\chapter{Introduction}
+Parallel and distributed computing~\cite{Kumar}~\cite{Manber} are widely used 
+in scientific and engineering fields, especially for time-critical or 
+time-consuming tasks.
+Parallel computing is typically carried out in dedicated multiprocessors with
+a central clock and shared memory.
+On the other hand, distributed computing is decentralized parallel
+computing, using two or more computers communicating over a network to
+accomplish a common objective or task.
+It is similar to computer clustering with the main difference being a wide
+geographic dispersion of the resources.
+In addition to the main difference, the types of hardware, programming 
+languages, operating systems and other resources may vary drastically as well 
+in distributed computing.
+
+Although the processing speed of networked computers is typically not as fast 
+as that of a dedicated parallel computer, networked computers are less
+expensive and more broadly available.
+Due to the rapid improvement in network hardware and software that makes
+distributed computing faster, more broadly available, and easier-to-implement
+than before, there are more and more research investigations nowadays 
+targeting or exploiting this low-end, decentralized parallel computing.
+Meanwhile, as the scale of distributed applications rapidly expands, 
+there is an increasing demand for the code mobility.
+
+Agent technology can significantly enhance the design and analysis of 
+problem domains under the following three conditions~\cite{Adler}: 
+(1) the problem domain is geographically distributed; 
+(2) the subsystems exist in a dynamic environment; 
+(3) the subsystems need to interact with each other more flexibly. 
+Mobile agents are software components that can travel between 
+different execution environments~\cite{Fuggetta}. 
+Mobile agents can be created dynamically during runtime and dispatched to 
+source systems to perform tasks with the most updated code. 
+Therefore, the mobility of mobile agents provides distributed 
+applications with significant flexibility and adaptability which are both 
+essential to satisfy the dynamically changing requirements and conditions in 
+a distributed environment.
+
+Most of the mobile agent systems were developed to support only Java mobile 
+agents.
+Furthermore, many of them are standalone platforms. 
+In other words, they were not designed to be embedded in a user application 
+to support code mobility.  
+Mobile-C~\cite{Chenthesis}~\cite{Chen3}~\cite{Mobile-C}~\cite{mobilec_webpage} 
+was originally developed as a standalone, IEEE Foundation for Intelligent 
+Physical Agents (FIPA) compliant mobile agent platform with a primary 
+intention to fit applications where low-level hardware gets involved, such as 
+networked mechatronic and embedded systems. 
+Since most of these systems are written in C/C++, Mobile-C uses C/C++ as 
+the mobile agent language for easy interfacing with control programs and 
+underlying hardware. 
+In addition, Mobile-C uses an embeddable C/C++ interpreter -- Ch, originally 
+developed by Cheng~\cite{SP1}~\cite{CUJ1}~\cite{Ch}, to support the execution 
+of C/C++ mobile agent code. 
+
+In order to provide distributed applications with code mobility, this 
+user's guide presents a mobile agent library, the Mobile-C library. 
+The Mobile-C library is supported in various operating systems including 
+Windows, Unix, and real-time OS.
+It has a small footprint to satisfy the small memory requirement for a 
+variety of mechatronic and embedded systems. 
+This mobile agent library allows Mobile-C to be embedded in a program to 
+support C/C++ mobile agents.
+The API functions in this library facilitate the development of a multi-agent
+system that can easily interface with a variety of hardware devices. 
+%\pagebreak
+% }}} Introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mobile-C Library Installation {{{
+\chapter{Mobile-C Library Installation}
+This chapter describes the prerequisites to install the Mobile-C library and 
+the installation steps for both Unix and Windows operating systems.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Requirements {{{
+\section{Requirements}
+This user's guide assumes all necessary software packages are installed
+correctly and function. 
+The software packages required to successfully install the Mobile-C library 
+include:
+
+\noindent
+(1) Ch version 6.3.0 or greater: It can be obtained from http://www.softintegration.com
+
+\noindent
+(2) Embedded Ch version 6.3.0 or greater: It can be obtained from http://www.softintegration.com
+
+% }}} SUB: Prerequisites 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Installation on Unix {{{
+\section{Installation on Unix}
+
+\subsection{Install the Mobile-C library}
+The following commands will install the Mobile-C library in the system 
+directory for {\bf 32-bit} Unix systems. 
+The system directory for Unix systems is usually `/usr/local/lib' or 
+  `/usr/lib' depending on your system.
+
+\begin{verbatim}
+    cd <MCPACKAGE>/src
+    ./configure
+    make
+    make install
+\end{verbatim}
+
+The following commands will install the Mobile-C library in the system 
+  directory for {\bf 64-bit} Unix systems. 
+The only difference between the above and below commands is that `fPIC' is 
+  added into CFLAGS for compilation.
+
+\begin{verbatim}
+    cd <MCPACKAGE>/src
+    ./configure CFLAGS=-fPIC
+    make
+    make install
+\end{verbatim}
+
+By default, the Mobile-C library created contains both shared and static 
+versions, which are `libmc.so.0.0.0' and `libmc.a', respectively.
+The header file, libmc.h, used in the C/C++ binary 
+space will be placed in the system directory, which is usually 
+`usr/local/include' or `/usr/include' depending on your system.
+ 
+Note that these commands will automatically build mxml-2.2.2 and
+xyssl-0.7, both of which are packaged with Mobile-C, but will
+not install these libraries. The Mobile-C libraries only need
+these libraries to compile, but does not need them installed in
+order to run.
+
+Also note that the above commands will automatically compile all the included
+demos automatically after compiling the Mobile-C library. The demos will
+run even if the 'make install' step is omitted.
+
+The `--prefix' option can be used to specify the home directory to 
+install the Mobile-C files, as shown in the following commands.
+
+\begin{verbatim}
+    cd <MCPACKAGE>/src
+    ./configure --prefix=<MCHOME>
+    make
+    make install
+\end{verbatim}
+
+\noindent
+\texttt{<MCPACKAGE>} is the directory created by unpacking the Mobile-C compressed 
+tar file.
+\texttt{<MCHOME>} is the installation directory for the Mobile-C library and 
+header file.\\
+\noindent
+The library files `libmc.so.0.0.0' and `libmc.a' will be installed in 
+\texttt{<MCHOME>/lib}, and the header file `libmc.h' will be placed in 
+\texttt{<MCHOME>/include}.
+
+% }}} SUB: Installation on Unix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Installation on Windows {{{
+\section{Installation on Windows}
+\subsection{Building the Mobile-C Library}
+The following steps are suggested to build the Mobile-C library.
+\begin{enumerate}
+\item Ensure that your \texttt{\_chrc} file in your home directory is up to
+  date. The \texttt{\_chrc} file may be opened from the ChIDE text editor by
+  opening ChIDE, selecting "Options" from the menu, and selecting the "Open
+  Local Ch Startup File" menu item. The section in your \texttt{\_chrc} file
+  which contains settings about
+  your Visual C++ installation must be correct. 
+\item Unpack the Mobile-C source code. Ensure that you have write permissions
+  for the directory you are unpacking Mobile-C into, or you may encounter 
+  compile-time errors. As mentioned in the previous section, we will refer
+  to the unpacked directory as \texttt{<MCPACKAGE>}.
+\item Open a Ch terminal.
+\item Navigate to the \texttt{<MCPACKAGE>} directory in your Ch terminal. For
+  example, if you unpacked Mobile-C to the \texttt{C:$\backslash$Mobile-C} directory, type
+  \texttt{cd C:$\backslash$Mobile-C} in your Ch terminal.
+\item Type the command \texttt{nmake -f makefile.win32} to build the Mobile-C
+  library, as well as all of the demos in the \texttt{<MCPACKAGE>/demos/}
+  directory.
+\end{enumerate}
+% }}} SUB: Installation on Windows 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Installation on KoreBot {{{
+\section{Installation on KoreBot}
+
+\subsection{Build the Mobile-C library}
+A bash script, \textit{build\_korebot}, is used to build the Mobile-C library 
+and an executable sample program, \textit{mc\_sample\_app}, for KoreBot board.
+
+Running the script will create a directory called \textit{korebot\_mc} that 
+contains \textit{bin}, \textit{include} and \textit{lib} directories.
+\textit{bin} directory contains the executable sample program.    
+\textit{include} directory contains the header file \textit{libmc.h}.
+\textit{lib} directory contains the Mobile-C related static and shared 
+libraries.
+
+Two paths, \textit{KOREBOT\_CHHOME} and \textit{KOREBOT\_TOOLCHAINHOME}, 
+in the bash script might need to be changed to match the correct 
+paths set up in a user's system.
+\textit{KOREBOT\_CHHOME} is the directory containing Ch files built for 
+KoreBot board.
+\textit{KOREBOT\_TOOLCHAINHOME} is the directory containing cross compiler 
+related files for KoreBot board. 
+
+Use the following commands to run the bash script.
+
+\begin{verbatim}
+    cd <MCPACKAGE>
+    ./build_korebot
+\end{verbatim}
+% }}} SUB: Installation on KoreBot 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Installation on Gumstix {{{
+\section{Installation on Gumstix}
+
+\subsection{Build the Mobile-C library}
+A bash script, \textit{build\_gumstix}, is used to build the Mobile-C library 
+and an executable sample program, \textit{mc\_sample\_app}, for Gumstix 
+computer.
+
+Running the script will create a directory called \textit{gumstix\_mc} that 
+contains \textit{bin}, \textit{include} and \textit{lib} directories.
+\textit{bin} directory contains the executable sample program.    
+\textit{include} directory contains the header file \textit{libmc.h}.
+\textit{lib} directory contains the Mobile-C related static and shared 
+libraries.
+
+Two paths, \textit{GUMSTIX\_CHHOME} and \textit{GUMSTIX\_TOOLCHAINHOME}, 
+in the bash script might need to be changed to match the correct 
+paths set up in a user's system.
+\textit{GUMSTIX\_CHHOME} is the directory containing Ch files built for 
+Gumstix computer. By default, it is set to the value \texttt{/usr/local/gumstix\_ch/ch/}.
+\textit{GUMSTIX\_TOOLCHAINHOME} is the directory containing cross compiler 
+related files for Gumstix computer. By default, it is set to the value \texttt{/usr/local/gumstix-buildroot}.
+
+Use the following commands to run the bash script.
+
+\begin{verbatim}
+    cd <MCPACKAGE>
+    ./build_gumstix
+\end{verbatim}
+% }}} SUB: Installation on Gumstix 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Installing the Mobile-C Ch Package{{{
+\section{Installing the Mobile-C Ch Package}
+The Mobile-C Ch Package will be required if agents need to use any of the
+Mobile-C FIPA ACL message functions, such as \texttt{mc\_AclSend()} or
+\texttt{mc\_AclRetrieve()}. To install the Mobile-C Ch package, please follow
+these steps:
+\begin{enumerate}
+\item From the Mobile-C root directory, run the command: \\
+\texttt{ch ./pkgcreate.ch} \\
+This will create a directory called ``\texttt{chmobilec}''.
+\item From within a Ch shell, run the command: \\
+\texttt{sudo pkginstall.ch chmobilec} \\
+If you are using Microsoft Windows, you may omit the "\texttt{sudo}" part of the
+command which is required on unix-like systems to ensure proper installation
+permassions.
+\end{enumerate}
+% }}} Installing the Mobile-C Security Module
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Creating your own compilation environment}
+If a custom build environment is required, there are several directories which
+must be added to the search paths for header files and libraries. There are 
+also a variety of system libraries which Mobile-C must be linked with in order
+to compile properly.
+
+\subsection{UNIX and Mac systems}
+In order to compile properly, the extra include directory
+\texttt{<CHHOME>/extern/include} must be added to the default include search
+directories. The directory \texttt{<CHHOME>/extern/lib} must also be added to
+the list of searched library directories. Furthermore, the following libraries
+must be linked with Mobile-C during the link step:
+\begin{itemize}
+\item libmxml (Provided with Mobile-C in the directory \texttt{<MCHOME>/src/mxml/})
+\item libmc\_list (Provided with Mobile-C in the directory \texttt{<MCCHOME>/src/mc\_list})
+\item libmc\_sync (Provided with Mobile-C in the directory \texttt{<MCCHOME>/src/mc\_sync})
+\item libdl
+\item libpthread
+\item libm
+\item libcrypt
+\item libembedch (Provided with Embedded-Ch)
+\end{itemize}
+
+\subsection{Windows}
+For windows, the include directory \texttt{<CHHOME>/extern/include} must be added
+to the include paths and the directory \texttt{<CHHOME>/extern/lib} must be added
+to the library search paths. Furthermore, the library \texttt{wsock32.lib} must
+be linked with Mobile-C in order to compile properly.
+
+% }}} Mobile-C Library Installation 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Getting Started{{{
+\chapter{Getting Started}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Compilation on Unix{{{
+\section{Compilation on Unix}
+All the demo programs are compiled automatically in the Unix version.
+% }}} Compilation on Unix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Compilation on Windows{{{
+\section{Compilation on Windows}
+All the demo programs are compiled automatically in the Windows version. Single
+demos may be recompiled by navigating to a demo directory in a Ch terminal with
+the \texttt{cd} and \texttt{ls} commands, and then executing the commands
+\texttt{nmake -f makefile.win32} to compile a demo, or \texttt{nmake -f
+makefile.win32 clean} to delete all compiled files.
+% }}} SUB: Compilation on Windows 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Overview of Sample Application Programs {{{
+\section{Overview of Sample Application Programs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Program: server.c {{{
+\begin{Program}[!h]
+\capstart
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/server.c}}
+\end{center}
+\caption{A sample Mobile-C server. (demos/getting\_started/hello\_world/server.c)}
+\label{prog:server.c}
+\end{Program}
+% }}} Program: server.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Program: client.c {{{
+\begin{Program}%[!h]
+\capstart
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/client.c}}
+\end{center}
+\caption{A sample Mobile-C client program. The sole purpose of this program is to
+  send a Mobile-C agent to another agency. (demos/getting\_started/hello\_world/client.c)}
+\label{prog:client.c}
+\end{Program}
+% }}} Program: client.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Program \vref{prog:server.c} starts an agency that is capable of 
+receiving mobile agents and executing mobile agent code. 
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/server.c.1}}
+\noindent
+The header file {\bf libmc.h} is included at the beginning of the program. 
+It defines all the data types, macros and function prototypes for the 
+Mobile-C library.
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/server.c.2}}
+\noindent
+The variable $agency$, of type {\bf MCAgency\_t}, is a handle that contains 
+information of an agency. The second line initializes a local variable that will
+hold the port number we wish the agency to bind to.
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/server.c.3}}
+\noindent
+{\bf MC\_Initialize()} \index{MC\_Initialize()} takes an integer and the address of an 
+{\bf MCAgencyOptions\_t} \index{MCAgencyOptions\_t} variable as its two parameters. 
+An {\bf MCAgencyOptions\_t} variable is a structure that contains 
+information about which threads to be activated and the default agent 
+status specified by a user.
+Here, a {\bf NULL} pointer is passed to {\bf MC\_Initialize()} as the second 
+parameter instead of an MCAgencyOptions\_t variable to start an agency with 
+default settings. 
+A local agency will be initialized to listen on port {\bf 5051} specified by 
+the variable $local\_port$.
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/server.c.4}}
+\noindent
+The agency waits indefinitely for a mobile agent by the function 
+{\bf MC\_MainLoop()} \index{MC\_MainLoop()}. 
+
+Program \ref{prog:client.c} starts an agency that sends a mobile agent to 
+a remote agency.
+Examining Programs \ref{prog:server.c} and \ref{prog:client.c}, we see
+that there are only two new API function calls:
+\begin{verbatim}
+  agent = MC_ComposeAgentFromFile(
+      "mobagent1",      /* Name */
+      "localhost:5050", /* Home */
+      "IEL",            /* Owner */
+      "hello_world.c",  /* Filename */
+      NULL,             /* Return var name. NULL for no return */
+      "localhost:5051", /* Server to execute task on */
+      0 );              /* Persistent. 0 for no persistence. */
+\end{verbatim}
+and
+\begin{verbatim}
+  MC_AddAgent(agency, agent);
+\end{verbatim}
+
+Mobile-C agents may be created from existing source code files. The example
+above takes a source code file called \texttt{hello\_world.c} and constructs
+an agent around it. The agent's name, home, owner, return variable name,
+and the host on which to execute the agent are all provided as arguments
+to the \texttt{MC\_ComposeAgentFromFile()} function. 
+
+Then, the newly created agent is added to the local agency so that it may
+perform its local and/or remote tasks. In our example, the agent has
+one remote task, so the agent will migrate to the remote host and perform
+its task there. 
+
+Also note that any valid hostname may be used in place of ``localhost''. The
+communicating agencies need not be on the same physical machine; in fact, in most
+cases they will be on seperate machines. Any IPv4 string, i.e. ``169.237.104.199'', or
+qualified hostname, i.e. ``machine.ucdavis.edu'', may be used. For instance, the
+code
+\begin{verbatim}
+    MC_ComposeAgentFromFile(
+                "Bob",
+                "iel.ucdavis.edu:5050",
+                "IEL",
+                "source_code.c",
+                "169.237.104.199:5055",
+                NULL,
+                0);
+\end{verbatim}
+will send an agent to the server at address ``169.237.104.199'' listening on
+port 5055. Or,
+\begin{verbatim}
+    MC_ComposeAgentFromFile(
+                "Lou",
+                "iel.ucdavis.edu:5055",
+                "IEL",
+                "agent_source.c",
+                "machine.ucdavis.edu:5031",
+                NULL,
+                0);
+\end{verbatim}
+will send the agent to an agency at ``machine.ucdavis.edu'' listening on 
+port 5031.
+% }}} SUB: Overview of Sample Application Programs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Mobile-C Bluetooth Agencies {{{
+\section{Mobile-C Bluetooth Agencies (Experimental)}
+As of Mobile-C version 2.0.2, Mobile-C has support for using Bluetooth
+as the agent message transport medium as opposed to the standard TCP/IP.
+A new option has been added to the \texttt{MCAgencyOptions\_t} structure
+to indicate whether or not Mobile-C should start as a Bluetooth enabled
+agency.
+
+Please note that currently, Mobile-C is unable to start as both a Bluetooth
+agency and a standard TCP/IP agency. That is, if a Mobile-C agency is
+initialized to communicate via Bluetooth, that same agency will not be able to
+communicate via TCP/IP, and vise versa. 
+
+When Mobile-C is initialized as a Bluetooth agency, it enables Mobile-C to
+send and receive messages to other Mobile-C Bluetooth agencies, via the
+short/medium range Bluetooth wireless protocol. A sample Mobile-C 
+server program that listens for incoming connections is shown below.
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/bluetooth/server.c}}
+
+Note that this program is very similar to the previous ``hello world''
+server.c, seen at Program \ref{prog:server.c}. One major difference to take
+note is the line which reads
+
+\begin{verbatim}
+options.bluetooth = 1;
+\end{verbatim}
+
+This line sets the option in the Mobile-C options structure to inform Mobile-C
+to initialize as a Bluetooth agency.
+
+Also note the initializing port number. Bluetooth RFCOMM port numbers are
+limited to values from 0 to 30. The value  ``20'' was chosen arbitrarily, but
+it must lie between zero and thirty. 
+
+The client program, which sends an agent to the server agency, is also similar
+to the previous client program seen at Program \ref{prog:client.c}.
+
+{\footnotesize \linespread{1.0} \verbatiminput{../demos/getting_started/bluetooth/client.c}}
+
+Note that the hostname supplied to the \texttt{MC\_ComposeAgentFromFile()}
+function is composed of the MAC address of the server Bluetooth device,
+followed by a space, followed by the port the server agency is listening on.
+
+% }}} SUB: Mobile-C Bluetooth Agencies
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Execution of Sample Applications {{{
+\section{Execution of Sample Applications}
+In general, each of the demos is designed to have very similar execution
+procedures. For each demo, there are one or more ``servers'', which are
+simply vanilla Mobile-C agencies. To run the demo, start all of the servers
+(there is only one server for most of the demos), and start the ``client''
+program. Generally, the client program also starts a Mobile-C agency,
+but it typically sends an agent to a destination as part of its startup
+process as well.
+
+For example, to run the Mobile-C ``Hello World'' example, 
+run the following commands from a text terminal on the server machine
+to start an agency listening on port {\bf 5051}.
+
+\begin{verbatim}
+    cd <MCPACKAGE>/demos/hello_world
+    ./server
+\end{verbatim}
+
+\noindent
+Next, run the following commands from a text terminal on the client machine
+to start an agency listening on 
+port {\bf 5050} and send the mobile agent to the remote agency 
+listening on port {\bf 5051}.\\
+
+\begin{verbatim}
+    cd <MCPACKAGE>/demos/hello_world
+    ./client
+\end{verbatim}
+
+\noindent
+After the mobile agent message is received and the mobile agent code is 
+executed, the string {\bf Hello World!} should be printed to the text terminal 
+on the server machine. Note that in this example, both the server and client
+are running on the same machine, but this is not a requirement. The field
+``localhost'' may be replaced with any qualified domain name or IP address. 
+
+
+% }}} Execution of Sample Applications
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The Mobile-C Library {{{
+\section{The Mobile-C Library}
+The Mobile-C library allows a Mobile-C agency to be embedded in a program to 
+support C/C++ mobile agents.
+In addition, the Mobile-C API gives users a full control over a Mobile-C 
+agency embedded in a program. 
+Therefore, the Mobile-C library not only provides a significant code mobility 
+for distributed applications, but also facilitates the development of a 
+multi-agent system that can easily interface with various hardware devices. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE {{{ 
+\begin{figure*}[!t]
+\begin{center}
+   \includegraphics[scale=0.5]{figure/mobilec_lib_arch}
+   \caption{Architecture of the Mobile-C library.}
+   \label{fig:mobilec_lib_arch}
+\end{center}
+\end{figure*}
+% FIGURE }}} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE {{{ 
+\begin{figure*}[!t]
+\begin{center}
+   \includegraphics[scale=0.5]{figure/mobilec_lib_imp}
+   \caption{Implementation overview of the Mobile-C library.}
+   \label{fig:mobilec_lib_imp}
+\end{center}
+\end{figure*}
+% FIGURE }}} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Architecture of the Mobile-C Library {{{
+\subsection{Architecture of the Mobile-C Library \label{mobilec_arch}}
+Figure \ref{fig:mobilec_lib_arch} illustrates the architecture of the 
+Mobile-C library.
+The Mobile-C library allows a Mobile-C agency to be embedded in a program to 
+support C/C++ mobile agents.
+A Mobile-C agency refers to a mobile agent platform within which mobile agents 
+exist and operate.
+The Mobile-C API gives users a full control over a Mobile-C agency and its 
+different modules.
+ 
+As a IEEE FIPA compliant mobile agent platform, a Mobile-C agency 
+comprises three FIPA normative modules, Agent Management System (AMS), 
+Agent Communication Channel (ACC) and Directory Facilitator (DF). 
+Two additional modules, Agent Execution Engine (AEE) and 
+Agent Security Manager (ASM), are included in a Mobile-C agency as well.
+These modules provide different functionalities summarized as follows.
+
+\textit{Agent Management System (AMS)}
+
+\noindent
+An AMS controls the creation, registration, execution, migration, 
+persistence, and termination of a mobile agent. 
+It maintains a directory of Agent Identifiers (AIDs) for registered mobile 
+agents. 
+Each mobile agent must register with an AMS in order to have a valid AID.
+
+\textit{Agent Communication Channel (ACC)}
+
+\noindent
+An ACC routes messages between local and remote entities. 
+It is responsible for the interactions between distributed components, such 
+as inter-agent communication and inter-platform agent transport. 
+The interactions can be performed through Agent Communication Language (ACL) 
+message exchange.
+
+\textit{Directory Facilitator (DF)}
+
+\noindent
+A DF serves yellow page services. 
+Mobile agents wishing to advertise their services should register with a DF. 
+Visiting mobile agents can search a DF for mobile agents providing the 
+services they desire.
+
+\textit{Agent Execution Engine (AEE)}
+
+\noindent
+An AEE serves as the execution environment for mobile agent code.
+An AEE has to be platform independent in order to support the execution of 
+mobile agents in a heterogeneous environment. 
+
+Each AEE contains an Embedded Ch interpreter to interpret the agent C code.
+By default, the agency will preload four interpreters upon startup for
+interpreting agents. If more than four interpreters are required, the agency
+will dynamically allocate extra interpreters as needed. See the reference for
+\texttt{MC\_Initialize()} on page \pageref{api:MC_Initialize} for more info.
+
+\textit{Agent Security Manager (ASM)}
+
+\noindent
+An ASM is responsible for maintaining securita policies for the host system.
+Some sample tasks of an ASM include identifying users, protecting host 
+resources, authenticating and authorizing mobile agents, and ensuring the 
+security and integrity of mobile agents.
+% }}} Architecture of the Mobile-C Library
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUB: Implementation of the Mobile-C Library {{{
+\subsection{Implementation of the Mobile-C Library}
+Figure \ref{fig:mobilec_lib_imp} shows the implementation overview of the 
+Mobile-C library.
+The functionalities of each module of an agency are 
+implemented as independent threads classified into five categories, that is, 
+the AMS functionality threads, the ACC functionality threads, the DF 
+functionality threads, the ASM functionality threads and the AEE threads.
+Each AEE thread is launched by one of the AMS functionality threads.
+
+The Mobile-C library provides API functions to specify which thread needs to 
+be active or inactive when an agency is initialized.
+It also provides API functions to access the input and output data structures 
+associated with the functionality threads.
+A Mobile-C agency maintains a list of synchronization variables that can be 
+used with a group of Mobile-C functions to ensure synchronization among 
+mobile agents and threads.
+The sizes of the Mobile-C static and shared libraries for Linux are about 
+500 KB and 390 KB, respectively.
+
+The header file \textit{libmc.h} contains definitions of all the structures and 
+functions of the Mobile-C library. 
+Table \vref{mobilec_api_cbinary} lists the currently implemented functions 
+for the binary space.
+
+% }}} Implementation of the Mobile-C Library
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} The Mobile-C Library
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} Getting Started
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Composing Agents {{{
+\chapter{Composing Agents}
+Mobile-C agents are represented internally as XML data structures. However,
+dealing with XML code requires background knowledge of XML and may be cumbersome.
+To enhance the convenience of creating and deploying Mobile-C agents,
+several different methods of creating agents from C source code files have
+been implemented.
+
+Agents may be composed from plain C source code. There are two main ways to
+compose Mobile-C agents. Agents may be composed by using the
+\texttt{compose\_send} commmand in the Mobile-C prompt, or by using the
+\texttt{MC\_ComposeAgent*} series of API functions.
+
+\section{Mobile-C Command Prompt \texttt{compose\_send} Command}
+The \texttt{compose\_agent} takes a C source code file and creates
+a fully functioning agent out of it. The \texttt{compose\_send} command
+syntax is
+\begin{verbatim}
+compose_send <filename> <target host> <target port>
+\end{verbatim}
+Many details about an agent generated in this method, such as the agent's
+name and owner, are dynamically generated when creating an agent using 
+this method. 
+\subsection{Example Execution Using the \texttt{compose\_send} Command}
+The demo \texttt{prompt\_example} has been provided with the Mobile-C
+package. Note that the source code for both servers is virtually identical to
+that in Program \ref{prog:server.c}, except with added execution
+instructions.
+The demo program is initiated by starting the first agency, named
+\texttt{server1}.
+\begin{verbatim}
+$ ./server1
+Agency 1 started. Please start the second agency by running the command
+"server2" on another terminal.
+
+MobileC >
+\end{verbatim}
+Next, the second agency is started on a seperate terminal.
+\begin{verbatim}
+$ ./server2
+Starting Agency...
+You may now try the following commands:
+
+  compose_send helloworld.c localhost 5050
+
+The previous command will compose an agent using the source
+code in "helloworld.c" and send it to the other agency at
+port 5050. Then try this command:
+
+  compose_send helloworld.c localhost 5051
+
+This will send the "hello_world.c" agent to the local agency.
+You may also try these commands at the other agency.
+
+MobileC >
+\end{verbatim}
+Following the instructions on the second agency, we execute the 
+suggested \texttt{compose\_send} command. The first agency terminal
+now appears as such:
+\begin{verbatim}
+$ ./server1
+Agency 1 started. Please start the second agency by running the command
+  "server2" on another terminal.
+
+MobileC > Hello, world!
+\end{verbatim}
+Note that the source file \texttt{helloworld.c} has been composed into a 
+mobile agent, migrated to the \texttt{server1} agency, and executed.
+
+\section{Mobile-C \texttt{MC\_ComposeAgent*} Functions}
+There also exist a set of API functions which compose agents from C source
+files. These functions are
+\begin{itemize}
+\item \texttt{MC\_ComposeAgent()} : Compose an agent from program source code. 
+\item \texttt{MC\_ComposeAgentWithWorkgroup()} : Compose an agent from program source code with a workgroup code. 
+\item \texttt{MC\_ComposeAgentFromFile()} : Compose an agent from a program source code file. 
+\item \texttt{MC\_ComposeAgentFromFileWithWorkgroup()} : Compose an agent from a program source code file with a workgroup code. 
+\item \texttt{MC\_AgentAddTask()} : Add an additional task to an already formed agent.
+\item \texttt{MC\_AgentAddTaskFromFile()} : Add an additional task to an already formed agent from a C source code file.
+\end{itemize}
+For an example of the usage of these functions, please refer to program
+\ref{prog:compose_multi_task_agent}.
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0}
+     \verbatiminput{../demos/composing_agents/multi_task_example/client_abridged.c}}
+\end{center}
+\caption{An agency building an agent with multiple tasks from seperate source code files.}
+\label{prog:compose_multi_task_agent}
+\end{Program}
+
+\section{Agent Workgroups}
+In order to provide an added layer of organization and security, agents
+may be created which belong to a workgroup. A workgroup's name may be an
+ASCII text string of any length. If an agent belongs in a workgroup,
+then certain actions on that agent may only be performed by other agents
+in the same workgroup. Thus, if a group of agents keeps their workgroup
+name private, no agents outside of that group will be able to terminate,
+delete, or otherwise affect the agents within the workgroup. All agents are
+still able to interact through FIPA ACL messages.
+
+For an example of agent workgroups in action, please see the demo program
+in the\\
+ \texttt{demos/agent\_workgroup\_example} directory. 
+% }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Agent Data {{{
+\chapter{Agent Data}
+Agents have the ability to carry pieces of data with them as they migrate from
+host to host. The data carried by an agent can be categorized into two broad
+types: ``agent return data'' and ``agent saved variables''. 
+
+\section{Agent Return Data}
+  ``Agent return data'' is typically used to store a piece of data being
+returned to the agent's home agency. For instance, if an agent is given a task
+to obtain a single result from a remote host, the agent might store the result
+as its agent return data. An agent may hold a single return value for each one
+of its tasks. The return value may be of any standard C type, or an array of 
+such a type. For instance, the \texttt{double} type, as well as
+\texttt{double[5][3]} are both valid types for a piece of agent return data,
+since both are examples of a standard C type or an array of a standard type.
+User defined structs and unions may not be returned as a piece of return data.
+ 
+In order to return a variable as agent return data, the name of the return variable
+simply needs to be specified when composing the agent. No further API calls need to be
+executed from within the agent code. Note that the return variable must be declared as
+a global variable in the agent code.
+For an example of an agent with multiple tasks returning information to its home agency,
+please see Program \ref{prog:compose_multi_task_agent} on page
+\pageref{prog:compose_multi_task_agent}.
+
+\section{Agent Saved Variables} 
+An ``agent saved variable'' is also carried with an agent as it migrates. However,
+this type of variable is typically used for data that the agent itself has access
+to as it completes its tasks. Furthermore, an agent may save the value of as many
+variables as it desires per task. For instance, during an agent's first task, it
+may save various values, like the number of other agents on the agency as an
+\texttt{int}, and the name of the agency as a \texttt{char[80]}. After it
+migrates to it's second task, it may access the variables it saved previously
+on the first host. In this way, an agent could calculate the total number of
+active agents in an agency network. In summary,
+
+\begin{tabular}{l|cc}
+ & Agent Return Data & Agent Saved Variable \\
+\hline
+May save multiple variables per task & & X \\
+\hline
+Data easily retrieved by home agency & X & X \\
+\hline
+Data saved to agent automatically  & & \\
+without agent-space API calls & X & \\
+\hline
+Agent can access its own saved data & & X
+\end{tabular}
+
+\vspace{0.18in}
+For example, consider an agent with the following tasks. The agent's first task
+appears as such:
+\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/task1.c}
+Note that the variable to be saved must be a global variable. In the agent code, the agent
+performs a call to the function \texttt{mc\_AgentVariableSave(mc\_current\_agent, "savevar");}
+The first argument in the function is a handle to an agent. The handle \texttt{mc\_current\_agent} is
+a special handle an agent has to itself. The second argument is a character string denoting the
+name of the variable to save. In effect, this code saves the value of \texttt{savevar} to
+itself. As shown in the preceding code, the \texttt{mc\_AgentVariableSave()} function may
+be called multiple times on differing variable types and arrays. Each variable will be
+saved to the agent prior to migration.
+
+Here is an example of the agent's second task's code:
+\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/task2.c}
+Note the call to \texttt{mc\_AgentVariableRetrieve(mc\_current\_agent,
+"savevar", 0);} in this code example. This function attempts to retrieve a
+pointer to the saved variable. The first argument, as seen before, is a handle
+to the agent itself. The second variable is the name of the variable to
+retrieve. The third argument is the task from which to retrieve the variable,
+with the value \texttt{0} being the first task. If the call succeeds, it will
+return a valid pointer to the saved variable. If it fails, the function returns
+\texttt{NULL}.
+
+
+
+% Chapter: Agent Data }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mobile-C Agent Migration Message Format {{{
+\chapter{Mobile-C Agent Migration Message Format}
+\section{General Message Format \label{sec:gen_message_format}}
+\begin{Program}
+\begin{center}
+   {\scriptsize \linespread{1.0} \verbatiminput{../demos/getting_started/hello_world/test1.xml}}
+\end{center}
+\caption{A rudimentary agent. (demos/getting\_started/hello\_world/test1.xml)}
+\label{prog:hello_agent}
+\end{Program}
+The message format for an agent migration message is designed such that
+multiple tasks and multiple code blocks can be migrated from agency to
+agency. The message is an XML message with encapsulated C code. An example
+of a rudimentary agent can be seen in Program \ref{prog:hello_agent} on 
+page \pageref{prog:hello_agent}. 
+Following is a brief description of each XML tag.
+\begin{itemize}
+\item \texttt{MESSAGE}: This tag indicates to Mobile-C that the following data
+  is a Mobile-C message. The message type is included in the attribute
+  ``message''.
+\item \texttt{MOBILE\_AGENT}: This tag indicates that the contained data is a 
+  Mobile-C agent.
+\item \texttt{AGENT\_DATA}: This tag indicates that the contained data is data pertaining
+  to this particular agent.
+\item \texttt{NAME}: The name of the agent.
+\item \texttt{OWNER}: The owner of the agent. 
+\item \texttt{HOME}: The home of the agent. Any agent that has data to ``return'' will
+	return it to this address by default.
+\item \texttt{WG\_CODE}: The workgroup code of the agent. Workgroup codes are
+kept secret by the agent. Only agents with matching workgroup codes are allowed
+to perform certain operations on each other, such as agent deletion.
+\item \texttt{TASKS}: This indicates that the following information pertains to the
+  task or tasks the agent is intended to perform. Attributes found under the
+  \texttt{TASKS} tag include:
+  \begin{itemize}
+    \item \texttt{task} : The total number of tasks the agent has.
+    \item \texttt{num} : The task that the agent is currently on.
+  \end{itemize}
+\item \texttt{TASK}: Each seperate \texttt{TASK} tag indicates a seperate task for the agent
+  to perform. The tasks may be seperate hosts and/or code blocks. In the
+  rudimentary example, there is only one task. Listed below are the attributes of 
+  \texttt{TASK} tags.
+  \begin{itemize}
+  \item \texttt{num}:           The number of the task. The first task is task number zero.
+  \item \texttt{complete}:      Completeness of the task
+  \item \texttt{server}:        The host to perform the task
+  \item \texttt{return}:        Name of the return variable
+  \item \texttt{persistent}:    Persistence of the agent
+  \item \texttt{return\_value}: Return value, if not an array
+  \item \texttt{code\_id}:      ID of the code block to execute
+  \end{itemize}
+\textit{complete} and \textit{server} are mandatory attributes, and others are 
+optional attributes.  
+\item AGENT\_CODE: Each AGENT\_CODE block represents a block of code that 
+  the agent may execute. Agents with multiple code blocks may decide at run-time
+  which block to execute. Valid attributes under the \texttt{AGENT\_CODE} tag
+  include
+  \begin{itemize}
+    \item \texttt{id}: The id of the code segment, as referenced by the \texttt{TASK} 
+      attribute, \texttt{code\_id}.
+  \end{itemize}
+\end{itemize}
+
+\section{Multiple Tasks with a Single Code Block}
+An agent may have an indefinite number of tasks. The agent will perform the tasks
+in ther order that they are stated in the XML file, completing each one before
+continuing to the next host. Following is an example of an agent which has
+multiple tasks to perform, executing the same code block at each new host.
+See Program \ref{prog:single_code_block} on page \pageref{prog:single_code_block} 
+for an example.
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/composing_agents/multi_task_example/test_single_code_block1.xml}}
+\end{center}
+\caption{An example agent containing two tasks and a single code block.
+  Note that variables ``mc\_host\_name'' and ``mc\_task\_progress'' are special built-in variables described in Table \vref{tab:agent_space_variables}.
+  \index{mc\_host\_name}
+  \index{mc\_task\_progress}
+  \texttt{(<MCPACKAGE>/demos/composing\_agents/multi\_task\_example/test\_single\_code\_block.xml)} }
+\label{prog:single_code_block}
+\end{Program}
+\addtocounter{Program}{-1}
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/composing_agents/multi_task_example/test_single_code_block2.xml}}
+\end{center}
+\caption{(Continued)}
+\end{Program}
+
+\section{Multiple Tasks with Multiple Code Blocks}
+See Program \ref{prog:multi_code_block} on page \pageref{prog:multi_code_block}
+for a more complicated example of agent code including multiple tasks and
+  multiple code blocks. Note that each code block has an associated ID which is 
+  refered to in the respective ``DATA'' tags. Also note that more than one ``DATA'' tag
+  may refer to the same code block. Thus, an agent may have more ``DATA'' tags than
+  code blocks.
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/composing_agents/multi_task_example/test_multi_code_block1.xml}}
+\end{center}
+\caption{An example agent containing two tasks and two code blocks. 
+  \texttt{(<MCPACKAGE>/demos/composing\_agents/multi\_task\_example/test\_multi\_code\_block.xml)}} 
+\label{prog:multi_code_block}
+\end{Program}
+\addtocounter{Program}{-1}
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/composing_agents/multi_task_example/test_multi_code_block2.xml}}
+\end{center}
+\caption{ (Continued) }
+\end{Program}
+
+\section {Multiple Mobile Agent performs Task on Multiple Hosts}
+Program \ref{prog:multi_mobile_agent_client} on page \pageref{prog:multi_mobile_agent_client} is a client that sends two different mobile agents to two different hosts. In for loop, it waits for the arrival signal of mobile agent. When an agent arrives it prints the result and delete that agent. For loop is iterated same as total number of mobile agents send by client. The two mobile agents having different name are shown in Program \ref{prog:mobile_agent_1} and Program \ref{prog:mobile_agent_2}:  
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0}
+     \verbatiminput{../demos/agent_migration_message_format/multi_data_retrieval/client.c}}
+\end{center}
+\caption{A client program that sends two mobile agents to two different hosts
+  \texttt{(<MCPACKAGE>/demos/agent\_migration\_message\_format/multi\_data\_retrieval/client.c)}}
+\label{prog:multi_mobile_agent_client}
+\end{Program}
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0}
+     \verbatiminput{../demos/agent_migration_message_format/multi_data_retrieval/test1.xml}}
+\end{center}\caption{First mobile agent name "mobagent1" send by client (Program 6) to server 1   
+  \texttt{(<MCPACKAGE>/demos/agent\_migration\_message\_format/multi\_data\_retrieval/test1.xml)}}
+\label{prog:mobile_agent_1}
+\end{Program}
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0}
+     \verbatiminput{../demos/agent_migration_message_format/multi_data_retrieval/test2.xml}}
+\end{center}\caption{Second mobile agent name "mobagent1" send by client (Program 6) to server 2
+  \texttt{(<MCPACKAGE>/demos/agent\_migration\_message\_format/multi\_data\_retrieval/test2.xml)}}
+\label{prog:mobile_agent_2}
+\end{Program}
+
+\section{Agent Return Messages}
+If the ``\texttt{name}'' attribute in an agent's ``\texttt{DATA}'' tag
+is not set to ``\texttt{no-return}'', the agent will generate an
+agent-return message upon completion of all of its tasks. The agent will
+generate a return message containing the contents of the variable name
+specified in the ``\texttt{name}'' attribute. For instance, Program
+\vref{prog:agent_with_return_data} shows a simple agent which 
+will migrate to another agency, generate a three-dimensional array called
+``\texttt{a}'', and return the contents of the array to the ``\texttt{HOME}''
+host upon completion. Note that the return variable must be global
+so that the contents are not destroyed upon completion of the \texttt{main}
+function. 
+  
+  An example of the return message that is generated by
+this agent can be seen in Program \vref{prog:return_agent}. Notice also in
+the return message that the variable type has been changed from ``int'' as it
+was in the original program to ``short'' and that the ``\texttt{dim}'' attribute
+has been changed to $3$. This is because Mobile-C automatically
+checks the type and dimension of the variable it is returning and assign
+those attributes automatically.
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/agent_migration_message_format/mc_array_return_example/agent.xml}}
+\end{center}
+\caption{An agent which returns data upon completion of it's tasks.}
+\label{prog:agent_with_return_data}
+\end{Program}
+
+\begin{Program}[p]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/agent_migration_message_format/mc_array_return_example/return_agent.xml}}
+\end{center}
+\caption{Agent return data xml format. Note: This XML code has been reformatted
+  to a more human-readable format. The actual format generated may differ.}
+\label{prog:return_agent}
+\end{Program}
+
+\section{Agent Saved Variables}
+As of Mobile-C version 1.10.0, Mobile-C agents have the ability to save an 
+arbitrary number of variables while migrating from task to task. Agents may
+use the agent-space api functions \texttt{mc\_AgentVariableSave()} and
+\texttt{mc\_AgentVariableRetrieve} to save and later retrieve variables.
+An example agent which does this may be viewed at the documentation for
+the \texttt{mc\_AgentVariableSave()} and \linebreak \texttt{mc\_AgentVariableRetrieve()}
+functions on pages \pageref{apidoc:mc_AgentVariableSave} and 
+\pageref{apidoc:mc_AgentVariableRetrieve}, respectively.
+
+As the agent is migrating from host to host with saved data, the data is 
+encapsulated in the agent's XML code. \texttt{<DATA>} tags are created as
+children of each \texttt{<TASK>} tag to store data. See Program 
+\ref{prog:migrating_agent} for an example of an agent that is migrating
+with saved data. The valid attributes within a \texttt{<DATA>} tag are
+\begin{itemize}
+\item \texttt{name}: The name of the saved variable.
+\item \texttt{dim}: The array dimension of the saved variable. 
+\item \texttt{type}: The type of the variable.
+\item \texttt{value}: (optional) If the variable has zero dimensions, the
+  value is stored in this attribute. Otherwise, children \texttt{<ROW>} 
+  tags must be created to store the array.
+\end{itemize}
+
+Each \texttt{<DATA>} tag may also have children \texttt{<ROW>} tags, if
+the data is an array. The valid attributes of the \texttt{<ROW>} tags are
+\begin{itemize}
+\item \texttt{index}: The index of the row.
+\end{itemize}
+Note also that each \texttt{<ROW>} tag may contain additional \texttt{<ROW>}
+children depending on the dimension of the array being stored.
+
+The Mobile-C XML Data Type Definition (DTD), which defines the format of a
+well-formed Mobile-C agent migration message, may be seen in Section
+\ref{sec:xml_dtd} on page \pageref{sec:xml_dtd}.
+
+\section{Stationary/Persistent Mobile Agents}
+A Stationary agent may be achieved in Mobile-C simply by creating an agent which
+never migrates. This is commonly achieved using a couple of different
+techniques.
+\subsection{An Agent with an Infinite Task}
+An agent may be considered stationary if it's task never ends. For instance, if
+the task of an agent is of the form:
+\begin{verbatim}
+while(1)
+{
+    cmd = wait_for_command();
+    execute_command(cmd);
+}
+\end{verbatim}
+Since the previous task never ends, the agent will never terminate and the agent
+will remain stationary in it's agency. 
+
+\subsection{The ``\texttt{persistent}'' Agent Flag}
+The ``\texttt{persistent}'' flag as mentioned in Section
+\ref{sec:gen_message_format} may be used to create a persistent agent. The
+example described in Chapter \ref{chap:interface_binary_to_agent} uses such a
+technique. This technique creates an agent which is not automatically flushed by the agency
+after it completes it's task. Thus, the agent remains dormant and stationary in
+the agency without external stimulus.
+
+\begin{Program}[ph]
+\begin{center}
+{\footnotesize \linespread{1.0}
+\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/migrating_agent.xml.part1}}
+\end{center}
+\caption{\label{prog:migrating_agent} This XML format illustrates an agent which is currently
+in the process of migrating with saved data. Note that the agent contains two tasks, and the
+first task has been completed. This file is a snapshot of the agent as it is in transit from
+task '0' to task '1'. Note the \texttt{<DATA>} tags which store the three variables
+referenced by the \texttt{mc\_AgentSaveVariable()} function from within the code, storing
+two integers and an integer array. Note that in general, any data type may be stored, including
+multi-dimensional arrays.}
+\end{Program}
+\addtocounter{Program}{-1}
+\begin{Program}[ph]
+\begin{center}
+{\footnotesize \linespread{1.0}
+\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/migrating_agent.xml.part2}}
+\end{center}
+\caption{(Continued)}
+\end{Program}
+
+
+% }}} Mobile-C Agent Migration Message Format
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% {{{ Mobile-C FIPA Compliant ACL Messages
+\chapter{Mobile-C FIPA Compliant ACL Messages \label{chap:fipa}}
+Mobile-C has the ability to send and receive FIPA compliant
+agent communication language (ACL) messages. More information
+about FIPA, the Foundation for Intellegent Physical Agents, may be
+found at \texttt{http://www.fipa.org}. This functionality allows
+Mobile-C agent to communicate with each other, as well as with 
+agents from other agencies that are also FIPA compliant. Demos
+of communication with JADE agents may be found in the directories
+\texttt{<MCPACKAGE>/demos/jade\_to\_mc\_example} and \\
+\texttt{<MCPACKAGE>/demos/mc\_to\_jade\_example}.
+
+%{{{ Constructing and Sending an ACL Message
+\section{Constructing and Sending an ACL Message}
+The general process for constructing an ACL message involves
+filling out required portions of an ACL message structure of type
+\texttt{struct fipa\_acl\_message\_s} and passing the message to the
+\texttt{MC\_AclSend()} function. A number of helper functions 
+exist in order to simplify the process of allocating memory and setting
+certain fields of the acl message. 
+Some typical functions used to compose a new ACL message are the following:
+\begin{itemize}
+\item \texttt{MC\_AclSetPerformative}: Set the FIPA performative of the message. See Program
+  \ref{prog:fipa_enum} for a complete listing of valid FIPA performative enumerations.
+\item \texttt{MC\_AclSetSender}: Sets the 'sender' field of the message.
+\item \texttt{MC\_AclAddReceiver}: Adds addresses to the 'receiver' field of the message.
+\item \texttt{MC\_AclSetContent}: Sets the 'content' field of an ACL message.
+\end{itemize}
+A detailed example of sending and receiving messages will be presented in
+Chapter \ref{chap:stationary_agent}.
+%}}}
+
+%{{{Receiving an ACL Message 
+\section{Receiving an ACL Message}
+Every agent residing on a Mobile-C agency has a mailbox allocated to it.
+At any time, the agent may check the mailbox for new ACL messages, or an
+agent may choose to wait on an empty mailbox until a new message arrives.
+These two tasks are done by the functions \texttt{MC\_AclRetreive()} and
+\texttt{MC\_AclWaitRetrieve()}, respectively. 
+Another useful function which may be used with a received ACL message is the
+\texttt{MC\_AclReply()} function. This function takes an ACL message as an
+input argument and automatically forms an ACL reply message addressed to the
+original sender. Note that the performative and new sender fields in the reply
+message are not automatically initialized and will still need to be set by
+the agent. A detailed example of an agent receiving and replying to a message
+may be found in Chapter \ref{chap:stationary_agent}.
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+\begin{verbatim}
+enum fipa_performative_e
+{
+  FIPA_ERROR=-1,
+  FIPA_ZERO,
+  FIPA_ACCEPT_PROPOSAL,
+  FIPA_AGREE,
+  FIPA_CANCEL,
+  FIPA_CALL_FOR_PROPOSAL,
+  FIPA_CONFIRM,
+  FIPA_DISCONFIRM,
+  FIPA_FAILURE,
+  FIPA_INFORM,
+  FIPA_INFORM_IF,
+  FIPA_INFORM_REF,
+  FIPA_NOT_UNDERSTOOD,
+  FIPA_PROPOGATE,
+  FIPA_PROPOSE,
+  FIPA_PROXY,
+  FIPA_QUERY_IF,
+  FIPA_QUERY_REF,
+  FIPA_REFUSE,
+  FIPA_REJECT_PROPOSAL,
+  FIPA_REQUEST,
+  FIPA_REQUEST_WHEN,
+  FIPA_REQUEST_WHENEVER,
+  FIPA_SUBSCRIBE
+};
+\end{verbatim}
+   }
+\end{center}
+\caption{Fipa Performative Enumerations.}
+\label{prog:fipa_enum}
+\end{Program}
+
+\pagebreak
+\clearpage
+\pagebreak
+%}}} Section: Receiving an ACL Message
+
+%}}} Chapter: Mobile-C FIPA Compliant ACL Messages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mobile-C Binary Stationary Agents {{{
+\chapter{Mobile-C Binary Stationary Agents \label{chap:stationary_agent}}
+Mobilec has support for hosting binary-space stationary agents. The
+agents are implemented as system threads. As such, the only limit 
+to the number of stationary agents residing on an agency are the
+system resources of the host agency. 
+
+The binary agents are able to call any of the C-space API functions, such as
+\texttt{MC\_AclWaitRetrieve()}. This allows stationary agents to communicate
+and interact with other mobile and stationary agents using FIPA ACL messages,
+as introduced in Chapter \ref{chap:fipa}.
+
+Stationary agents may be used in any application in which agent mobility is
+unnecessary. Stationary agents can typically perform any task a mobile agent
+can perform, except migration. Furthermore, stationary agents tend to execute
+faster and consume less system resources.
+
+Mobile-C stationary agent threads are added using the
+\texttt{MC\_AddStationaryAgent()} API function. See Program 
+\ref{prog:stationary_agent_server} for an example of a stationary agent. 
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/binary_stationary_agents/stationary_agent_communication/server.c}}
+\end{center}
+\caption{A sample program which starts a single stationary agent that responds to FIPA ACL messages.}
+\label{prog:stationary_agent_server}
+\end{Program}
+
+The \texttt{MC\_AddStationaryAgent()} function takes three arguments:
+\begin{enumerate}
+\item A handle to the home agency. This is the agency the new agent will reside under.
+\item The agent thread. This is a pointer to a function which will execute and act as
+the stationary agent. If the function returns, the stationary agent is terminated.
+\item An optional argument to pass to the agent. If additional information or data needs
+to be passed to the stationary agent thread, a pointer of any type may be supplied as the
+third argument to \\
+\texttt{MC\_AddStationaryAgent()}. This pointer may later be retrieved
+with the \\
+\texttt{MC\_AgentInfo\_GetAgentArgs()} function from within the agent.
+\end{enumerate}
+
+The stationary agent thread must have a prototype of the form
+\begin{verbatim}
+void* agent_func_name(stationary_agent_info_t* agent_info);
+\end{verbatim}
+As seen in the prototype, the agent thread receives an argument of type
+\texttt{stationary\_agent\_info\_t}. This special type is a structure 
+which contains information about the the agent, such as its name, and the
+location of its mailbox. Certain information may be retrieved from the 
+function parameter by using the \texttt{MC\_AgentInfo\_*} series of API
+functions, which include:
+\begin{itemize}
+\item \texttt{MC\_AgentInfo\_GetAgency()} : Retrieves a handle to the host agency.
+\item \texttt{MC\_AgentInfo\_GetAgent()} : Retrieves a handle to the agent
+information structure.
+\item \texttt{MC\_AgentInfo\_GetAgentArgs()} : Retrieves the pointer that was
+given as an agent argument during the call to \texttt{MC\_AddStationaryAgent}.
+\end{itemize}
+
+Example usage of these functions may be seen in Program \ref{prog:stationary_agent_server}.
+%}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Interface between Binary and Mobile Agent Spaces {{{
+\chapter{Interface between Binary and Mobile Agent Spaces
+\label{chap:interface_binary_to_agent}}
+An embeddable C/C++ interpreter Ch was chosen to be the AEE in the Mobile-C 
+library to support C/C++ mobile agents. 
+Therefore, in order to access the variables, functions, and data sets in 
+the mobile agent space from the binary space, Ch must be first embedded in the 
+binary space.
+The function \textit{MC\_GetAgentExecEngine()} \index{MC\_GetAgentExecEngine()} in 
+Table \ref{mobilec_api_cbinary} returns the AEE associated with a mobile agent 
+to the binary space.
+Using the AEE returned by \textit{MC\_GetAgentExecEngine()}, all of the 
+Embedded Ch functions~\cite{EmbeddedCh} can be called in a binary C/C++ 
+program to access the variables, functions, and data sets defined in the 
+mobile agent space.
+The Embedded Ch toolkit also allows mobile agent code to invoke C/C++ 
+functions defined in a binary C/C++ program.
+
+The Embedded Ch toolkit reduces the complexity of heterogeneous development 
+environment for both embedded scripting and applications. 
+With the consistent C/C++ code base, it can significantly reduce the effort 
+in the software development and maintenance. 
+Moreover, with the Embedded Ch toolkit, C/C++ applications can be extended 
+with all the features of Ch including built-in string type for scripting. 
+The Embedded Ch toolkit has a small footprint. 
+The pointer and time deterministic nature of the C language provide a 
+perfect interface with hardware in real-time systems.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Invoke a Mobile Agent Space Function from Binary Space {{{
+\noindent
+\section{Invoke a Mobile Agent Space Function from Binary Space}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% client.c {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/client.c}}
+\end{center}
+\caption{ A program which sends a persistent mobile agent.
+  \texttt{(<MCPACKAGE>/demos/cspace-agentspace\_interface/persistent\_example/client.c)}}
+\label{prog:client_ex2.c}
+\end{Program}
+% }}} client.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% test1.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/test1.xml}}
+\end{center}
+\caption{A persistent mobile agent. Agents marked ``persistent'' are
+  not flushed from the agency after they terminate.
+    \texttt{(<MCPACKAGE>/demos/cspace-agentspace\_interface/persistent\_example/test1.xml)}}
+\label{prog:mobileagent_ex2.xml}
+\end{Program}
+% }}} test2.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% host.c {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/server.c}}
+\end{center}
+\caption{A Mobile-C agency.
+ \texttt{(<MCPACKAGE>/demos/cspace-agentspace\_interface/ persistent\_example/server.c)}}
+\label{prog:server_ex2.c}
+\end{Program}
+% }}} host.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE {{{
+\begin{figure*}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/server_output.txt}}
+   \caption{Output from the binary server program.}
+   \label{fig:example2_output}
+\end{center}
+\end{figure*}
+% FIGURE }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This example illustrates how to call a function defined in mobile agent 
+code by using the Mobile-C library and Embedded Ch toolkit. 
+The mobile agent in this example is a persistent agent, which is not removed 
+upon termination of its execution.
+
+The client program shown in Program \vref{prog:client_ex2.c} starts a Mobile-C 
+agency listening on port \textit{5050} by the function 
+\textit{MC\_Initialize()}, and sends a mobile agent to the remote agency 
+running on host \textit{localhost} at port \textit{5051} through 
+the function \textit{MC\_SendAgentMigrationMessageFile()}. 
+The filename including the full path of the mobile agent is specified from the 
+standard input.
+
+The mobile agent sent to the remote agency is 
+shown in Program \vref{prog:mobileagent_ex2.xml}. 
+The name, owner, source machine of the mobile agent are 
+\textit{mobagent1}, \textit{IEL}, and 
+\textit{localhost:5050}, respectively. 
+The mobile agent is persistent since the flag \textit{persistent}\index{persistent} 
+is set to 1 
+in Program \ref{prog:mobileagent_ex2.xml}.
+This flag can be set to 0 or removed by a user for a non-persistent mobile 
+agent.
+The embedded mobile agent code is a simple but complete C program which 
+defines the function \textit{hello()} to be called in the server program. 
+
+As shown in Program \vref{prog:server_ex2.c}, the server program starts a 
+Mobile-C agency listening on port \textit{5051} by the 
+function \textit{MC\_Initialize()}, and waits for a mobile agent.  
+The mobile agent named \textit{mobagentl} is found by the function 
+\textit{MC\_FindAgentByName()} \index{MC\_FindAgentByName()}, and the AEE 
+associated with the mobile 
+agent is obtained by the function \textit{MC\_AgentExecEngine()} 
+\index{MC\_AgentExecEngine()}.
+The variable returned by \textit{MC\_AgentExecEngine()} is a Ch interpreter of 
+data type \textit{ChInterp\_t}. 
+This variable is the first parameter for all of the Embedded Ch functions. 
+The function \textit{hello()} defined in the mobile agent code is invoked 
+by the Embedded Ch function \textit{Ch\_CallFuncByName()}. 
+
+There are several different methods to call functions in mobile agent 
+space from the binary space using the Embedded Ch API. 
+Here we describe the function \textit{Ch\_CallFuncByName()}
+\index{Ch\_CallFuncByName()} used in Program 
+\ref{prog:server_ex2.c}.
+With \textit{Ch\_CallFuncByName()}, a function defined in the mobile 
+agent space can be called by its name. 
+The prototype of \textit{Ch\_CallFuncByName()} is shown as follows.
+
+int Ch\_CallFuncByName(ChInterp\_t interp, char *name, void *retval, ...);
+
+The first argument is an instance of the Ch interpreter. 
+The second argument is a string containing the name of the function to be 
+called. 
+The function name is associated with a function defined in mobile agent code. 
+The third argument is a pointer containing the address of the return value of 
+the called function. 
+If the called function takes any arguments, the arguments should be listed 
+after the third argument, \textit{retval}. 
+\textit{Ch\_CallFuncByName()} returns zero on successful execution or 
+non-zero on failure.
+
+The other method of executing the function is through the Mobile-C
+api function {\bf MC\_CallAgentFunc()} \index{MC\_CallAgentFunc()}. 
+This method is seen in the example program, Program \ref{prog:server_ex2.c}.
+
+Figure \vref{fig:example2_output} shows the output when the binary file 
+\textit{server} compiled from Program \ref{prog:server_ex2.c} was executed. 
+The string generated and the value returned from the function \textit{hello()} 
+were printed to the screen after the Enter key was pressed once the mobile 
+agent had arrived. 
+
+% }}} Invoke a Mobile Agent Space Function from Binary Space 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} Interface between Binary and Mobile Agent Spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extend Mobile-C Functionality to Mobile Agent Space {{{
+\chapter{Extend Mobile-C Functionality to Mobile Agent Space}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE {{{
+\begin{figure*}[b]
+\begin{center}
+   \includegraphics[scale=0.5]{figure/chmobilec_package}
+   \caption{Interface of mobile agent code with the Mobile-C library.}
+   \label{fig:chmobilec_package}
+\end{center}
+\end{figure*}
+% FIGURE }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In order to allow mobile agent code to call user defined routines and 
+access data sets defined in the binary space, as well as control 
+other mobile agents defined in the mobile agent space through the 
+Mobile-C API functions, the Mobile-C functionality has to be extended into 
+the mobile agent space.
+We integrated Ch with the Mobile-C library to provide access to some 
+Mobile-C functionalities. 
+
+Figure \vref{fig:chmobilec_package} shows how mobile agent code interfaces 
+with the Mobile-C library.
+When the function \textit{mc\_function()} is called in mobile agent code,
+Ch searches the corresponding interface function \textit{MC\_function\_chdl()} 
+in the Mobile-C library, and passes arguments to it by calling the function.
+Subsequently, the interface function \textit{MC\_function\_chdl()} invokes the 
+target function \textit{MC\_function()}, and passes the return value back to 
+the mobile agent space~\cite{EmbeddedCh}.
+
+The prototypes of Mobile-C functions used in the mobile agent space are
+declared in \textit{agent.c} through an Embedded Ch function,
+\textit{Ch\_DeclareFunc()}.
+The data type, \textit{MCAgent\_t}, used as a parameter or return value by 
+certain Mobile-C functions for the mobile agent space is also defined in 
+\textit{agent.c} by two Embedded Ch functions, 
+\textit{Ch\_DeclareVar()} and \textit{Ch\_DeclareTypedef()}~\cite{EmbeddedCh}.
+Table \vref{chmobilec_api_cscript} lists the currently implemented functions 
+for the mobile agent space.
+Two examples are used to demonstrate the applications and features of the 
+Mobile-C functionality in the mobile agent space. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Terminate Mobile Agent Execution from Mobile Agent Space {{{
+\noindent
+\section{Terminate Mobile Agent Execution from Mobile Agent Space}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% test2.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/test2.xml}}
+\end{center}
+\caption{A mobile agent which enters an infinite loop and does 
+  not terminate. \texttt{(<MCPACKAGE>/demos/cspace-agentspace\_interface/persistent\_example/test2.xml)}}
+\label{prog:mobileagent1_ex3.xml}
+\end{Program}
+% }}} test2.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% test3.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/cspace-agentspace_interface/persistent_example/test3.xml}}
+\end{center}
+\caption{ This agent terminates the execution
+of the agent in Program \ref{prog:mobileagent1_ex3.xml}. 
+  \texttt{(<MCPACKAGE>/demos/cspace-agentspace\_interface/persistent\_example/test3.xml)}}
+\label{prog:mobileagent2_ex3.xml}
+\end{Program}
+% }}} test3.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This example demonstrates how to send a mobile agent to terminate the 
+execution of another currently running mobile agent. 
+These two mobile agents belong to independent mobile agent spaces. 
+
+The server program used in this example is the same as Program 
+\vref{prog:server.c}. 
+The client program is the same as Program \vref{prog:client_ex2.c} except 
+that it calls the function \textit{MC\_SendAgentMigrationMessageFile()} twice 
+to send out two mobile agents.
+The first mobile agent sent to the remote agency is 
+\textit{test2.xml} shown in Program 
+\vref{prog:mobileagent1_ex3.xml}.
+The execution of the mobile agent code will repeatedly print a string 
+\textit{Hello} to the screen every second.
+The second mobile agent sent to the remote agency is 
+\textit{test3.xml} shown in Program 
+\vref{prog:mobileagent2_ex3.xml}.
+The function \textit{mc\_FindAgentByName()} \index{mc\_FindAgentByName()}
+returns a variable of type 
+\textit{MCAgent\_t} as a handle to a mobile agent. 
+The mobile agent code embedded in \textit{mobileagent2\_ex3.xml} finds a 
+mobile agent named \textit{mobagent1} by the function 
+\textit{mc\_FindAgentByName()} and terminates the execution of 
+\textit{mobagent1} by the function \textit{mc\_TerminateAgent()}
+\index{mc\_TerminateAgent()}. 
+% }}} Terminate Mobile Agent Execution from Mobile Agent Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Invoke a Registered Service from Mobile Agent Space {{{
+\noindent
+\section{Invoke a Registered Service from Mobile Agent Space}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% service_provider_1.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/agent_space_functionality/mc_df_service_test/service_provider_1.xml}}
+\end{center}
+\caption{Sample agent containing 'addition' and 'subtraction' services.
+Note that the variable ``mc\_current\_agent'' is a special built-in
+  variable described in Table
+  \vref{tab:agent_space_variables}.\index{mc\_current\_agent}
+\texttt{(<MCPACKAGE>/demos/agent\_space\_functionality/mc\_df\_service\_test/ service\_provider\_1.xml)}}
+\label{prog:mobileagent1_ex4.xml}
+\end{Program}
+% }}} service_provider_1.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% service_provider_2.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/agent_space_functionality/mc_df_service_test/service_provider_2.xml}}
+\end{center}
+\caption{Sample agent containing 'multiplication' and 'modulus' services.
+Note that the variable ``mc\_current\_agent'' is a special built-in
+  variable described in Table
+  \vref{tab:agent_space_variables}.\index{mc\_current\_agent}
+\texttt{(<MCPACKAGE>/demos/mc\_df\_service\_test/service\_provider\_2.xml)}}
+\label{prog:mobileagent2_ex4.xml}
+\end{Program}
+% }}} service_provider_2.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% test2.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\scriptsize \linespread{1.0} \verbatiminput{../demos/agent_space_functionality/mc_df_service_test/test1.xml.part1}}
+\end{center}
+\caption{Sample agent that searches for and invokes agent services.
+\texttt{(<MCPACKAGE>/demos/mc\_df\_service\_test/test1.xml)} (Part 1)}
+\label{prog:mobileagent3_ex4.xml}
+\end{Program}
+\addtocounter{Program}{-1}
+\begin{Program}[!t]
+\begin{center}
+   {\scriptsize \linespread{1.0} \verbatiminput{../demos/agent_space_functionality/mc_df_service_test/test1.xml.part2}}
+\end{center}
+\caption{(Continued) }
+\end{Program}
+% }}} test2.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This example demonstrates how to send a mobile agent to invoke a service 
+provided by a persistent mobile agent registered with the DF.
+
+The server program used in this example is the same as Program 
+\vref{prog:server.c}. 
+The client program is the same as Program \vref{prog:client_ex2.c} except 
+that it calls the function \textit{MC\_SendAgentMigrationMessageFile()} three
+times to send out three mobile agents.
+The first mobile agent sent to the remote agency is 
+shown in Program 
+\vref{prog:mobileagent1_ex4.xml}.
+The execution of the mobile agent code will register two services with the 
+remote DF through the function mc\_RegisterService(). 
+The two services are \textit{addition} and \textit{subtraction} which 
+provide addition and subtraction of two integers, respectively.
+These services also refer to the functions defined in the mobile agent code.
+The function \textit{mc\_RegisterService()} \index{mc\_RegisterService()}
+takes three parameters. 
+An \textit{MCAgent\_t} type variable is the first parameter. 
+A system variable of type \textit{MCAgent\_t}, \textit{mc\_current\_agent}, 
+is used as the first parameter when services for 
+the current mobile agent are registered, as illustrated in Program 
+\vref{prog:mobileagent1_ex4.xml}.
+The system variable \textit{mc\_current\_agent} 
+is declared in \textit{agent.c} using the function \textit{Ch\_DeclareVar()} 
+to hold the current mobile agent.
+An array of pointer to char and an integer are the second and third 
+parameters, respectively.
+The array holds the name of the services whereas the integer denotes the 
+number of the services to be registered. 
+
+The second mobile agent is similar to the first and also registers two
+services, \textit{multiplication} and \textit{modulus}, which provides 
+multiplication and modulo operation of two integers. 
+This mobile agent can be seen in Program \vref{prog:mobileagent2_ex4.xml}.
+
+The third mobile agent sent to the remote agency is 
+\textit{} shown in Program 
+\vref{prog:mobileagent3_ex4.xml}.
+The function \textit{mc\_SearchForService()}\index{mc\_SearchForService()} 
+takes five parameters.
+The first parameter is the name of the service to be found.
+The second parameter is the address of an array of ponter to char that 
+holds the names of all the mobile agents with the desired service.
+Likewise, the third parameter is the address of an array of pointer to 
+char that holds the desired service name associated with all the found 
+mobile agents.
+The fourth parameter is the address of a one-dimensional integer array that 
+holds the IDs of all the mobile agents with the desired service.
+The last parameter is the address of an integer denoting the number of mobile 
+agents that have been found. 
+In this example, once the search for \textit{addition} service is done, the 
+first mobile agent with this service will be returned by the function 
+\textit{mc\_FindAgentByID()}\index{mc\_FindAgentByID()} with a parameter as 
+the first element of array \textit{agentIDs}.
+In this example, the first found mobile agent is 
+\textit{service\_provider\_1}.
+The function \textit{addition()} defined in \textit{service\_provider\_1} 
+will be called through the function \textit{mc\_CallAgentFunc()} to perform 
+addition of two integers.
+Since \textit{mc\_CallAgentFunc()}\index{mc\_CallAgentFunc()} can only pass 
+one argument to the invoked 
+function, the address of a data structure with two integer members is passed 
+to \textit{addition()} in this example.
+The return value of \textit{addition()} is assigned to the variable 
+\textit{retval}.
+The string \textit{Result of addition 44 + 45 is 89.} will be printed to the 
+screen at the end.   
+% }}} Invoke a Mobile Agent Space Function from Mobile Agent Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% }}} Extend Mobile-C Functionality to Mobile Agent Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Synchronization Support int he Mobile-C Library {{{
+\chapter{\label{chap:synchronization}Synchronization Support in the Mobile-C library}
+In a Mobile-C agency, mobile agents are executed by independent AEEs. 
+A user might also need to design a multi-threaded application where a Mobile-C 
+agency itself is one of the many threads that handle different tasks.
+The Mobile-C library provides support for synchronization among mobile 
+agents and threads.
+The synchronization API functions are used to protect shared resources as well 
+as provide a method of deterministically timing the execution of mobile agents 
+and threads.
+
+The internal implementation consists of a linked list of 
+Portable Operating System Interface for UNIX (POSIX) compliant synchronization 
+variables, namely, mutexes, condition variables, and semaphores. 
+Each node in the linked list is a synchronization variable which is assigned 
+or given a unique identification number. 
+The API functions can be called from the binary or mobile agent 
+space to initialize the synchronization variables and access them by their 
+unique identification numbers in the linked list.
+
+A Mobile-C synchronization variable is an abstract variable, initialized
+by the function {\it MC\_SyncInit()} \index{MC\_SyncInit()}\index{mc\_SyncInit()}.
+Once it has been initialized, it may be used as a mutex, condition variable, 
+or semaphore.
+No further function calls are necessary to change a generic synchronization
+variable to one of the types. However, once a synchronization variable is
+used as a mutex, condition variable, or semaphore, it should not be used again
+as a different type. For instance, if calls to 
+\begin{verbatim}
+MC_SyncInit(500);
+MC_MutexLock(500);
+\end{verbatim}
+are made, initializing a synchronization variable with ID ``500'', and locking
+it as a mutex, it should not be then used with any of the condition variable or
+semaphore functions.
+
+The application of the Mobile-C synchronization mechanism is illustrated by 
+the example below.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Synchronization in Mobile Agent Space {{{
+\noindent
+\section{Synchronization in Mobile Agent Space}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% client.c {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/synchronization/agent_mutex_example/client.c}}
+\end{center}
+\caption{A program used to send a mobile agent. 
+  \texttt{(<MCPACKAGE>/demos/synchronization/ agent\_mutex\_example/mc\_client.c)}}
+\label{prog:client_ex5.c}
+\end{Program}
+% }}} client.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% sleep.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} 
+     \verbatiminput{../demos/synchronization/agent_mutex_example/sleep.xml}}
+\end{center}
+\caption{An agent which uses a mutex while accessing a shared resource.
+  \texttt{(<MCPACKAGE>/demos/synchronization/agent\_mutex\_example/sleep.xml)} }
+\label{prog:mobileagent1_ex5.xml}
+\end{Program}
+% }}} sleep.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wake.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/agent_mutex_example/wake.xml}}
+\end{center}
+\caption{An agent which uses a mutex while accessing a shared resource.
+  \texttt{(<MCPACKAGE>/demos/synchronization/agent\_mutex\_example/wake.xml)} }
+\label{prog:mobileagent2_ex5.xml}
+\end{Program}
+% }}} wake.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The Mobile-C library allows synrchonization among agents via
+mutexes, condition variables, and semaphores. Each type of synchronization
+variable is used for different features. Perhaps the most common and basic
+of these variables is the mutex.
+
+The client program shown in Program \vref{prog:client_ex5.c} starts a Mobile-C
+agency listening on port \textit{5050} and subsequently sends two mobile 
+agents to 
+the remote agency running on host \textit{localhost} at port 
+\textit{5051}.
+The mobile agents are shown in Program \vref{prog:mobileagent1_ex5.xml} 
+and Program \vref{prog:mobileagent2_ex5.xml}. These mobile agents will use
+a mutex to guard an operation that may not be performed by two agents
+simultaneously.
+
+This example demonstrates the ability of a Mobile-C mutex to protect
+a resource that may be shared between two agents. Any real or
+imaginary resource that should
+not be accessed simultaneously by more than one entity at a time should
+be guarded by a mutex. The resource may be a shared variable, or something
+more abstract such as control of a robot arm. If there is only one robot arm,
+then only one entity, an agent in this case, should be able to control it at a 
+time.
+
+In our particular example, the tasks our agents are going to perform are
+imaginary. Each task is represented instead by the ``sleep()'' function and
+the printing of a message,
+which causes execution of that particular agent to pause for a time, as
+if it were performing a task. For our example, we will intentionally
+cause our agents to collide execution times to demonstrate that our 
+mutex works. Examining our client program, Program 
+\vref{prog:client_ex5.c},
+we see that we set a two second interval between sending the agents. However,
+the task that each agent tries to perform will be five seconds long. This
+means that the second agent will arrive while the first agent is in the middle
+of performing its simulated task. The execution output will demonstrate that
+the second agent will not begin its task until the first agent is finished.
+
+Semaphores are also used to guard resources in which a limited number of
+entities may access at a time. Since the behaviour and usage of semaphores are
+similar to that of a mutex, an example is not provided here. Please see
+the demo in directory \texttt{<MCPACKAGE>/demos/agent\_semaphore\_example/} for an example.
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/agent_cond_example/sleep.xml}}
+\end{center}
+\caption{A sample agent which will immediately sleep on a condition variable
+after arriving at an agency. \texttt{(<MCPACKAGE>/demos/synchronization/agent\_cond\_example/sleep.xml)}}
+\label{prog:cond_agent_1}
+\end{Program}
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/agent_cond_example/wake.xml}}
+\end{center}
+\caption{A sample agent which will signal a condition variable after arriving
+at an agency. \texttt{(<MCPACKAGE>/demos/synchronization/agent\_cond\_example/wake.xml)}}
+\label{prog:cond_agent_2}
+\end{Program}
+
+Condition variables are also useful in multi-threaded applications in order
+for threads to sleep and wait for a signal. Program 
+\vref{prog:cond_agent_1} illustrates an agent that will sleep on a condition
+  variable immediately after arriving at an agency. Program 
+\vref{prog:cond_agent_2} shows an agent that will send a signal to the condition
+variable the first agent in Program \ref{prog:cond_agent_1} is waiting on, thereby
+causing the first agent to wake up and continue execution.
+% }}} Synchronization in the Mobile Agent Space 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Synchronization Between Binary and Agent Spaces {{{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% server.c {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/cspace_mutex_example/server.c}}
+\end{center}
+\caption{A sample program with an embedded Mobile-C agency demonstrating the use of a 
+Mobile-C mutex to protect a shared resource. \texttt{(<MCPACKAGE>/demos/synchronization/cspace\_mutex\_example/mc\_server.c)}}
+\label{prog:binary_sync_example_server}
+\end{Program}
+% }}} server.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% agent.xml {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/cspace_mutex_example/agent.xml}}
+\end{center}
+\caption{A sample Mobile-C agent which must perform an action on a shared resource
+guarded by a Mobile-C mutex. \texttt{(<MCPACKAGE>/demos/synchronization/cspace\_mutex\_example/agent.xml)}}
+\label{prog:binary_sync_example_agent}
+\end{Program}
+% }}} agent.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Synchronization Between Binary and Agent Spaces}
+The synchronization variables initialized using MC\_SyncInit() are accessible
+in both agent space and binary space, enabling agents to synchronize with 
+binary threads. Again, all three Mobile-C synchronization variable types:
+mutexes, condition variables, and semaphores, may be used in both
+binary and agent space. 
+
+Referring the example server code in Program
+\vref{prog:binary_sync_example_server}, we show a piece of code where
+a binary program containing a Mobile-C agency must perform a
+subroutine involving a shared resource, protecting it with a mutex. 
+The shared resource will
+be accessible from both the main() binary thread as well as any agents
+which are residing in the agency. As such, the server code 
+initializes and uses a mutex to protect the shared resource. In our 
+example agent shown in Program \vref{prog:binary_sync_example_agent},
+we see that this agent needs to access the same shared resource,
+and so it must first lock the mutex before doing so. This example
+demonstrates that the mutex will prevent both the agent and binary
+thread from accessing the resource simultaneously
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% server.c {{{
+\begin{Program}
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/cspace_cond_example/server.c}}
+\end{center}
+\caption{An example server containing a thread which will run once each time it
+is signalled by another thread or by an agent. 
+  \texttt{(<MCPACKAGE>/demos/synchronization/cspace\_cond\_example/mc\_server.c)}}
+\label{prog:binary_cond_example_server}
+\end{Program}
+% }}} server.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% agent.xml {{{
+\begin{Program}
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/synchronization/cspace_cond_example/agent.xml}}
+\end{center}
+\caption{A sample agent which signals a condition variable.
+\texttt{(<MCPACKAGE>/demos/synchronization/cspace\_cond\_example/agent.xml)}}
+\label{prog:binary_cond_example_agent}
+\end{Program}
+% }}} agent.xml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Referring now to 
+Program \vref{prog:binary_cond_example_server} and Program 
+\vref{prog:binary_cond_example_agent}, we demonstrate the use of 
+Mobile-C condition variables to synchronize an agent with a binary thread.
+The binary space thread program shown in Program \ref{prog:binary_cond_example_server}
+simply waits on a condition variable. The agent shown in Program
+\ref{prog:binary_cond_example_agent} signals the binary space thread
+with a call to {\it mc\_CondSignal()}, causing the binary space
+thread to run once. 
+% }}} Synchronization Between Binary and Agent Spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mobile-C Execution with Multiple Agencies {{{
+\section{Mobile-C Execution with Multiple Agencies}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% server.c {{{
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/miscellaneous/multiple_agency_example/server.c}}
+\end{center}
+\caption{An example program containing two Mobile-C agencies. The program
+copies agents arriving at the agency on port 5051 to the agency at port
+5052.\texttt{(<MCPACKAGE>/demos/miscellaneous/multiple\_agency\_example/mc\_server.c)}}
+\label{prog:multiple_agency_server}
+\end{Program}
+% }}} server.c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Using the Mobile-C library, multiple agencies may be initialized 
+within the same program. This is useful in cases where the agencies
+may have different AEE configuration properties, privileges, etc. 
+Ch is the chosen AEE of Mobile-C. 
+Functions such as MC\_CopyAgent() and MC\_AddAgent() become useful
+in such cases. 
+
+In the example shown in Program \vref{prog:multiple_agency_server},
+we demonstrate a program with two agencies, listening on ports
+5051 and 5052, respectively. In our simple example, the server
+simple duplicates every agent arriving to the agency on port 5051
+and adds a copy to the agency on port 5052. 
+
+Note that the 
+MC\_CopyAgent() function is necessary here because Mobile-C
+functions which retrieve agents from agencies only retrieve references
+to the agents, not copies of the agents. The MC\_CopyAgent() function performs
+a deep copy on the agent structure so that it may be used in another
+agency. Also note that setting the copied agent's status to 
+``MC\_WAIT\_CH'' ensures that it will execute again upon entering the 
+second agency. 
+% }}} Mobile-C Execution with Multiple Agencies
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} Synchronization Support in the Mobile-C Library
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% {{{ Mobile-C Security Module
+\chapter{Mobile-C Security Module \label{chap:Security}}
+The Mobile-C package (version 1.10.@@) includes a security module. 
+This security module is intended to provide secure migration process of 
+  mobile agents and ACL messages from one agency to another. 
+Before the migration process, both agencies must authenticate each other 
+  successfully. 
+After that, an encrypted mobile agent is transferred and its integrity 
+  is verified at the receiver side. 
+The security module helps guard against man-in-the-middle attacks and
+  eavesdropping, and provides a strong authentication of the 
+  agencies involved in the migration process.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Security Module Architecture and Overview {{{
+\section{Security Module Architecture and Overview}
+The Mobile-C security module is inspired by the SSH protocol.
+When a security-enabled agency attempts to contact another agency for 
+  the migration of a mobile agent or an ACL message, both
+  agencies must authenticate each other before the  migration process. 
+A successful authentication creates a trust between the two agencies.
+
+Each security-enabled agency must contain a \textit{known\_host} file 
+  and a pair of private (\textit{rsa\_priv}) and public (\textit{rsa\_pub}) 
+  key files.
+These files are provided to each agency by the administrator at 
+  startup time. 
+The \textit{known\_host} file contains the host name and public key 
+  of each agency in the network, as an identifier. 
+By default, each agency trusts all the agencies that are listed 
+  in the \textit{known\_host} file. 
+The \textit{rsa\_priv} and \textit{rsa\_pub} key files contains the 
+  private and public key of the agency.
+
+% }}} Security Module Architecture and Overview
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enabling the Security Module {{{
+\section {Enabling the Security Module}
+The configuration options need to be changed in order for the module 
+to be built and used are below.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enabling the Security Module in Unix {{{
+\subsection{Enabling the Security Module in Unix}
+In a Unix environment, a configuration option needs to be stated during
+the configuration process. The new configuration step will be the command
+\begin{verbatim}
+./configure --enable-security
+\end{verbatim}
+instead of the old
+\begin{verbatim}
+./configure
+\end{verbatim}
+
+% }}} Enabling the Security Module in Unix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enabling the Security Module in Windows {{{
+\subsection{Enabling the Security Module in Windows}
+For Windows, below is the line that needs to be comment out in the 
+file ``[MobileC\_HOME]/src/winconfig.h''.
+\begin{verbatim}
+#define MC_SECURITY 1
+\end{verbatim}
+% }}} Enabling the Security Module in Windows
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Further Instructions {{{
+\subsection{Further Instructions}
+If the private key file is used in encrypted form then option needs to 
+be turned on. 
+The following C code snippet will start a security-enabled agency 
+  listening on port 5050.
+\begin{verbatim}
+MCAgency_t agency;
+MC_AgencyOptions_t options;
+MC_InitializeAgencyOptions(&options);
+strcpy(options.passphrase, "alpha1234");
+agency = MC_Initialize(5050, &options);
+
+\end{verbatim}
+
+See more about the MC\_AgencyOptions\_t type at the description of the
+  MC\_Initialize() function in Appendix A on page \pageref{api:MC_Initialize}.
+
+% }}} Further Instructions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} Enabling the Security Module
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Preparation to Run Security Enabled Agency  {{{
+\section{Preparation to Run Security Enabled Agency}
+Before running a Mobile-C agency with the security option, 
+  the following files are required.
+\begin{enumerate}
+\item A known host file (\text{known\_host})
+\item A pair for public (\textit{rsa\_pub}) and private 
+      (\textit{rsa\_priv}) key files
+\end{enumerate} 
+  are required to be created. 
+These are \textit{known\_host} file and \textit{private key} file.  
+A small utility source program 
+  \begin{verbatim} [MobileC-SRC_HOME]/src/util/mc_keygen.c \end{verbatim} 
+  is provided with the Mobile-C library to create a pair of public 
+  and private key files for an agency. 
+When you make the Mobile-C library the executable for this source program
+  can be found in 
+  \begin{verbatim} [Mobile-C_HOME]/bin/mc_keygen \end{verbatim}
+It is required to create a separate pair of public and private key file
+  for each agency. 
+That means if there are \textit{n} agencies in a network then \textit{n}
+  number of public and private key file pairs are required.
+The private key files can be created in plaintext or encrypted 
+  form. Details can be found in section 9.3.1.
+The known host file needs to be built manually after creating public
+  and private key files.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generating Key Files {{{
+\subsection{Generating Key Files}
+A utility program {\bf mc\_genkey} \textit{([MobileC-Home]/bin/mc\_genkey)} is 
+used to create public and private key files.
+This utility program can create a private key in plain text or cipher text.
+To generate the key files with private key in plain text, you can execute the 
+{\bf mc\_genkey} as 
+\begin{verbatim}
+$./mc_genkey -rsakeys -pt
+Seeding the random number generator 
+Generating the RSA key [ 1024-bit ] 
+Exporting public key in rsa_pub 
+Exporting the private key in rsa_priv 
+Done. 
+Key generated.
+\end{verbatim}
+where \textit{-pt} means to generate private key in plain text. 
+Similarly,
+\begin{verbatim}
+$./mc_genkey -rsakeys -en
+Enter Passphrase (A-Z, a-z, 0-9)to encrypt privatekey file
+(remember your passphrase otherwise encrypted private key file is useless)
+>  alpha1234
+
+Seeding the random number generator 
+Generating the RSA key [ 1024-bit ] 
+Exporting public key in rsa_pub 
+Exporting the private key in rsa_priv 
+encrypted. 
+done. 
+keys generated.
+\end{verbatim}
+
+would generate the private key in encrypted form, where \textit{en} stands 
+for encryption. 
+Here we a passphrase (\textit{alpha1234})is provided to encrypt the private 
+  key file. 
+With this option it prompts for the passphrase that is used to encrypt the 
+  rsa private key. 
+Here we entered a passphrase (\textit{alpha1234}) to encrypt the private 
+  key file.
+You can enter a string maximum upto 32 bytes in length consisting of small 
+  or capital alphabet and/or 1-9 digits. 
+The same passphrase is required by the Mobile-C agency to decrypt the 
+  private key file.
+With both options, it generates the public key file in plain text.
+The output file names are \textit{rsa\_pub} for public key and
+\textit{rsa\_priv} for private key.
+
+% }}} Generating Key Files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE {{{ 
+\begin{figure*}[!t]
+\begin{center}
+   \includegraphics[scale=0.5]{figure/knownhost}
+   \caption{A sample known host file.}
+   \label{fig:knownhost}
+\end{center}
+\end{figure*}
+% FIGURE }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Known Host file {{{
+\subsection{Known Host File}
+After creating the key files for all the agencies in a network the 
+  \textit{known\_host} file needs to be created manully.
+The sample \textit{known\_host} file is shown in Figure ~\ref{fig:knownhost}. 
+To proceed, create a file using a text editor with name 
+  \textit{known\_host}. 
+Type the name of the first agency (as shown \textit{Host Name} in 
+Figure ~\ref{fig:knownhost}) and 
+copy its public key from \textit{rsa\_pub} file. Insert the record 
+separation character \# and type the same for second agency and continue.
+Make sure that the name for the \textit{known\_host} file is 
+\textit{``known\_host"}. After creating the 
+\textit{known\_host} file, copy the \textit{known\_host} file to each \
+agency and the \textit{rsa\_priv} file on the respective
+agencies (the same directory from where you will run the Mobile-C 
+agency). 
+Public and private key files are always created as a pair this means that
+  any text encrypted with the public key can only be decrypted with the
+  corresponding (paired) private key.
+Therefore, please make sure that the copied private key 
+(\textit{rsa\_priv}) to an agency must correspond to the public key
+that is mentioned infront of the name of this agency in \textit{
+known\_host} file.
+% }}} Known Host File
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%}}} Preparation to Run Security Enabled Agency
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Examples {{{
+\section{Examples -- Mobile-C Security}
+A Mobile-C security enable agency can be executed with encypted or plaintext
+  private key. 
+When you execute a Mobile-C agency it will look for private key file named
+  \textit{rsa\_priv} in the current directory. 
+If the private key is encrypted and the passphrase is not provided in Mobile-C
+  agency C program then it will prompt for the passphrase.
+\texttt{<MCPACKAGE>/demos/} contains two demos 
+  (\textit{hello\_world\_secure} and \textit{multi\_task\_example\_secure}) that 
+  uses private key in plain text.
+
+Please note that for \textit{hello\_world\_secure} demo, the private and public
+  key pair is same for client and server, that is both the client and server 
+  program run on the same machine (iel2.engr.ucdavis.edu).
+To run the demo in your machine, you to write the name of your machine in 
+  \textit{known\_host} file and the mobile agent file (\textit{test1.xml}) 
+
+To run client and server agencies on the two different machines, you need to
+  create a pair of public and private keys (see section 9.3.1) and that 
+  is for the second machine.  
+The first agency can use the already created key files that are provided with
+  demos.
+After creating the key files, edit the \textit{known\_host} file by including
+  the name of other machine and newly created public key from file 
+  (\textit{rsa\_priv}), for details see section 9.3.2.
+Also copy the newly generated private key file (\textit{rsa\_priv}) and 
+  updated \textit{known\_host} file on the other machine in the same 
+  directory from where Mobile-C agency will be executed.
+Now start the server program and then the client program.
+
+Please note that when you build the demos, the executable 
+ files ( \textit{client} and  \textit{server}) for demo 
+ \textit{hello\_world \_secure} are in 
+ directories \textit{hello\_world\_secure/client} and 
+ \textit{hello\_world\_ secure/server} respectively. Similarly, the executable 
+ files (\textit{client},  \textit{server1} and  \textit{server2} ) for demo
+  \textit{multi\_task\_example\_secure} are in directories 
+   \textit{multi\_task\_e xample\_secure/client}, 
+   \textit{multi\_task\_example\_secure/server1} and
+   \textit{multi\_task\_example\_secure/server2} respectively.
+
+Each agency uses a separate \textit{known\_host},
+  public(\textit{rsa\_pub}) and private key {\textit{rsa\_priv} pair files. 
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/mobilec_security/hello_world_secure/server.c }}
+\end{center}
+\caption{ A sample server side code for security enable agency 
+       (\textit{../demos/mobilec\_security/hello\_world\_secure/server.c})}
+\label{prog:security_server}
+\end{Program}
+
+\begin{Program}[!t]
+\begin{center}
+   {\footnotesize \linespread{1.0} \verbatiminput{../demos/mobilec_security/hello_world_secure/client.c }}
+\end{center}
+\caption{ A sample client side code for security enable agency
+        (\textit{../demos/mobilec\_security/hello\_world\_secure/client.c})}
+\label{prog:security_client}
+\end{Program}
+
+The programs \ref{prog:security_server} and \ref{prog:security_client} show 
+  \textit{hello\_world\_secure} server and client code respectively.
+Please note that the \textit{MC\_AgencyOptions\_t} is required only if the 
+  private key file is encrypted. 
+Since both programs use the private key file (\textit{rsa\_priv}) in plaintext
+  so \textit{MC\_AgencyOptions\_t} is NULL in \textit{MC\_Initialize} function.
+
+If you generate the private key file (\textit{rsa\_priv}) in encrypted form 
+   (see section 9.3.1) then the Mobile-C agency requires the same passphrase 
+    to decrypt its private key that you have entered to encrypted this file.
+In this case \textit{MC\_AgencyOptions\_t} should not be NULL. 
+It is a possible that passphrase would not be privided in the code. 
+That is, this code can be run if 
+  \textit{strcpy(options.passphrase, "xxxx");} is commented out.
+In this case, if the private key is encyrpted the Mobile-C agency
+  would prompt to enter passphrase at startup otherwise not. 
+
+%To run the these programs in your machine you need to replace 
+%  \textit{rabbit.engr.ucdavis.edu} to your machine name in 
+%  \textit{client.c}, \textit{test1.xml} and \textit{known\_host}
+%  file.
+%The \textit{test1.xml} is a hello world mobile agent. \
+     
+
+% }}} Example
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% }}} Mobile-C Security Module
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{{{Communication With Other FIPA Compliant Agent Systems
+\chapter{Communication With Other FIPA Compliant Agent Systems}
+This section provides some brief examples regarding communication
+between Mobile-C and other FIPA compliant agent systems.
+\subsection{Example: Receiving a message from a JADE agent}
+The following section contains details regarding an example where a
+Mobile-C agent receives a message from a JADE agent. This example is
+included to provide a brief overview of how FIPA ACL communication
+operates between Mobile-C agencies and JADE agencies.
+
+\subsubsection{Start a Mobile-C Agency}
+The first step in the example is to start a Mobile-C agency and a suitable
+agent to wait for a message. An example agency which performs these tasks
+may be found in the directory \texttt{<MCPACKAGE>/demos/ jade\_to\_mc\_example/}.
+To start the agency, simply go to the directory and execute the server
+with the command
+\begin{verbatim}
+./server
+\end{verbatim}
+The server will start and load the sample agent named ``mobagent1'' in one step,
+which should produce the following output (or similar):
+\begin{verbatim}
+Mobile-C Started
+
+MobileC > This is mobagent1 from the agency at port 5050.
+Now, I am going to wait until I receive a message. Waiting...
+\end{verbatim}
+
+\subsubsection{Create a JADE container}
+The next step is to start a JADE agency. Instructions on how to obtain and
+install JADE may be found at the website \texttt{<http://jade.tilab.com>} .
+Once JADE in installed, use the command
+\begin{verbatim}
+java jade.Boot -gui
+\end{verbatim}
+to start a JADE container. Note that the command may vary across systems depending
+on your java distribution and system setup. This command should produce a window
+similar to the following:
+
+\begin{center}
+\includegraphics[width=4in]{figure/jade_to_mc_example/jade_main_window.png}
+\end{center}
+
+\subsubsection{Start a JADE dummy agent}
+The next step is to start a ``dummy'' agent by clicking on the button indicated by the 
+large arrow in the previous figure. This should produce a second window
+which should resemble the following image.
+
+\begin{center}
+\includegraphics[width=4in]{figure/jade_to_mc_example/dummy_agent_window_blank.png}
+\end{center}
+
+\subsubsection{Send a message to Mobile-C}
+There are several fields in this empty ACL message that need to be set before the
+message will be successfully passed to our Mobile-C agent. The first field to fill
+out is the \texttt{Receivers}, which indicates the recipients for our message.
+We wish for our Mobile-C agent ``mobagent1'' to be our sole recipient. Add 
+``mobagent1'' by right-clicking on the \texttt{Receivers} textbox and selecting the
+\texttt{Add} option. Fill out the box as shown in the following image:
+
+\begin{center}
+\includegraphics[width=2in]{figure/jade_to_mc_example/dummy_agent_receiver_window.png}
+\end{center}
+
+After setting the receiver, the rest of the message may be set to whatever is desired.
+For this example, our sample message may be seen on the following image.
+
+\begin{center}
+\includegraphics[width=4in]{figure/jade_to_mc_example/dummy_agent_window_complete.png}
+\end{center}
+
+Once your desired message parameters are in place, click on the ``Send Message'' button
+indicated by the arrow in the previous figure. The message will be sent to the agent
+waiting at the Mobile-C agency that was previously started. The agent should
+receive the message and produce the following output:
+\begin{verbatim}
+mobagent1 Got a message!
+Message is from da0@boxzor:1099/JADE
+The content is Hello mobagent1. This is sample content.
+\end{verbatim}
+This indicates that \texttt{mobagent1} has successfully received the
+message from JADE.
+
+\subsection{Example: Sending a message from Mobile-C to JADE}
+This example illustrates a Mobile-C agent sending an ACL message to a
+JADE agent.  The example will be presented in a step by step fashion and all
+files may be found in the directory \texttt{<MCPACKAGE>/demos/mc\_to\_jade\_example/}.
+
+\subsubsection{Start a JADE container with a ``PingAgent'' agent}
+The first step is to start a JADE container with a responsive agent. In this
+example, we will use a demo ``PingAgent'' agent which is provided with JADE. The
+agent source code may be found in the JADE subdirectory 
+\texttt{jade/src/examples/PingAgent/PingAgent.java} . After installing JADE,
+run the command
+\begin{verbatim}
+java jade.Boot pingme:examples.PingAgent.PingAgent
+\end{verbatim}
+from the \texttt{jade/src/} directory to start a JADE main container and 
+invoke an agent of type ``PingAgent'' named ``pingme''. The ``PingAgent'' agent
+contains a behaviour which receives messages and replies with a standard 
+reply message. The ``PingAgent'' expects incoming messages to have a performative
+of ``query-ref'', and for the content field to contain the text ``ping''. 
+
+\subsubsection{Start a Mobile-C agency with a sender agent}
+A Mobile-C agency and agent for use in the example has already been
+created and reside in the directory \texttt{<MCPACKAGE>/demos/mc\_to\_jade\_example/} .
+After compiling Mobile-C and the Mobile-C demos, simply go to the directory and
+run the 'client' executable.
+\begin{verbatim}
+./client
+\end{verbatim}
+The executable will automatically start a Mobile-C agency and load an agent
+named ``mobagent1''. The agent is programmed to send an ACL message to 
+``pingme'' at the local JADE container and wait for a response message. 
+Upon receiving the response, the agent will print the contents of the 
+response message. The Mobile-C agent output should look something like
+\begin{verbatim}
+Mobile-C Started
+Sending agent to self...
+Done.
+mobagent2 Creating new ACL message...
+mobagent2 sending ACL message...
+Received a message from pingme@boxzor:1099/JADE.
+Content is 'alive'.
+\end{verbatim}
+%}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography {{{
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{IEEEtran}
+%\bibliography{/home/chgroup/project/paper/ielpaper}
+\bibliography{ielpaper}
+\pagebreak
+% }}} Bibliography 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix {{{
+\appendix
+\chapter{Mobile-C API in the C/C++ Binary Space \label {appendix}}
+\input{api/libmc}
+\chapter{Mobile-C API in the C/C++ Script Space \label {appendixb}}
+\input{api/mobilec}
+\pagebreak
+% }}} Appendix 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{{{ Mobile-C Agent Porting Guide from v1.9.x to v1.10.x
+\chapter{Mobile-C Agent Porting Guide from v1.9.x to v1.10.x}
+This chapter provides a brief overview of changes made to the agent
+xml code from version 1.9 to version 1.10. Agents in the v1.10 series
+of Mobile-C will not be compatible with the v1.9 series of agencies
+and vice versa. Additional features such as saved agent variables have
+necessitated a reorganization of the agent XML format. 
+
+\section{Overview of major changes}
+Some major changes in the agent xml format from version 1.9 to version 
+1.10 include the following:
+\begin{enumerate}
+\item The \texttt{<GAF\_MESSAGE>} tag has been renamed to
+  \texttt{<MOBILEC\_MESSAGE>}.
+\item The \texttt{<TASK>} tag has been renamed to \texttt{<TASKS>}. 
+  The attributes within the old \texttt{<TASK>} tag, \texttt{task} and
+  \texttt{num}, remain the same.
+\item The \texttt{<DATA>} tag has been renamed to \texttt{<TASK>}. Within
+the new \texttt{<TASK>} tag, the \texttt{name} attribute, which specifies
+the name of the variable to return upon task completion, has been renamed 
+to \texttt{return}. 
+\end{enumerate}
+
+\subsection{Comparison of Old Format and New Format}
+\subsubsection{Old Agent Code}
+\begin{verbatim}
+<!DOCTYPE myMessage SYSTEM "gafmessage.dtd">
+
+<GAF_MESSAGE>
+<MESSAGE message="MOBILE_AGENT">
+ <MOBILE_AGENT>
+  <AGENT_DATA>
+   <NAME>mobagent1</NAME>
+   <OWNER>IEL</OWNER>
+   <HOME>localhost:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA dim="0" name="no-return" complete="0" server="localhost:5051" />
+    <AGENT_CODE>
+     <![CDATA[
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+   printf("This is mobagent1 from the agency at port 5050.\n");
+   printf("I am performing the task on the agency at port 5051 now.\n");
+   printf("%f\n", hypot(1,2));
+
+   return 0;
+}
+     ]]>
+    </AGENT_CODE>
+    </TASK>
+  </AGENT_DATA>
+ </MOBILE_AGENT>
+</MESSAGE>
+</GAF_MESSAGE>
+\end{verbatim}
+
+\subsubsection{New Agent Code}
+\begin{verbatim}
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+   <MOBILE_AGENT>
+    <AGENT_DATA>
+     <NAME>mobagent1</NAME>
+     <OWNER>IEL</OWNER>
+     <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" return="no-return" complete="0" server="localhost:5051" />
+      <AGENT_CODE>
+       <![CDATA[
+ #include <stdio.h>
+ #include <math.h>
+ int main()
+ {
+     printf("This is mobagent1 from the agency at port 5050.\n");
+     printf("I am performing the task on the agency at port 5051 now.\n");
+     printf("%f\n", hypot(1,2));
+
+     return 0;
+ }
+       ]]>
+      </AGENT_CODE>
+    </TASKS>
+    </AGENT_DATA>
+   </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>
+\end{verbatim}
+
+
+\section{New Agent XML DTD \label{sec:xml_dtd}}
+{\footnotesize \linespread{1.0} \verbatiminput{../src/mobilec.dtd} }
+%}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Index {{{
+\phantomsection
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+% }}} Index 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

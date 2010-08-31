@@ -1,0 +1,4 @@
+bird2.engr.ucdavis.edu:5051
+phoenix.engr.ucdavis.edu:5052
+rabbit.engr.ucdavis.edu:5053
+mouse.engr.ucdavis.edu:5054

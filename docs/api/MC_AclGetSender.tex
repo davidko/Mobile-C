@@ -1,0 +1,55 @@
+\rhead{\bf MC\_AclGetSender()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclGetSender()\index{MC\_AclGetSender()}}\\
+\addcontentsline{toc}{section}{MC\_AclGetSender()}
+\label{api:MC_Acl_GetSender()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AclGetSender}({\bf fipa\_acl\_message\_t*} acl, {\bf char**} name, {\bf char**} address );\\
+
+\noindent
+{\bf Purpose}\\
+Get the sender from an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success or non-zero on failure.
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. \\
+$name$ & (Output) Gets the name of the sender. \\
+$address$ & (Output) Gets the address of the sender. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function takes pointers to characters, automatically allocates space for
+character strings, and makes copies of the names and addresses of an ACL message
+onto those strings. The variables passed into the \texttt{name} and \texttt{address}
+parameters of the function should be freed manually by the caller.
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclSetPerformative(), MC\_AclAddReceiver(), MC\_AclAddReplyTo(), 
+    \linebreak MC\_AclSetContent()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

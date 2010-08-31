@@ -1,0 +1,56 @@
+\rhead{\bf MC\_MainLoop()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_MainLoop()\index{MC\_MainLoop()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_MainLoop()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_MainLoop}({\bf MCAgency\_t} $agency$);\\
+
+\noindent
+{\bf Purpose}\\
+Cause the calling thread to wait indefinitely on an agency.\\
+
+\noindent
+{\bf Return Value}\\
+If the Mobile-C agency is terminated safely from another 
+thread or agent, the function will return 0. Otherwise, the function will
+return a non-zero error code. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle associated with a running agency. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function will block the calling thread until another thread or agent
+calls the function \texttt{MC\_End()} or \texttt{mc\_End()}, respectively.
+This function will also stop blocking if the \texttt{quit} command is issued
+from the Mobile-C command prompt.
+It must be run on a handle that is attached to an agency that has already 
+been started with the function \texttt{MC\_Initialize()}. Also note that 
+it is not necessary to call this function to start a valid Mobile-C
+agency. All agency threads and services are started upon calling
+\texttt{MC\_Initialize()}, and \texttt{MC\_MainLoop()} is generally
+only used to prevent the main thread from exiting.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/getting_started/hello_world/server.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

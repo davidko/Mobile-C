@@ -1,0 +1,52 @@
+\rhead{\bf MC\_AgentVariableRetrieve()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentVariableRetrieve()\index{MC\_AgentVariableRetrieve()}}\\
+\addcontentsline{toc}{section}{MC\_AgentVariableRetrieve()}
+\label{api:MC_AgentVariableRetrieve()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf void* MC\_AgentVariableRetrieve}({\bf MCAgent\_t} $agent$, {\bf const char*} $var\_name$);\\
+
+\noindent
+{\bf Purpose}\\
+Retrieve the value of a variable that the agent has saved in a previous task.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns a pointer to the saved data on success or NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.\\
+$var\_name$ & The variable to retrieve.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve the value of a variable that had been previously been
+saved with the function \texttt{MC\_AgentVariableSave()}. The function returns a pointer
+pointing to the saved data. For instance, if the saved variable was originally of type
+\texttt{int}, then the function returns \texttt{int*}. Similarly, if the data was originally
+of type \texttt{char*}, then the function returns \texttt{char**}, and so on.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/test1.xml}}
+
+\noindent
+{\bf See Also}\\
+MC\_AgentVariableSave()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

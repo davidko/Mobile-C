@@ -1,0 +1,3 @@
+Dev Version 1.10.2
+	- Fixed bug where acc_MessageHandlerThread() failed to exit upon call to
+		MC_End()

@@ -1,0 +1,89 @@
+\rhead{\bf MC\_WaitSignal()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_WaitSignal()\index{MC\_WaitSignal()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_WaitSignal()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_WaitSignal}({\bf MCAgency\_t} $agency$, {\bf int} $signals$);\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to block the execution of a Mobile-C library application 
+until the event of a signal.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle to a running agency.\\
+$signals$ & A bitwise-or combination of signals to wait on.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to block the execution of an application using the 
+Mobile-C library until a given signal is received as specfied by the 
+parameter $signals$. 
+Currently implemented signals that may be waited on are:
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{50 mm}p{120 mm}}
+MC\_RECV\_CONNECTION : & Continue after a connection is initialized.\\
+MC\_RECV\_MESSAGE : & Continue after a message is received.\\
+MC\_RECV\_AGENT : & Continue after an agent is received.\\
+MC\_RECV\_RETURN: & Continue after return data is received.\\
+MC\_EXEC\_AGENT : & Continue after an agent is finished executing.\\
+MC\_ALL\_SIGNALS : & Continue after any one of the above events occurs. 
+\end{tabular}
+\end{description}
+In order to wait on a custom combination of signals, the bitwise 'or operator' 
+may be used to specify combinations of signals.\\ 
+
+\noindent
+{\bf Example}\\
+\begin{verbatim}
+/* More code here. */
+
+/* Now we wait until we receive a message or mobile agent. */
+MC_WaitSignal(agency, RECV_MESSAGE | RECV_AGENT);
+
+/* At this point, a message or mobile agent has been received. */
+
+/* Perform operations on the new message or mobile agent here. */
+
+/* Resume the Mobile-C library */
+MC_ResetSignal(agency);
+
+/* More code here. */
+\end{verbatim}
+\noindent
+The above piece of code blocks execution until either a RECV\_MESSAGE or a 
+RECV\_AGENT event occurs.
+The function {\bf MC\_ResetSignal()} must be invoked at some point after 
+returning from {\bf MC\_WaitSignal()} in order for Mobile-C to resume normal 
+operations.\\
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_ResetSignal()\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

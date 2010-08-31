@@ -1,0 +1,52 @@
+\rhead{\bf MC\_AclPost()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclPost()\index{MC\_AclPost()}}\\
+\addcontentsline{toc}{section}{MC\_AclPost()}
+\label{api:MC_AclPost()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AclPost}({\bf MCAgent\_t} agent, {\bf fipa\_acl\_message\_t*} message);\\
+
+\noindent
+{\bf Purpose}\\
+Post a message directly to an agent's mailbox.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success, non-zero on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent. \\
+$message$ & The ACL message to post. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to post an ACL message directly to an agent's 
+mailbox. The agent must reside on the same agency as the caller.
+No forwarding or checking of any fields of the ACL message is performed.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclNew(), MC\_AclReply(), MC\_AclRetrieve(), MC\_AclSend(), \linebreak 
+    MC\_AclWaitRetrieve()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

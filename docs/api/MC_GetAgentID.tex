@@ -1,0 +1,48 @@
+\rhead{\bf MC\_GetAgentID()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_GetAgentID()\index{MC\_GetAgentID()}}\\
+\addcontentsline{toc}{section}{MC\_GetAgentID()}
+\label{api:MC_GetAgentID()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_GetAgentID}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Get an agent's ID. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns an agent's ID. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+Every agent that arrives at an agency is given an agency-unique 
+identification number. This function retrieves that number.  \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/mc_sample_app/korebot/service_provider_2.xml}}
+
+\noindent
+{\bf See Also}\\
+MC\_GetAgentName().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

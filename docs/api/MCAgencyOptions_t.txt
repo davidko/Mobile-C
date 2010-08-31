@@ -1,0 +1,16 @@
+typedef struct MCAgencyOptions_s{
+    int threads;              /*!< Threads to start */
+    int default_agent_status; /*!< Default agent status */
+    int modified;             /*!< unused */
+    int enable_security;      /*!< security enable flag */
+    unsigned char passphrase[32]; /*!< security enable flag */
+
+    /* Following are some thread stack size options: unix/pthreads only! */
+    int stack_size[MC_THREAD_ALL]; /*!< If the stack size is -1, use system
+                                        def.*/
+    char *known_host_filename; /* Filename of the known-hosts file (optional) */
+    char *priv_key_filename; /* Filename of the private key file (optional) */
+    int initInterps; /* Default initial number of Ch interpreters to preload */
+    ChOptions_t* ch_options; /* Ch Options for the Embedded Ch Interpreters */
+} MCAgencyOptions_t;
+

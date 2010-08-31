@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>wake_agent</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+int main()
+{
+    int mutex_id;
+    mutex_id = 55;
+    printf("Agent 2: Has arrived");
+    printf("Agent 2: Attempting to lock the mutex...\n");
+    mc_MutexLock(mutex_id);
+    printf("Agent 2: Mutex locked.\n");
+    printf("Agent 2: Perform protected operations here.\n");
+    sleep(5);
+    mc_MutexUnlock(mutex_id);
+    printf("Agent 2: Mutex Unlocked\n");
+    mc_SyncDelete(mutex_id);
+
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

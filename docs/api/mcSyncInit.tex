@@ -1,0 +1,60 @@
+\rhead{\bf mc\_SyncInit()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_SyncInit()\index{mc\_SyncInit()}}\\
+\addcontentsline{toc}{section}{mc\_SyncInit()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_SyncInit}({\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Initialize a new synchronization variable for agents to wait on.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns the allocated id of the synchronization variable. Note 
+that the allocated id may not necessarily be the same as the requested
+id. See the description below for more details.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$id$ & A requested synchronization variable id. A random id will be assigned 
+if the value passed is 0 or if there is a conflicting id.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function initializes and registers a new MobileC synchronization variable.
+Mobile-C Synchronization variables may be used as a mutex, a condition 
+variable (with an associated mutex), or a semaphore. 
+The purpose of the Mobile-C synchronization variables is to synchronize the 
+execution of agents with each other, as well as the excution of agents with 
+their respective agencies.
+
+Each synchronization variable created by this function is effectively global
+across the agency and therefore must have a unique identifying number. If
+this function is called requesting an id that is already registered,
+the function will automatically ignore the requested value and allocate
+a synchronization variable with a randomly generated id.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/synchronization/agent_mutex_example/sleep.xml}}
+
+\noindent
+{\bf See Also}\\
+ mc\_CondSignal(), mc\_CondWait(), mc\_MutexLock(), mc\_MutexUnlock(), mc\_SemaphorePost(), mc\_SemaphoreWait(), mc\_SyncDelete().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

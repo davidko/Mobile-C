@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+    <MOBILE_AGENT>
+     <AGENT_DATA>
+       <NAME>sleep_agent</NAME>
+       <OWNER>IEL</OWNER>
+       <HOME>localhost:5050</HOME>
+       <TASKS task="1" num="0">
+         <TASK num="0" complete="0" server="localhost:5051">
+         </TASK>
+	  <AGENT_CODE>
+          <![CDATA[
+#include <stdio.h>
+int main()
+{
+    int sem_id;
+    printf("Sleep agent has arrived.\n");
+    sem_id = mc_SyncInit(55);
+    if (sem_id != 55) {
+        printf("Possible error. Aborting...\n");
+        exit(1);
+    }
+    printf("This is the sleep agent.\n");
+    printf("I am going to sleep now...\n");
+    mc_SemaphoreWait(sem_id);
+    printf("This is the sleep agent: I am awake now. Continuing...\n");
+    mc_SyncDelete(sem_id);
+
+    return 0;
+}
+        ]]>
+        </AGENT_CODE>
+      </TASKS>
+      </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>

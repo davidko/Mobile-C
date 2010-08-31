@@ -1,0 +1,50 @@
+\rhead{\bf MC\_AgentVariableSave()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentVariableSave()\index{MC\_AgentVariableSave()}}\\
+\addcontentsline{toc}{section}{MC\_AgentVariableSave()}
+\label{api:MC_AgentVariableSave()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentVariableSave}({\bf MCAgent\_t} $agent$, {\bf const char*} $var\_name$);\\
+
+\noindent
+{\bf Purpose}\\
+Mark an agent's variable to be saved during migration.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.\\
+$var\_name$ & The variable to save. The variable must be a global variable.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to mark an agent's variable to be saved when the agent
+migrates to its next host. The agent will be able to retrieve the values of
+saved variables as it is completing later tasks.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/test1.xml}}
+
+\noindent
+{\bf See Also}\\
+MC\_AgentVariableRetrieve()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+       <DATA dim="0" name="no-return" >
+       </DATA>
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+#ifndef _WIN32_
+#pragma package "/usr/local/ch/package/chmobilec"
+#else
+#pragma package "C:\\ch\\package\\chmobilec"
+#endif
+
+#include <math.h>
+#include <fipa_acl.h>
+int main()
+{
+    fipa_acl_message_t* tmp;
+    fipa_acl_message_t* reply;
+    printf("This is mobagent1 from the agency at port 5050.\n");
+    printf("Now, I am going to wait until I receive a message. Waiting...\n");
+    tmp = mc_AclWaitRetrieve(mc_current_agent);
+    printf("mobagent1 Got a message! \n");
+    printf("Message is from %s\n", tmp->sender->name);
+    printf("The content is %s\n", tmp->content->content);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

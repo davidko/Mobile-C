@@ -1,0 +1,51 @@
+\rhead{\bf mc\_AgentVariableSave()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AgentVariableSave()\index{mc\_AgentVariableSave()}}\\
+\addcontentsline{toc}{section}{mc\_AgentVariableSave()}
+
+\noindent
+\label{apidoc:mc_AgentVariableSave}
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_AgentVariableSave}({\bf MCAgent\_t} $agent$, {\bf const char*} $variable\_name$);\\
+
+\noindent
+{\bf Purpose}\\
+Save the value of a variable to the agent's persistent datastate. \\
+
+\noindent
+{\bf Return Value}\\
+0 on success, non-zero on failure. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{25 mm}p{130 mm}}
+$agent$ & The agent for which to save a variable. From agent space, this value 
+will typically be \texttt{mc\_current\_agent}, which is a special variable that
+is an agent's handle to itself. \\
+$variable\_name$ & The name of the variable to save.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to save arbitrary variables to an agent's datastate. These
+variables may be read by the agent later during later tasks.
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/agent_migration_message_format/agent_saved_variables_example/test1.xml}}
+
+\noindent
+{\bf See Also}\\
+    mc\_AgentVariableRetrieve()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

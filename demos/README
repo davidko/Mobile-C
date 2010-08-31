@@ -1,0 +1,76 @@
+MobileC Demos
+
+This directory contains the MobileC demos. Each demo is designed to 
+demonstrate a certain aspect or feature of the MobileC agency or 
+MobileC agents. Following are some quick synopses of each demo contained
+in this directory. Note that the execution of most of the demos simply
+involves starting the server/host agency, and then starting the client
+agency. If there are multiple servers/hosts, they must all be started
+before starting the client agency.
+
+agent_cond_example:
+  This demo demonstrates the use of MobileC condition variables among 
+  cooperating agents. 
+
+agent_mutex_example:
+  This demo demonstrates the use of MobileC mutex variables among cooperating
+  agents. 
+
+agent_self_migrate:
+  This demo demonstrates how an agent may choose where to migrate to on its own,
+  without having a preset task. The agent may migrate itself via code in its
+  own agent code space.
+
+agent_semaphore_example:
+  This demo demonstrates the use of MobileC Semaphores among cooperating
+  agents.
+
+agent_squad_test:
+  This demo demonstrates the use of barriers to implement 'squads' of agents. 
+  A squad of agents is characterized by a set of agents that move together
+  from host to host, cooperating to perform parallel tasks on each host.
+
+hello_world:
+  This is the simplest demo consisting of a single trivial agent being 
+  migrated from a client agency to a host agency. 
+
+mc_array_return_example:
+  This example demonstrates MobileC's ability to return multi-dimensional
+  arrays as data. An agent travels to a host agency, creates a 
+  multi-dimensional array, and returns with it to the original agency. 
+  Scenarios similar to this exist for data acquisition situations.
+
+mc_barrier_example:
+  A simple demo demonstrating the use of MobileC Barriers to coordinate
+  multiple agents.
+
+mc_df_example:
+  This demo shows a simple use of the MobileC directory facilitator. Three
+  agents are sent in series in this demo: The first and second agents
+  each register some services, and a third agent searches for those 
+  services.
+
+mc_df_service_test:
+  This demonstration builds upon the mc_df_example demo by actually calling
+  and using services provided by other agents.
+
+mc_sample_app:
+  mc_sample_app is a simple multi-purpose MobileC agency.
+
+multi_task_example:
+  This example demonstrates the behavior of an agent which has multiple tasks
+  on multiple hosts. The agent visits two seperate hosts, performs
+  tasks on each one, and returns data to the originating agency. 
+
+multi_data_retrieval:
+  This example executes as such: A single agency sends out two agents, each 
+  to a seperate agency to perform a task. Each agent then returns to the 
+  home agency with data.
+
+persistent_example:
+  This demo demonstrates the execution of a simple persistent agent.
+
+steer_example:
+  This demo demonstrates a potential application of MobileC in the field of
+  computational steering. This example is somewhat more complex: Reading
+  through the demo readme file at steer_example/README is highly recommended.

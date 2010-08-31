@@ -1,0 +1,17 @@
+Mobile-C Security Module
+
+The Mobile-C Security Module uses the XySSL-0.7 Library which may be obtained
+from http://xyssl.org . The security module currently uses the Diffie-Hellman
+protocol for secure message passing. 
+
+The Mobile-C Security Module was designed and prototyped by Cristian Bertocco
+<cbertocco@dei.unipd.it>. 
+
+The actual implementation within Mobile-C was done by David Ko 
+<dko@ucdavis.edu> and is based on Cristian Bertocco's prototype code.
+
+As per request, the security module may or may not be compiled into the final 
+library using a configure option. A runtime option also exists to enable/disable
+the security module. Run the configure script with the '--help' argument and see
+the MCAgencyOptions_t documentation in the User's guide for more details.
+

@@ -1,0 +1,52 @@
+\rhead{\bf MC\_AgentReturnArrayExtent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnArrayExtent()\index{MC\_AgentReturnArrayExtent()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnArrayExtent()}
+\label{api:MC_AgentReturnArrayExtent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentReturnArrayExtent}({\bf MCAgent\_t} agent, {\bf int} task\_num, {\bf int} index);\\
+
+\noindent
+{\bf Purpose}\\
+Get the extent of a dimension of an array contained within a return agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns the extent of the dimension of the array and index \texttt{index}, or
+-1 on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the array dimension.
+\item \texttt{index} : The index of the array dimension to retrieve.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve the extent of a single dimension of an array
+held by a returning agent. The \texttt{index} argument must be smaller than the
+dimension of the array.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayDim(), MC\_AgentReturnArrayNum()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

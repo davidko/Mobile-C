@@ -1,0 +1,54 @@
+\rhead{\bf MC\_ResetSignal()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_ResetSignal()\index{MC\_ResetSignal()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_ResetSignal()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_ResetSignal}({\bf MCAgency\_t} $agency$);\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to reset the Mobile-C signalling system. 
+It is intended to be used after returning from a call to function 
+{\bf MC\_WaitSignal()}.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle to a running agency.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to reset the Mobile-C signalling system. 
+System signals are triggered by certain events in the Mobile-C library. 
+This includes events such as the arrival of a new message or mobile agent, and 
+the departure of a mobile agent, etc. 
+If function {\bf MC\_WaitSignal()} is used to listen for one of these events, 
+function {\bf MC\_ResetSignal()} must be called in order to allow Mobile-C to 
+resume with it's operations.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/composing_agents/multi_task_example/client.c}}
+
+\noindent
+{\bf See Also}\\
+MC\_WaitSignal() \\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

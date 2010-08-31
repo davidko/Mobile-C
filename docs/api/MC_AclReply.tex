@@ -1,0 +1,53 @@
+\rhead{\bf MC\_AclReply()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclReply()\index{MC\_AclNew()}}\\
+\addcontentsline{toc}{section}{MC\_AclReply()}
+\label{api:MC_AclReply()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AclReply}({\bf fipa\_acl\_message\_t*} acl\_message);\\
+
+\noindent
+{\bf Purpose}\\
+Automatically generate an ACL message addressed to the sender of an
+incoming ACL message..\\
+
+\noindent
+{\bf Return Value}\\
+A newly allocated ACL message with the 'receiver' field initialized, or
+NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl\_message$ & The message to generate a reply to.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is designed to make replying to received ACL messages easier.
+The function automatically generates a new ACL message with the correct
+destination address to reach the sender of the original message.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclNew(), MC\_AclPost(), MC\_AclRetrieve(), MC\_AclSend(), \linebreak 
+    MC\_AclWaitRetrieve()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

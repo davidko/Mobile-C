@@ -1,0 +1,57 @@
+\rhead{\bf MC\_SendAgentMigrationMessageFile()} 
+\noindent
+\vspace{5pt}
+\rule{6.5in}{.01in}
+\noindent
+{\LARGE \bf MC\_SendAgentMigrationMessageFile()\index{MC\_SendAgentMigrationMessageFile()}} [Deprecated]\\ 
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SendAgentMigrationMessageFile()}
+\label{api:MC_SendAgentMigrationMessageFile()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SendAgentMigrationMessageFile}({\bf MCAgency\_t} $agency$, {\bf char *}$filename$, {\bf char *}$hostname$, {\bf int} $port$);\\
+
+\noindent
+{\bf Purpose}\\
+Send an ACL mobile agent message saved as a file to a remote agency.
+
+Please note that this function is deprecated. Please use the
+\texttt{MC\_SendAgentFile()} function instead.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{20 mm}p{135 mm}}
+$agency$ & A handle associated with an agency from which to send the ACL 
+mobile agent message. A NULL pointer can be used to send the ACL message 
+from an unspecified agency.\\ 
+$filename$ & The ACL mobile agent message file to be sent.\\
+$hostname$ & The hostname of the remote agency. It can be in number-dot 
+format or hostname format, i.e., 169.237.104.199 or machine.ucdavis.edu.\\
+$port$ & The port number on which the remote agency is listening. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to send an XML based ACL mobile agent message, which 
+is saved as a file, to a remote agency. 
+This function can be used without a running local agency.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/getting_started/hello_world/client.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

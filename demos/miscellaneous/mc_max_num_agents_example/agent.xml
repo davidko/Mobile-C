@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" return="no-return" complete="0" server="localhost:5051" />
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+    char* str;
+    MCAgent_t agent;
+    printf("Hello World!\n");
+    printf("This is mobagent1 from the agency at port 5050.\n");
+    printf("I will now generate a new agent to send back to\n");
+    printf("my home host.\n");
+    agent = mc_ComposeAgent(
+        "NewAgent",
+        "localhost:5051",
+        "mobagent1",
+        "\n#include <stdio.h>\n \
+        int main()\n \
+        {\n \
+          printf(\"Hello World!!\\n\");\n \
+          }\n",
+        "no-return",
+        "localhost:5050",
+        NULL,
+        0 );
+          
+    mc_AddAgent(agent);
+
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

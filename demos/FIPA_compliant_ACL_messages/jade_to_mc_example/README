@@ -1,0 +1,27 @@
+Jade communication to Mobile-C example
+
+This example is meant to illustrate Mobile-C's ability to parse and interpret
+FIPA ACL messages delivered from a JADE agent. To run this demo, perform the
+following steps:
+  1. Start the 'server' executable. This will start a Mobile-C agency listening
+     on port 5050 and automatically load an agent named 'mobagent1'. The agent
+     'mobagent' will proceed to wait until a new FIPA ACL message is detected
+     in its mailbox.
+  2. Start a JADE container. The command
+        java jade.Boot -gui
+     is usually sufficient. Please consult the JADE website at jade.tilab.com
+     for information regarding obtaining, installing, and running JADE.
+  3. Start a 'dummy' agent within jade. This may be done by clicking on the
+     'dummy' icon located on the toolbox on the top of the JADE gui window.
+  4. Use the 'dummy' agent to compose a new ACL message. Set the following 
+     fields:
+        - Under 'Receivers', add a new receiver with the name 'mobagent1'
+          and with an address of 'http://localhost:5050/acc' . 
+        - Set the performative to any desired performative.
+        - Type a message into the 'content' area
+  5. Click on the 'Send' icon to send the newly composed message to the 
+     Mobile-C agent. 
+  6. Inspect the Mobile-C agency. The 'mobagent1' agent should have received
+     the message and printed the performative and content.
+
+

@@ -1,0 +1,36 @@
+steer_example
+
+
+This demo is meant to demonstrate a simple steerable algorithm implemented
+using the MobileC library. 
+
+- Program Execution Synopsis
+
+The goal of the program is to continuosly run an algorithm. The user should
+be able to suspend, stop, resume, or restart the algorithm at will.
+
+- Execution Instructions
+
+Upon starting the 'server' executable, an agency is executed and the algorithm
+begins. A trivial algorithm (A counter counting up from 0) is used in this 
+example. 
+
+The commands are issued to the algorithm through MobileC agents that may be 
+sent from any host, including the local host. A copy of 'mc_sample_app' is
+included in this directory which may be used to send agents to the 
+algorithm agency. To start the command agency, you must bind it to a 
+non-default port since the algorithm agency uses the default port. Execute
+  ./mc_sample_app 5051
+to start the command agency on port 5051, a non-default port.
+
+To send command agents to the algorithm agency, use the MobileC 'send' command.
+From within the mc_sample_app prompt, type
+  send restart.xml localhost 5050
+to send the restart command agent to the algorithm agent. Type
+  help send
+from within the MobileC prompt for details about the send command. Sending
+'restart.xml' will restart the algorithm. The command agents that are included are:
+  restart.xml
+  resume.xml
+  stop.xml
+  suspend.xml

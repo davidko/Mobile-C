@@ -1,0 +1,18 @@
+Mobile-C to Jade FIPA communication Example
+
+This example is intended to test a Mobile-C agent's ability to send a FIPA 
+compliant message to a JADE agent. In order to run this example, a JADE agency
+must be started. For default operation, the following steps must be performed.
+
+1.  Jade must be started with an agent of type "PingAgent", found in the JADE
+    path jade/src/examples/PingAgent/PingAgent.java. From the jade/src directory,
+    run the command 
+        java jade.Boot pingme:examples.PingAgent.PingAgent
+    This will start a Jade container with a Receiver of the name 'pingme'. 
+    Please consult the Jade documentation for instructions on how to run and
+    troubleshoot Jade.
+
+2. Run the 'client' application from this directory. This program automatically
+    starts a Mobile-C agency and loads a Mobile-C agent into it. This agent
+    composes and sends a FIPA-ACL message to an agent of the name 'pingme'
+    at the Jade agency. The agent code is contained in the file "agent.xml".

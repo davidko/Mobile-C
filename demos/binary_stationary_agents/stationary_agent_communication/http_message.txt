@@ -1,0 +1,63 @@
+POST http://127.0.0.1:5050/acc HTTP/1.1
+Cache-Control: no-cache
+MIME-Version: 1.0
+Content-Type: multipart-mixed ; boundary="--251D738450A171593A1583EB"
+ 
+This is not part of the MIME multipart encoded  message.
+--251D738450A171593A1583EB 
+Content-Type: application/xml
+ 
+<?xml version="1.0"?>
+<envelope>
+  <params index="1">
+    <to>
+      <agent-identifier>
+        <name>mobagent1</name>
+        <addresses>
+          <url>http://foo.com/acc</url>
+        </addresses>
+      </agent-identifier>
+    </to>
+    <from>
+      <agent-identifier>
+        <name>sender@bar.com</name>
+        <addresses>
+          <url>http://bar.com/acc</url>
+        </addresses>
+      </agent-identifier>
+    </from>
+ 
+    <acl-representation>fipa.acl.rep.string.std</acl-representation>
+ 
+    <payload-encoding>US-ASCII</payload-encoding>
+ 
+    <date>20000508T042651481</date>
+ 
+    <received >
+      <received-by value="http://foo.com/acc" />
+      <received-date value="20000508T042651481" />
+      <received-id value="123456789" />
+    </received>
+  </params>
+</envelope>
+
+--251D738450A171593A1583EB
+Content-Type: application/text; charset=US-ASCII
+ 
+(inform
+  :sender
+    (agent-identifier
+      :name sender@bar.com
+      :addresses (sequence http://bar.com:80/acc ) )
+  :receiver
+    (set (agent-identifier
+      :name mobagent1
+      :addresses (sequence http://foo.com:80/acc ))))
+  :content-length 12
+  :reply-with task1-003
+  :language fipa-sl0
+  :ontology planning-ontology-1
+  :content "
+     (done task1)")
+--251D738450A171593A1583EB?
+ 

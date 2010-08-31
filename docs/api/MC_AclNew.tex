@@ -1,0 +1,46 @@
+\rhead{\bf MC\_AclNew()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AclNew()\index{MC\_AclNew()}}\\
+\addcontentsline{toc}{section}{MC\_AclNew()}
+\label{api:MC_AclNew()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf fipa\_acl\_message\_t* MC\_AclNew}({\bf void});\\
+
+\noindent
+{\bf Purpose}\\
+Create a new, blank ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns a newly allocated ACL message structure or NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+None.\\
+
+\noindent
+{\bf Description}\\
+This function allocates and returns a new ACL message. All 
+attributes of the message are set empty values and must be 
+initialized before sending the message.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AclPost(), MC\_AclReply(), MC\_AclRetrieve(), MC\_AclSend(), \linebreak
+    MC\_AclWaitRetrieve()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

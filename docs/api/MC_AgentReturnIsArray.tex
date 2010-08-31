@@ -1,0 +1,49 @@
+\rhead{\bf MC\_AgentReturnIsArray()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnIsArray()\index{MC\_AgentReturnIsArray()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnIsArray()}
+\label{api:MC_AgentReturnIsArray()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentReturnIsArray}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Determine whether an agent's return value is an array or not.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 1 if it is an array, 0 if it is not array, or -1 on failure, such as if
+there is no return data..\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : A task number.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function is used to determine if a return variable is an array or just a
+scalar value.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayExtent(), MC\_AgentReturnArrayNum()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

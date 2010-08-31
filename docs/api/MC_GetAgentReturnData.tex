@@ -1,0 +1,101 @@
+\rhead{\bf MC\_GetAgentReturnData()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_GetAgentReturnData()\index{MC\_GetAgentReturnData()}}[Deprecated]\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_GetAgentReturnData()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_GetAgentReturnData}({\bf MCAgent\_t} $agent$, 
+                                 {\bf int} $task\_num$, 
+                                 {\bf void**} $data$,
+                                 {\bf int*} $dim$,
+                                 {\bf int**} $extent$);\\
+
+\noindent
+{\bf Purpose}\\
+Retrieve the data from a return mobile agent.\\ 
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{20 mm}p{135 mm}}
+$agent$ & A returning agent.\\
+$task\_num$ & The task for which the return data is to be retrieved.\\ 
+$data$ & A pointer to hold an array of data.\\
+$dim$ & An integer to hold the dimension of the array.\\
+$extent$ & A pointer to hold an array of extents for each dimension of the 
+data array.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve the return data of a mobile agent. 
+Mobile agents may return single data values as well as multidimensional arrays 
+of int, float, or double type. 
+The first two arguments, $agent$ and $task\_num$, are input arguments which 
+specify which mobile agent and task for which to retrieve data. 
+The next three arguments are unallocated pointers which are modified by the 
+function. 
+\noindent
+The mobile agent's return data are stored as a single list of values in 
+$data$. 
+The dimension of the array is stored into $dim$, and the size of each 
+dimension is stored into $extent$.\\
+
+Please note that this function is deprecated. Please use the 
+\texttt{MC\_AgentReturn*()} series of functions instead.
+
+\noindent
+{\bf Example}\\
+\begin{verbatim}
+MCAgent_t agent;
+MCAgency_t agency;
+double *data;
+int dim;
+int *extent;
+int i;
+int elem;
+
+/* Agency initialization code here */
+
+agent = MC_FindAgentByName(agency, "ReturnAgent");
+MC_GetAgentReturnData(agent, 0, &data, &dim, &extent);
+elem = 1;
+for(i=0; i<dim; i++) {
+    printf("dim %d has %d size.\n", i, extent[i]);
+    elem *= extent[i];
+}
+printf("There are %d total elements in the multidimensional array.\n", elem);
+\end{verbatim}
+\noindent
+The above code prints the dimension and extent of each dimension of the 
+return data held by the agent. 
+It only prints the data of the first task, as indicated by the second 
+argument of function {\bf MC\_GetAgentReturnData()}, which is 0 in this 
+example.\\
+
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+\texttt{MC\_AgentReturnDataGetSymbolAddr(), MC\_AgentReturnArrayDim(),
+MC\_AgentReturnArrayExtent(), MC\_AgentReturnDataSize(),
+MC\_AgentReturnArrayNum()}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,43 @@
+\rhead{\bf mc\_SendSteerCommand()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_SendSteerCommand()\index{mc\_SendSteerCommand()}}\\
+\addcontentsline{toc}{section}{mc\_SendSteerCommand()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_SendSteerCommand}({\bf MCAgency\_t} attr, {\bf int(*)(void* data)} funcptr, {\bf void*} arg);\\
+
+\noindent
+{\bf Purpose}\\
+The mc\_SendSteerCommand function sends a computational steering command to the
+algorithm at the agent's current agency.
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success, or a non-zero error code on failure. \\
+
+\noindent
+{\bf Description}\\
+This function enables mobile agents to send steer commands to steering-enables
+algorithms running at the agent's local agency. See the demo at 
+demos/steer\_example/ for more details. \\
+
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/miscellaneous/steer_example/resume.xml}}
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_Steer(), MC\_SteerControl()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

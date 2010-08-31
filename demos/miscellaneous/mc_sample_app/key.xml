@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="KEY">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>bird1.engr.ucdavis.edu:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA name="no-return" 
+           complete="0" 
+           server="iel2.engr.ucdavis.edu:5130">
+     </DATA>
+     <KEY>
+     1421314241
+     </KEY>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

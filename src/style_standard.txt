@@ -1,0 +1,34 @@
+Note: This file is still in rough draft phase. Organization to come later.
+
+Always name function using nouns first, then verbs.
+i.e. agent_destroy, not destroy_agent.
+
+All objects and instances of objects will be named using lowercase letters
+and underscores. Furthermore, all structures will end in '_s', typedefs in
+'_t', enums in '_e', and typedef'd pointers with '_p'.
+i.e. struct some_structure_s my_structure; 
+not
+struct someStructure_s myStructure;
+
+All functions that act directly on objects, such as initialization,
+modification, destruction, will begin with the object name on which
+it operates, followed by the action in camel-hump format. i.e.
+some_structure_AddElement(); /* <-- this function would add an element to
+                                'some_structure' */
+Standard operations are (verbatim):
+  Initialize
+  Destroy
+  Add
+  Pop
+  etc...
+
+All other system functions, and user api functions will use camel-hump 
+naming, such as 
+runChScript. Note that the first letter is lowercase, acronyms begin with
+a single uppercase letter with the rest being lowercase.
+
+All data structures have their own header file, which named the same name as
+the data structure. This applies to all structures except the standard
+agency queues, which are defined in data_structures.c, declared in
+include/data_structures.h, and whose templates may be found in
+include/ap_queue_templates.h.

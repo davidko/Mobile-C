@@ -1,0 +1,47 @@
+\rhead{\bf MC\_Steer()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_Steer()\index{MC\_Steer()}}\\
+\addcontentsline{toc}{section}{MC\_Steer()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_Steer}({\bf MCAgency\_t} attr, {\bf int} (*funcptr)({\bf void*} data), {\bf void*} arg);\\
+
+\noindent
+{\bf Purpose}\\
+The MC\_Steer function initialized and runs a function containing an algorithm. 
+The function enables the steering functionality of the algorithm so that it may accept 
+command during runtime to change the execution of the algorithm. 
+For more information, please see the example and the demo located in the 
+demos/steer\_example/ directory.\\ 
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success, or a non-zero error code on failure. \\
+
+\noindent
+{\bf Description}\\
+The {\bf MC\_Steer} function is designed execute an algorithm in a fashion which enables
+that algorithm to be steered or modified on-the-fly during runtime. See the demo and
+the example for more details. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/miscellaneous/steer_example/server.c}}
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_SteerControl()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

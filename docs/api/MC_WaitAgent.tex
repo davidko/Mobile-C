@@ -1,0 +1,50 @@
+\rhead{\bf MC\_WaitAgent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_WaitAgent()\index{MC\_WaitAgent()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_WaitAgent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_WaitAgent}({\bf MCAgency\_t} $agency$);\\
+
+\noindent
+{\bf Purpose}\\
+Cause the calling thread to wait until a mobile agent is received.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle associated with a running agency. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function waits on an agency and wakes up the addition of a new
+mobile agent to the agency.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

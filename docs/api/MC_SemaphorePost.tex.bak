@@ -1,0 +1,59 @@
+\rhead{\bf MC\_SemaphorePost()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_SemaphorePost()\index{MC\_SemaphorePost()}}\\
+\addcontentsline{toc}{section}{MC\_SemaphorePost()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SemaphorePost}({\bf MCAgency\_t} agency, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+This function unlocks one resource from a MobileC semaphore, increasing its
+count by one.
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or non-zero if the id could not be found or on
+a semaphore error. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & The agency in which to find the synchronization variable to lock.
+$id$ & The id of the synchronization variable to lock. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+MC\_SemaphorePost unlocks a resourse from a previously allocated and initialized 
+MobileC synchronization variable being used as a semaphore. This function may be called 
+multiple times to increase  the count of the semaphore up to INT\_MAX. 
+
+Note that although a MobileC synchronization variable may be used as a mutex, condition
+variable, or semaphore, once it is used as a semaphore, it should only be used as a semaphore
+for the remainder of its life cycle.
+
+\noindent
+{\bf Example}\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_SemaphoreWait(), MC\_SyncInit(), MC\_SyncDelete().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

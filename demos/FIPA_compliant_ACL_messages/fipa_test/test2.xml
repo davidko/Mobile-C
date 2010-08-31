@@ -1,0 +1,68 @@
+<!-- File: fipa_test/test2.xml -->
+
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent2</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5052">
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+//#include <stdio.h>
+#ifndef _WIN32_
+#pragma package "/usr/local/ch/package/chmobilec"
+#else
+#pragma package "C:\\ch\\package\\chmobilec"
+#endif
+
+#include <math.h>
+#include <fipa_acl.h>
+int main()
+{
+    fipa_acl_message_t* message;
+    char *name, *address;
+
+    printf("\n%s: Arried at %s\n", mc_agent_name, mc_agent_address);
+
+    printf("\n%s: Creating new ACL message.\n", mc_agent_name);
+    message = mc_AclNew();
+    mc_AclSetPerformative(message, FIPA_INFORM );
+    mc_AclSetSender(message, mc_agent_name, mc_agent_address);
+    mc_AclAddReceiver(message, "mobagent1", "http://localhost:5051/acc" );
+
+    mc_AclSetProtocol(message, FIPA_PROTOCOL_CONTRACT_NET);
+    mc_AclSetConversationID(message, "cn1");
+    mc_AclSetContent(message, "Content from mobagent2" );
+
+    printf("%s: sending ACL message...\n");
+    mc_AclSend(message);
+    mc_AclDestroy(message);
+
+    /* Now wait for a message to come back */
+    printf("%s: Waiting for a message.\n", mc_agent_name);
+    message = mc_AclWaitRetrieve(mc_current_agent);
+
+    mc_AclGetSender(message, &name, &address);
+    printf("%s: Received a message from %s.\n", mc_agent_name, name);
+    printf("\tContent is '%s'.\n", mc_AclGetContent(message));
+    printf("\tProtocol is '%d'.\n", mc_AclGetProtocol(message));
+    printf("\tConverationID is '%s'.\n", mc_AclGetConversationID(message));
+
+    mc_AclDestroy(message);
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

@@ -1,0 +1,54 @@
+\rhead{\bf MC\_BarrierInit()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_BarrierInit()\index{MC\_BarrierInit()}}\\
+\addcontentsline{toc}{section}{MC\_BarrierInit()}
+\label{api:MC_BarrierInit()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_BarrierInit}({\bf MCAgency\_t} agency, {\bf int} $id$, {\bf int} $num\_procs$);\\
+
+\noindent
+{\bf Purpose}\\
+This function initializes a Mobile-C Barrier variable for usage. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or non-zero if the id could not be found. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{20 mm}p{145 mm}} 
+$agency$ & The agency in which initialized the barrier.\\
+$id$ & The id of the barrier. \\
+$num\_procs$ & The number of threads or agents the barrier will block before
+  continuing.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to initialize Mobile-C Barrier variables for usage
+by the \texttt{MC\_Barrier()} function. 
+    \\
+
+\noindent
+{\bf Example}\\
+Please see the example located at the directory
+\texttt{ mobilec/demos/mc\_barrier\_example/ }. \\
+
+\noindent
+
+\noindent
+{\bf See Also}\\
+MC\_Barrier(), MC\_BarrierDelete(). \\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,50 @@
+\rhead{\bf MC\_AgentReturnDataSize()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnDataSize()\index{MC\_AgentReturnDataSize()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnDataSize()}
+\label{api:MC_AgentReturnDataSize()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf size\_t MC\_AgentReturnDataSize}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Get the size of the datatype of an array returned by a returning agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns a positive value of -1 on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the datasize.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function retrieves the size of the datatype of an array. In other words,
+it is the size in bytes of a single element of the array.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayDim(), MC\_AgentReturnArrayExtent(), MC\_AgentReturnArrayNum(),
+  MC\_AgentReturnDataGetSymbolAddr(), MC\_AgentReturnDataType(),
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

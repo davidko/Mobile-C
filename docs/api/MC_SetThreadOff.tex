@@ -1,0 +1,72 @@
+\rhead{\bf MC\_SetThreadOff()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_SetThreadOff()\index{MC\_SetThreadOff()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_SetThreadOff()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_SetThreadOff}({\bf MCAgencyOptions\_t} $*options$, {\bf enum threadIndex\_e} $thread$);\\
+
+\noindent
+{\bf Purpose}\\
+Set a particular thread to not execute upon Mobile-C initialization.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success and non-zero otherwise. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$options$ & An allocated MCAgencyOptions\_t variable.\\
+$thread$ & A thread index.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to modify the Mobile-C startup options. 
+It is used to disable threads that may otherwise be enabled. 
+The threads which may be modified are
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{40 mm}p{125 mm}}
+MC\_THREAD\_AI : & Agent Initializing Thread - Create agent from incoming messages.\\
+MC\_THREAD\_AM : & Agent Managing Thread - Manage active agents.\\
+MC\_THREAD\_CL : & Connection Listening Thread - Listen incoming connections.\\
+MC\_THREAD\_MR : & Message Receiving Thread - Handle incoming connections and recieve agent messages.\\
+MC\_THREAD\_MS : & Message Sending Thread - Handle outgoing connections and send agent messages.\\
+MC\_THREAD\_CP : & Command Prompt Thread - Handle an interactive user command prompt.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Example}\\
+\begin{verbatim}
+MCAgencyOptions_t options;
+MCAgency_t agency;
+
+/* Turn the listen thread off. We will receive our messages 
+   in another method. */
+MC_SetThreadOff(&options, MC_THREAD_AI);
+
+/* Start the agency with no listen thread*/
+agency = MC_Initialize(5050, &options);
+
+/* etc ... */
+\end{verbatim}
+
+\noindent
+{\bf See Also}\\
+MC\_SetThreadOn()\\
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\
+

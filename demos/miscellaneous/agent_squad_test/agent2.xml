@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>agent2</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="3" num="0">
+     <TASK num="0"
+           complete="0" 
+           server="localhost:5051">
+     </TASK>
+     <TASK num="1"
+           complete="0" 
+           server="localhost:5052">
+     </TASK>
+     <TASK num="2"
+           complete="0" 
+           server="localhost:5053">
+     </TASK>
+
+     <AGENT_CODE>
+       <![CDATA[
+#include <stdio.h>
+#include <time.h>
+#define AGENTS_BEGIN 55
+#define AGENTS_END 56
+#define TASK_BEGIN 57
+#define TASK1 58
+#define TASK2 59
+#define TASK3 60
+
+int main() {
+    while (mc_Barrier(AGENTS_BEGIN) == MC_ERR_NOT_FOUND) {
+        sleep(1);
+    }
+    srand(time(NULL));
+    if( mc_host_port == 5052) {
+        printf("Agent 2: Beginning task on port %d.\n",
+                mc_host_port);
+        sleep( rand() % 10 );
+        printf("Agent 2: Task finished.");
+    }  else {
+        printf("Agent 2: Arrived at port %d: Nothing to do.\n",
+                mc_host_port);
+    }
+
+    while(mc_Barrier(AGENTS_END) == MC_ERR_NOT_FOUND) {
+        sleep(1);
+    }
+    return 0;
+}
+       ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

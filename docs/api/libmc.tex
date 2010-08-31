@@ -1,0 +1,491 @@
+\lhead{Mobile-C API in the C/C++ Binary Space}
+\noindent
+The header file {\bf libmc.h} defines all the data types, macros 
+and function prototypes for the Mobile-C library.
+The header file is used in the C/C++ binary space.
+
+\begin{table}[!h]
+\capstart
+\begin{center}
+\caption{Data types defined in {\bf libmc.h}.}
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Data Type & Description \\
+\hline
+{\bf MCAgency\_t} & A handle containing information of an agency. \\
+{\bf MCAgent\_t} & A handle containing information of a mobile agent. \\
+{\bf MCAgencyOptions\_t} & A structure containing information about which thread(s) to be activated and the default agent status specified by a user. \\
+\hline
+\end{tabular}
+\end{center}
+\label{mobilec_datatype}
+\end{table}
+
+The header file {\bf fipa\_acl.h} contains datatype and macros related to 
+FIPA ACL messaging, as described in Chapter \ref{chap:fipa}. This header
+file may be used in both C/C++ binary space, as well as agent space.
+
+\begin{table}[!h]
+\capstart
+\begin{center}
+\caption{Data types defined in {\bf fipa\_acl.h}.}
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Data Type & Description \\
+\hline
+{\bf fipa\_acl\_message\_t} & A structure containing a FIPA ACL message. \\
+\hline
+\end{tabular}
+\end{center}
+\label{fipa_datatype}
+\end{table}
+
+\pagebreak
+
+\begin{table}[!h]
+\capstart
+\begin{center}
+\caption{Macros defined in {\bf libmc.h}.}
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Macro & Description \\
+\hline
+{\texttt enum MC\_ThreadIndex\_e} & \\
+\hline
+{\bf MC\_THREAD\_AI} \index{MC\_THREAD\_AI} & Identifier for agent initalizing thread. \\
+{\bf MC\_THREAD\_AM} \index{MC\_THREAD\_AM} & Identifier for agent managing thread. \\
+{\bf MC\_THREAD\_CL} \index{MC\_THREAD\_CL} & Identifier for connection listening thread. \\
+{\bf MC\_THREAD\_MR} \index{MC\_THREAD\_MR} & Identifier for message receiving thread. \\
+{\bf MC\_THREAD\_MS} \index{MC\_THREAD\_MS} & Identifier for message sending thread. \\
+{\bf MC\_THREAD\_CP} \index{MC\_THREAD\_CP} & Identifier for command prompt thread. \\
+{\bf MC\_THREAD\_ALL} \index{MC\_THREAD\_ALL} & Identifier for all threads. \\
+\hline
+{\texttt enum MC\_Signal\_e} & \\
+\hline
+{\bf MC\_RECV\_CONNECTION} \index{MC\_RECV\_CONNECTION} & Signal activated after an agency accepts a connection. \\
+{\bf MC\_RECV\_MESSAGE} \index{MC\_RECV\_MESSAGE} & Signal activated after an agency receives an ACL message. \\
+{\bf MC\_RECV\_AGENT} \index{MC\_RECV\_AGENT} & Signal activated after an agency receives a mobile agent. \\
+{\bf MC\_RECV\_RETURN} \index{MC\_RECV\_RETURN} & Signal activated after an agency receives return data from a completed mobile agent. \\
+{\bf MC\_EXEC\_AGENT} \index{MC\_EXEC\_AGENT} & Signal activated after a mobile agent is executed. \\
+{\bf MC\_ALL\_SIGNALS} \index{MC\_ALL\_SIGNALS} & Signal activated after any of the above four events occurs. \\
+\hline
+{\texttt enum MC\_AgentType\_e} \index{MC\_AgentType\_e}& \\
+\hline
+{\bf MC\_REMOTE\_AGENT} \index{MC\_REMOTE\_AGENT} & Identifier for a remote mobile agent. \\
+{\bf MC\_LOCAL\_AGENT} \index{MC\_LOCAL\_AGENT} & Identifier for a local mobile agent.\\
+{\bf MC\_RETURN\_AGENT} \index{MC\_RETURN\_AGENT} & Identifier for a return mobile agent. \\
+\hline
+{\texttt enum MC\_AgentStatus\_e} \index{MC\_AgentStatus\_e} & \\
+\hline
+{\bf MC\_WAIT\_CH} \index{MC\_WAIT\_CH} & Value indicating a mobile agent is waiting to be executed. \\
+{\bf MC\_WAIT\_MESSGSEND} \index{MC\_WAIT\_MESSGSEND}& Value indicating a mobile agent is waiting to be exported to another agency. \\
+{\bf MC\_AGENT\_ACTIVE} \index{MC\_AGENT\_ACTIVE}& Value indicating a mobile agent is being executed. \\
+{\bf MC\_AGENT\_NEUTRAL} \index{MC\_AGENT\_NEUTRAL}& Value indicating a mobile agent is waiting for an unspecified reason. \\
+{\bf MC\_AGENT\_SUSPENDED} \index{MC\_AGENT\_SUSPENDED}& Value indicating a mobile agent is being suspended. \\
+{\bf MC\_WAIT\_FINISHED} \index{MC\_WAIT\_FINISHED}& Value indicating a mobile agent has been executed and is waiting to be removed. \\
+\hline
+\end{tabular}
+\end{center}
+\label{mobilec_macro}
+\end{table}
+
+\begin{table}[!hp]
+\capstart
+\begin{center}
+\caption{Macros defined in {\bf fipa\_acl.h}. Detailed documentation for the
+FIPA performatives and protocols may be found in the FIPA specifications at
+\texttt{http://www.fipa.org}.}
+\begin{tabular}{p{90 mm}p{70 mm}}
+\hline
+Macro & Description \\
+\hline
+{\texttt fipa\_performative\_e \index{fipa\_performative\_e}} & \\
+\hline
+{\bf FIPA\_ACCEPT\_PROPOSAL} \index{FIPA\_ACCEPT\_PROPOSAL} & The \texttt{accept-proposal} performative. \\
+{\bf FIPA\_AGREE} \index{FIPA\_AGREE} & The \texttt{agree} performative. \\
+{\bf FIPA\_CANCEL} \index{FIPA\_CANCEL} & The \texttt{cancel} performative. \\
+{\bf FIPA\_CALL\_FOR\_PROPOSAL} \index{FIPA\_CALL\_FOR\_PROPOSAL} & The \texttt{call-for-proposal} performative. \\
+{\bf FIPA\_CONFIRM} \index{FIPA\_CONFIRM} & The \texttt{confirm} performative. \\
+{\bf FIPA\_DISCONFIRM} \index{FIPA\_DISCONFIRM} & The \texttt{disconfirm} performative. \\
+{\bf FIPA\_FAILURE} \index{FIPA\_FAILURE} & The \texttt{failure} performative. \\
+{\bf FIPA\_INFORM} \index{FIPA\_INFORM} & The \texttt{inform} performative. \\
+{\bf FIPA\_INFORM\_IF} \index{FIPA\_INFORM\_IF} & The \texttt{inform-if} performative. \\
+{\bf FIPA\_INFORM\_REF} \index{FIPA\_INFORM\_REF} & The \texttt{inform-ref} performative. \\
+{\bf FIPA\_NOT\_UNDERSTOOD} \index{FIPA\_NOT\_UNDERSTOOD} & The \texttt{not-understood} performative. \\
+{\bf FIPA\_PROPOGATE} \index{FIPA\_PROPOGATE} & The \texttt{propogate} performative. \\
+{\bf FIPA\_PROPOSE} \index{FIPA\_PROPOSE} & The \texttt{propose} performative. \\
+{\bf FIPA\_PROXY} \index{FIPA\_PROXY} & The \texttt{proxy} performative. \\
+{\bf FIPA\_QUERY\_IF} \index{FIPA\_QUERY\_IF} & The \texttt{query-if} performative. \\
+{\bf FIPA\_QUERY\_REF} \index{FIPA\_QUERY\_REF} & The \texttt{query-ref} performative. \\
+{\bf FIPA\_REFUSE} \index{FIPA\_REFUSE} & The \texttt{refuse} performative. \\
+{\bf FIPA\_REJECT\_PROPOSAL} \index{FIPA\_REJECT\_PROPOSAL} & The \texttt{reject-proposal} performative. \\
+{\bf FIPA\_REQUEST} \index{FIPA\_REQUEST} & The \texttt{request} performative. \\
+{\bf FIPA\_REQUEST\_WHEN} \index{FIPA\_REQUEST\_WHEN} & The \texttt{request-when} performative. \\
+{\bf FIPA\_REQUEST\_WHENEVER} \index{FIPA\_REQUEST\_WHENEVER} & The \texttt{request-whenever} performative. \\
+{\bf FIPA\_SUBSCRIBE} \index{FIPA\_SUBSCRIBE} & The \texttt{subscribe} performative. \\
+\hline
+{\texttt enum fipa\_protocol\_e} & \\
+\hline
+{\bf FIPA\_PROTOCOL\_REQUEST} \index{FIPA\_PROTOCOL\_REQUEST} & The FIPA \texttt{request} protocol. \\
+{\bf FIPA\_PROTOCOL\_QUERY} \index{FIPA\_PROTOCOL\_QUERY} & The FIPA \texttt{query} protocol. \\
+{\bf FIPA\_PROTOCOL\_REQUEST\_WHEN} \index{FIPA\_PROTOCOL\_REQUEST\_WHEN} & The FIPA \texttt{request-when} protocol. \\
+{\bf FIPA\_PROTOCOL\_CONTRACT\_NET} \index{FIPA\_PROTOCOL\_CONTRACT\_NET} & The FIPA \texttt{contract-net} protocol. \\
+{\bf FIPA\_PROTOCOL\_ITERATED\_CONTRACT\_NET} \index{FIPA\_PROTOCOL\_ITERATED\_CONTRACT\_NET} & The FIPA \texttt{iterated-contract-net} protocol. \\
+{\bf FIPA\_PROTOCOL\_ENGLISH\_AUCTION} \index{FIPA\_PROTOCOL\_ENGLISH\_AUCTION} & The FIPA \texttt{english-auction} protocol. \\
+{\bf FIPA\_PROTOCOL\_DUTCH\_AUCTION} \index{FIPA\_PROTOCOL\_DUTCH\_AUCTION} & The FIPA \texttt{dutch-auction} protocol. \\
+{\bf FIPA\_PROTOCOL\_BROKERING} \index{FIPA\_PROTOCOL\_BROKERING} & The FIPA \texttt{brokering} protocol. \\
+{\bf FIPA\_PROTOCOL\_RECRUITING} \index{FIPA\_PROTOCOL\_RECRUITING} & The FIPA \texttt{recruiting} protocol. \\
+{\bf FIPA\_PROTOCOL\_SUBSCRIBE} \index{FIPA\_PROTOCOL\_SUBSCRIBE} & The FIPA \texttt{subscribe} protocol. \\
+{\bf FIPA\_PROTOCOL\_PROPOSE} \index{FIPA\_PROTOCOL\_PROPOSE} & The FIPA \texttt{propose} protocol. \\
+{\bf FIPA\_PROTOCOL\_END} \index{FIPA\_PROTOCOL\_END} & The FIPA \texttt{end} protocol. \\
+\hline
+\end{tabular}
+\end{center}
+\label{fipa_macro}
+\end{table}
+
+\begin{table}[!hp]
+\capstart
+\begin{center}
+\caption{Functions in the C/C++ binary space.}
+\begin{tabular}{p{78 mm}p{77 mm}}
+%\begin{tabular}{ll}
+\hline
+Function & Description \\
+\hline
+{\bf MC\_AclAddReceiver()} \dotfill & Add a receiver to an ACL message. \\
+{\bf MC\_AclAddReplyTo()} \dotfill & Add a reply-to address to an ACL message. \\
+{\bf MC\_AclGetContent()} \dotfill & Get the content of an ACL message. \\
+{\bf MC\_AclGetConversationID()} \dotfill & Get the conversation id from an ACL message. \\
+{\bf MC\_AclGetPerformative()} \dotfill & Get the performative of an ACL message. \\
+{\bf MC\_AclGetProtocol()} \dotfill & Get the protocol from an ACL message. \\
+{\bf MC\_AclGetSender()} \dotfill & Get the sender of an ACL message. \\
+{\bf MC\_AclNew()} \dotfill & Allocate a new FIPA ACL message. \\
+{\bf MC\_AclPost()} \dotfill & Post a FIPA ACL message to an agent's mailbox. \\
+{\bf MC\_AclReply()} \dotfill & Allocate a new FIPA ACL message automatically addressed to the sender of a previous message. \\
+{\bf MC\_AclRetrieve()} \dotfill & Retrieve an ACL message from an agent's mailbox. \\
+{\bf MC\_AclSetContent()} \dotfill & Set the content of an ACL message. \\
+{\bf MC\_AclSetConversationID()} \dotfill & Set the conversation id of an ACL message. \\
+{\bf MC\_AclSetPerformative()} \dotfill & Set the performative of an ACL message. \\
+{\bf MC\_AclSetProtocol()} \dotfill & Set the protocol of an ACL message. \\
+{\bf MC\_AclSetSender()} \dotfill & Set the sender of an ACL message. \\
+{\bf MC\_AclWaitRetrieve()} \dotfill & Wait for a message to arrive at an agent's mailbox. \\
+{\bf MC\_AgentAddTask()} \dotfill & Add a task to an agent based off of C source code. \\
+{\bf MC\_AgentAddTaskFromFile()} \dotfill & Add a task to an agent based off of a C source code file. \\
+{\bf MC\_AgentReturnArrayDim()} \dotfill & Get the dimension of an array returned by an agent. \\
+{\bf MC\_AgentReturnArrayExtent()} \dotfill & Get the extent of a dimension of an array returned by an agent. \\
+{\bf MC\_AgentReturnArrayNum()} \dotfill & Get the number of elements of an array returned by an agent. \\
+{\bf MC\_AgentReturnDataGetSymbolAddr()} \dotfill & Get a pointer to an array returned by an agent. \\
+{\bf MC\_AgentReturnDataSize()} \dotfill & Get the size of a single element of the array. \\
+{\bf MC\_AgentReturnDataType()} \dotfill & Get the type of the array. \\
+{\bf MC\_AgentReturnIsArray()} \dotfill & Determine if the returned variable is an array. \\
+{\bf MC\_AddAgent()} \dotfill & Add a mobile agent into an agency. \\
+{\bf MC\_AddStationaryAgent()} \dotfill & Add a mobile agent into an agency. \\
+%{\bf MC\_AgentVariableRetrieve()} & Retrieve a saved variable from an agent's prior task. \\
+%{\bf MC\_AgentVariableSave()} & Save an agent's task variable for migration. \\
+{\bf MC\_Barrier()} \dotfill & Block until all agents in an agency have called this function. \\
+{\bf MC\_BarrierDelete()} \dotfill & Delete a Mobile-C barrier. \\
+{\bf MC\_BarrierInit()} \dotfill & Initialize a Mobile-C barrier. \\
+{\bf MC\_CallAgentFunc()} \dotfill & Call a function defined in an agent. \\
+{\bf MC\_CallAgentFuncV()} \dotfill & Call a function defined in an agent. \\
+{\bf MC\_CallAgentFuncVar()} \dotfill & Call a function defined in an agent. \\
+{\bf MC\_ChInitializeOptions()} \dotfill & Set the initialization options for a Ch to be used as one AEE in an agency. \\
+{\bf MC\_ComposeAgent()} \dotfill & Compose an agent from program source code. \\
+{\bf MC\_ComposeAgentS()} \dotfill & [Deprecated] Compose an agent from program source code with a workgroup code. \\
+\hline
+\end{tabular}
+\end{center}
+\label{mobilec_api_cbinary}
+\end{table}
+
+\addtocounter{table}{-1}
+\begin{table}[!hp]
+\capstart
+\begin{center}
+\caption{Functions in the C/C++ binary space (contd.).}
+%\begin{tabular}{ll}
+\begin{tabular}{p{78 mm}p{77 mm}}
+\hline
+Function & Description \\
+\hline
+{\bf MC\_ComposeAgentWithWorkgroup()} \dotfill & Compose an agent from program source code with a workgroup code. \\
+{\bf MC\_ComposeAgentFromFile()} \dotfill & Compose an agent from a program source code file. \\
+{\bf MC\_ComposeAgentFromFileS()} \dotfill & [Deprecated] Compose an agent from a program source code file with a workgroup code. \\
+{\bf MC\_ComposeAgentFromFileWithWorkgroup()} & Compose an agent from a program source code file with a workgroup code. \\
+{\bf MC\_CondBroadcast()} \dotfill & Wake up all agents/threads waiting on a condition variable. \\
+{\bf MC\_CondReset()} \dotfill & Reset a Mobile-C condition variable. \\
+{\bf MC\_CondSignal()} \dotfill & Signal another agent that is waiting on a condition variable. \\
+{\bf MC\_CondWait()} \dotfill & Cause the calling agent or thread to wait on a Mobile-C condition variable with the ID specified by the argument. \\
+{\bf MC\_CopyAgent()} \dotfill & Perform a deep copy to copy an agent. \\
+{\bf MC\_DeleteAgent()} \dotfill & Stop and remove an agent from an agency. \\
+{\bf MC\_DeregisterService()} \dotfill & Deregister a service with the Directory Facilitator. \\
+{\bf MC\_End()} \dotfill & Terminate a Mobile-C agency. \\
+{\bf MC\_FindAgentByID()} \dotfill & Find a mobile agent by its ID number in an agency.\\
+{\bf MC\_FindAgentByName()} \dotfill & Find a mobile agent by its name in an agency. \\
+{\bf MC\_GetAgentArrivalTime()} \dotfill & Get the time when an agent arrives an agency. \\
+{\bf MC\_GetAgentExecEngine()} \dotfill & Get the AEE associated with a mobile agent in an agency. \\
+{\bf MC\_GetAgentID()} \dotfill & Get the ID of an agent. \\
+{\bf MC\_GetAgentName()} \dotfill & Get the name of an agent. \\
+{\bf MC\_GetAgentNumTasks()} \dotfill & Get the number of tasks a mobile agent has. \\
+{\bf MC\_GetAgentReturnData()} \dotfill & [Deprecated] Get the return data of a mobile agent. \\
+{\bf MC\_GetAgentStatus()} \dotfill & Get the status of a mobile agent in an agency. \\
+{\bf MC\_GetAgentType()} \dotfill & Get the type of a mobile agent. \\
+{\bf MC\_GetAgentXMLString()} \dotfill & Retrieve a mobile agent message in XML format as a character string. \\
+{\bf MC\_GetAllAgents()} \dotfill & Obtain all the agents in an agency. \\
+{\bf MC\_HaltAgency()} \dotfill & Halt an agency's operation. \\
+{\bf MC\_Initialize()} \dotfill & Start a Mobile-C agency and return a handle of the launched agency. \\
+{\bf MC\_InitializeAgencyOptions()} \dotfill & Initialize Mobile-C options. \\
+{\bf MC\_LoadAgentFromFile()} \dotfill & Load an agent from an XML file into a local agency.\\
+{\bf MC\_MainLoop()} \dotfill & Cause the calling thread to wait indefinitely on an agency.\\
+{\bf MC\_MigrateAgent()} \dotfill & Migrate an agent. \\
+{\bf MC\_MutexLock()} \dotfill & Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\pagebreak
+
+\addtocounter{table}{-1}
+\begin{table}[!hp]
+\capstart
+\begin{center}
+\caption{Functions in the C/C++ binary space (contd.).}
+%\begin{tabular}{ll}
+\begin{tabular}{p{63 mm}p{97 mm}}
+\hline
+Function & Description \\
+\hline
+{\bf MC\_MutexUnlock()} \dotfill & Unlock a locked Mobile-C synchronization variable. \\
+{\bf MC\_PrintAgentCode()} \dotfill & Print a mobile agent code for inspection. \\
+{\bf MC\_RegisterService()} \dotfill &  Register a new service with the Directory Facilitator. \\
+{\bf MC\_ResetSignal()} \dotfill &  Reset the Mobile-C signalling system. \\
+{\bf MC\_ResumeAgency()} \dotfill &  Resume an agency's operation. \\
+{\bf MC\_RetrieveAgent()} \dotfill & Retrieve the first neutral mobile agent from a mobile agent list. \\
+{\bf MC\_RetrieveAgentCode()} \dotfill & Retrieve a mobile agent code in the form of a character string. \\
+{\bf MC\_SearchForService()} \dotfill & Search the Directory Facilitator for a service. \\
+{\bf MC\_SemaphorePost()} \dotfill & Unlock one resource from a Mobile-C semaphore. \\
+{\bf MC\_SemaphoreWait()} \dotfill & Allocate one resource from a Mobile-C synchronization semaphore variable. \\
+{\bf MC\_SendAgent()} \dotfill & Send an ACL mobile agent message to a remote agency. \\
+{\bf MC\_SendAgentFile()} \dotfill & Send an ACL mobile agent message saved as a file to a remote agency. \\
+{\bf MC\_SendAgentMigrationMessage()} \dotfill & [Deprecated] Send an ACL mobile agent message to a remote agency. \\
+{\bf MC\_SendAgentMigrationMessageFile()} \dotfill & [Deprecated] Send an ACL mobile agent message saved as a file to a remote agency. \\
+{\bf MC\_SendSteerCommand()} \dotfill & Send a command to control a steerable binary space function. \\
+{\bf MC\_SetAgentStatus()} \dotfill & Set the status of a mobile agent in an agency. \\
+{\bf MC\_SetDefaultAgentStatus()} \dotfill & Assign a user defined default status to all incoming mobile agents. \\
+{\bf MC\_SetThreadOff()} \dotfill & Deactivate a thread in an agency. \\
+{\bf MC\_SetThreadOn()} \dotfill & Activate a thread in an agency. \\
+{\bf MC\_Steer()} \dotfill & Set up a steerable binary space function. \\
+{\bf MC\_SteerControl()} \dotfill & Retrieve a steering command from the mobile agent space. \\
+{\bf MC\_SyncDelete()} \dotfill & Delete a previously initialized synchronization variable. \\
+{\bf MC\_SyncInit()} \dotfill & Initialize a new synchronization variable. \\
+{\bf MC\_TerminateAgent()} \dotfill & Terminate the execution of a mobile agent in an agency. \\
+%{\bf MC\_Wait()} \dotfill & Cause the calling thread to wait indefinitely on an agency.\\
+{\bf MC\_WaitAgent()} \dotfill & Cause the calling thread to wait until a mobile agent is received. \\
+{\bf MC\_WaitRetrieveAgent()} \dotfill & Block the calling thread until a mobile agent arrives, and return the mobile agent instead of executing it. \\
+{\bf MC\_WaitSignal()} \dotfill & Block until one of the signals in the second argument is signalled.\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\pagebreak
+
+\newpage
+\input{api/MC_AclGetProtocol}
+\pagebreak
+\input{api/MC_AclAddReceiver}
+\pagebreak
+\input{api/MC_AclAddReplyTo}
+\pagebreak
+\input{api/MC_AclGetContent}
+\pagebreak
+\input{api/MC_AclGetConversationID}
+\pagebreak
+\input{api/MC_AclGetPerformative}
+\pagebreak
+\input{api/MC_AclGetProtocol}
+\pagebreak
+\input{api/MC_AclGetSender}
+\pagebreak
+\input{api/MC_AclNew}
+\pagebreak
+\input{api/MC_AclPost}
+\pagebreak
+\input{api/MC_AclReply}
+\pagebreak
+\input{api/MC_AclRetrieve}
+\pagebreak
+\input{api/MC_AclSetContent}
+\pagebreak
+\input{api/MC_AclSetConversationID}
+\pagebreak
+\input{api/MC_AclSetPerformative}
+\pagebreak
+\input{api/MC_AclSetProtocol}
+\pagebreak
+\input{api/MC_AclSetSender}
+\pagebreak
+\input{api/MC_AclWaitRetrieve}
+\pagebreak
+\input{api/MC_AgentAddTask}
+\pagebreak
+\input{api/MC_AgentAddTaskFromFile}
+\pagebreak
+\input{api/MC_AgentReturnArrayDim}
+\pagebreak
+\input{api/MC_AgentReturnArrayExtent}
+\pagebreak
+\input{api/MC_AgentReturnArrayNum}
+\pagebreak
+\input{api/MC_AgentReturnDataGetSymbolAddr}
+\pagebreak
+\input{api/MC_AgentReturnDataSize}
+\pagebreak
+\input{api/MC_AgentReturnDataType}
+\pagebreak
+\input{api/MC_AgentReturnIsArray}
+\pagebreak
+\input{api/MC_AddAgent}
+\pagebreak
+\input{api/MC_AddStationaryAgent}
+\pagebreak
+%\input{api/MC_AgentVariableRetrieve}
+%\pagebreak
+%\input{api/MC_AgentVariableSave}
+%\pagebreak
+\input{api/MC_Barrier}
+\pagebreak
+\input{api/MC_BarrierDelete}
+\pagebreak
+\input{api/MC_BarrierInit}
+\pagebreak
+\input{api/MC_CallAgentFunc}
+\pagebreak
+\input{api/MC_CallAgentFuncV}
+\pagebreak
+\input{api/MC_CallAgentFuncVar}
+\pagebreak
+\input{api/MC_ChInitializeOptions}
+\pagebreak
+\input{api/MC_ComposeAgent}
+\pagebreak
+\input{api/MC_ComposeAgentS}
+\pagebreak
+\input{api/MC_ComposeAgentWithWorkgroup}
+\pagebreak
+\input{api/MC_ComposeAgentFromFile}
+\pagebreak
+\input{api/MC_ComposeAgentFromFileS}
+\pagebreak
+\input{api/MC_ComposeAgentFromFileWithWorkgroup}
+\pagebreak
+\input{api/MC_CondBroadcast}
+\pagebreak
+\input{api/MC_CondReset}
+\pagebreak
+\input{api/MC_CondSignal}
+\pagebreak
+\input{api/MC_CondWait}
+\pagebreak
+\input{api/MC_CopyAgent}
+\pagebreak
+\input{api/MC_DeleteAgent}
+\pagebreak
+\input{api/MC_DeregisterService}
+\pagebreak
+\input{api/MC_End}
+\pagebreak
+\input{api/MC_FindAgentByID}
+\pagebreak
+\input{api/MC_FindAgentByName}
+\pagebreak
+\input{api/MC_GetAgentArrivalTime}
+\pagebreak
+\input{api/MC_GetAgentExecEngine}
+\pagebreak
+\input{api/MC_GetAgentID}
+\pagebreak
+\input{api/MC_GetAgentName}
+\pagebreak
+\input{api/MC_GetAgentNumTasks}
+\pagebreak
+\input{api/MC_GetAgentReturnData}
+\pagebreak
+\input{api/MC_GetAgentStatus}
+\pagebreak
+\input{api/MC_GetAgentType}
+\pagebreak
+\input{api/MC_GetAgentXMLString}
+\pagebreak
+\input{api/MC_GetAllAgents}
+\pagebreak
+\input{api/MC_HaltAgency}
+\pagebreak
+\input{api/MC_Initialize}
+\pagebreak
+\input{api/MC_InitializeAgencyOptions}
+\pagebreak
+\input{api/MC_LoadAgentFromFile}
+\pagebreak
+\input{api/MC_MainLoop}
+\pagebreak
+\input{api/MC_MigrateAgent}
+\pagebreak
+\input{api/MC_MutexLock}
+\pagebreak
+\input{api/MC_MutexUnlock}
+\pagebreak
+\input{api/MC_PrintAgentCode}
+\pagebreak
+\input{api/MC_RegisterService}
+\pagebreak
+\input{api/MC_ResetSignal}
+\pagebreak
+\input{api/MC_ResumeAgency}
+\pagebreak
+\input{api/MC_RetrieveAgent}
+\pagebreak
+\input{api/MC_RetrieveAgentCode}
+\pagebreak
+\input{api/MC_SearchForService}
+\pagebreak
+\input{api/MC_SemaphorePost}
+\pagebreak
+\input{api/MC_SemaphoreWait}
+\pagebreak
+\input{api/MC_SendAgent}
+\pagebreak
+\input{api/MC_SendAgentFile}
+\pagebreak
+\input{api/MC_SendAgentMigrationMessage}
+\pagebreak
+\input{api/MC_SendAgentMigrationMessageFile}
+\pagebreak
+\input{api/MC_SendSteerCommand}
+\pagebreak
+\input{api/MC_SetAgentStatus}
+\pagebreak
+\input{api/MC_SetDefaultAgentStatus}
+\pagebreak
+\input{api/MC_SetThreadOff}
+\pagebreak
+\input{api/MC_SetThreadOn}
+\pagebreak
+\input{api/MC_Steer}
+\pagebreak
+\input{api/MC_SteerControl}
+\pagebreak
+\input{api/MC_SyncDelete}
+\pagebreak
+\input{api/MC_SyncInit}
+\pagebreak
+\input{api/MC_TerminateAgent}
+\pagebreak
+%\input{api/MC_Wait}
+%\pagebreak
+\input{api/MC_WaitAgent}
+\pagebreak
+\input{api/MC_WaitRetrieveAgent}
+\pagebreak
+\input{api/MC_WaitSignal}
+\pagebreak
+

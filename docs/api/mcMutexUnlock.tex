@@ -1,0 +1,60 @@
+\rhead{\bf mc\_MutexUnlock()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_MutexUnlock()\index{mc\_MutexUnlock()}}\\
+\addcontentsline{toc}{section}{mc\_MutexUnlock()}
+
+\noindent
+{\bf Synopsis}\\
+%{\bf \#include $<$mobilec.h$>$}\\
+{\bf int mc\_MutexUnlock}({\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+This function unlocks a locked Mobile-C synchronization variable.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or non-zero if the id could not be found.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1pt}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$id$ & The id of the synchronization variable to lock. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function unlocks a Mobile-C synchronization variable that was previously
+locked as a mutex. 
+If the mutex is not locked while calling this function, undefined behaviour 
+results.
+Note that although a Mobile-C may act as a mutex, condition variable, or 
+semaphore, once it has been locked and/or unlocked as a mutex, it should only 
+be used as a mutex for the remainder of it's life cycle or unexpected 
+behaviour may result.\\
+
+\noindent
+{\bf Example}\\
+Please see Program \vref{prog:mobileagent1_ex5.xml}, Program 
+\vref{prog:mobileagent2_ex5.xml}, and Chapter \ref{chap:synchronization}
+on page \pageref{chap:synchronization} for more details.\\
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+mc\_MutexLock(), mc\_SyncInit(), mc\_SyncDelete().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

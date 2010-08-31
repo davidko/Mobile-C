@@ -1,0 +1,44 @@
+\rhead{\bf mc\_ResumeAgency()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_ResumeAgency()\index{mc\_ResumeAgency()}}\\
+\addcontentsline{toc}{section}{mc\_ResumeAgency()}
+\label{api:mc_ResumeAgency()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_ResumeAgency}({void});\\
+
+\noindent
+{\bf Purpose}\\
+This function resumes the execution of an agency. \\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+None. \\
+
+\noindent
+{\bf Description}\\
+This function resumes the operation of the core threads of the Mobile-C
+agency, such as the ACC, AMS, etc., after they have been halted by the 
+\texttt{mc\_HaltAgency()} function.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+% FIXME: Need an example here
+%{\footnotesize\verbatiminput{../demos/multiple_agency_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+mc\_HaltAgency().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

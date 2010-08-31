@@ -1,0 +1,54 @@
+\rhead{\bf MC\_FindAgentByID()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_FindAgentByID()\index{MC\_FindAgentByID()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_FindAgentByID()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf MCAgent\_t MC\_FindAgentByID}({\bf MCAgency\_t} $agency$, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Find a mobile agent by its ID number in a given agency.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns an {\bf MCAgent\_t} object on success or NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & An agency handle.\\
+$id$ & An integer representing a mobile agent's ID number.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to find and retrieve a pointer to an existing running 
+mobile agent in an agency by the mobile agent's ID number.\\
+
+\noindent
+{\bf Example}\\
+This function is equivalent to the agent-space version. Please see the
+example for mc\_FindAgentByID() listed on page \vref{api:mc_FindAgentByID()}.
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_FindAgentByName()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

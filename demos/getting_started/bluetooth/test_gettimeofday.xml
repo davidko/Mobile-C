@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA dim="0" name="no-return" complete="0" server="localhost:5051">
+     </DATA>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+
+struct mytime{
+  unsigned long sec;
+  long usec;
+};
+
+int main()
+{
+  struct mytime t;
+  mc_gettimeofday(&t);
+  printf("The time is %d, %d", t.sec, t.usec);
+  printf("Hello World!\n");
+  printf("This is mobagent1 from the agency at port 5050.\n");
+  printf("I am performing the task on the agency at port 5051 now.\n");
+  mc_gettimeofday(&t);
+  printf("The time is %d, %d", t.sec, t.usec);
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASK task="1" num="0">
+     <DATA dim="0" name="no-return" complete="0" server="localhost:5051">
+     </DATA>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+
+struct mytime{
+  unsigned long sec;
+  long usec;
+};
+
+int main()
+{
+  struct mytime t;
+  mc_gettimeofday(&t);
+  printf("The time is %d, %d", t.sec, t.usec);
+  printf("Hello World!\n");
+  printf("This is mobagent1 from the agency at port 5050.\n");
+  printf("I am performing the task on the agency at port 5051 now.\n");
+  mc_gettimeofday(&t);
+  printf("The time is %d, %d", t.sec, t.usec);
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASK>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

@@ -1,0 +1,50 @@
+\rhead{\bf MC\_AgentReturnDataGetSymbolAddr()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentReturnDataGetSymbolAddr()\index{MC\_AgentReturnDataGetSymbolAddr()}}\\
+\addcontentsline{toc}{section}{MC\_AgentReturnDataGetSymbolAddr()}
+\label{api:MC_AgentReturnDataGetSymbolAddr()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf const void* MC\_AgentReturnDataGetSymbolAddr}({\bf MCAgent\_t} agent, {\bf int} task\_num);\\
+
+\noindent
+{\bf Purpose}\\
+Get a pointer to the array contained within a return agent.\\
+
+\noindent
+{\bf Return Value}\\
+Returns a valid pointer or NULL on failure.\\
+
+\noindent
+{\bf Parameters}
+\begin{itemize}
+\item \texttt{agent} : A return agent.
+\item \texttt{task\_num} : This variable chooses which task within an agent to
+retrieve the array.
+\end{itemize}
+
+
+\noindent
+{\bf Description}\\
+This function retrieves a pointer to the first element of an array returned by
+a returning agent.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example for \texttt{MC\_AgentReturnArrayDim()} on page \pageref{api:MC_AgentReturnArrayDim()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  MC\_AgentReturnArrayDim(), MC\_AgentReturnArrayExtent(), MC\_AgentReturnArrayNum(),
+  MC\_AgentReturnDataSize(), MC\_AgentReturnDataType(),
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

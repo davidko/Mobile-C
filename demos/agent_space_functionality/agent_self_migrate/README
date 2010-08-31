@@ -1,0 +1,56 @@
+This directory contains some example server and client code utilizing the
+MobileC library.
+
+*** Quickstart ***
+Inspect and run './configure.guess.sh', and then 'make'.
+
+ **************************************
+ *** Full Installation Instructions ***
+ **************************************
+
+To build these example programs, you must have:
+1: The embedded Ch libraries: Please see http://www.softintegration.com
+2: The Mini-XML library: http://www.easysw.com/~mike/mxml/
+3: A compiled and working MobileC library
+
+After the libraries are correctly installed, run the configure script
+
+    ./configure
+
+and compile the binaries
+
+    make
+
+To run the test, simply execute the host, and then execute the client. Please
+see the README file in the upper directory for more details.
+
+ ***********************************
+ *** Compilation troubleshooting ***
+ ***********************************
+
+If the configure script gives you an error stating that in cannot find any 
+libraries or header files, you may need to manually specify the location
+of your libraries and header files. For instance, if my embedded Ch libraries
+and header files are in the 
+
+    /usr/local/ch/extern/lib
+
+and
+   
+    /usr/local/ch/extern/include
+
+directories, respectively, and my MobileC library resided in a nonstandard 
+directory like
+
+    /home/david/libmc/
+
+I would configure with the following options:
+
+    ./configure CFLAGS="-I/usr/local/ch/extern/include" \
+         LDFLAGS="-L/usr/local/ch/extern/lib -L/home/david/libmc"
+
+Run 
+
+    ./configure --help
+
+for more details.

@@ -1,0 +1,43 @@
+        {
+            printf("Error: could not open file 'ChDataFile_ch'.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    fgets(line, sizeof(line), fptr);
+    while(!feof(fptr)) 
+    {
+        velocity = atof(strrchr(line, ',') + 1);
+        sum += velocity;
+        count++;
+        fgets(line, sizeof(line), fptr);
+    }
+    if(count != 0) 
+    { 
+        if (mc_task_progress == 0) {
+            results_iel2 = sum/count;
+        } else {
+            results_ch = sum/count;
+        }
+
+        printf("The average velocity under the detection station is %f.\n\n", sum/count);
+    }
+    else 
+    {
+        results_iel2 = 0;
+        results_ch = 0;
+        printf("There is no vehicle passed under the detection station.\n\n");
+    }
+
+    fclose(fptr);
+    printf("I am leaving to go to the next host.\n");
+
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

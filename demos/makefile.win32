@@ -1,0 +1,262 @@
+all: 
+	cd ./agent_migration_message_format/agent_datastate_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_migration_message_format/agent_saved_variables_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_migration_message_format/mc_array_return_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_migration_message_format/mc_migration_message_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_migration_message_format/multi_data_retrieval/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_migration_message_format/multi_task_example2/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_space_functionality/agent_self_migrate/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_space_functionality/mc_delete_agent_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_space_functionality/mc_df_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./agent_space_functionality/mc_df_service_test/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./binary_stationary_agents/stationary_agent_communication/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./binary_stationary_agents/stationary_agent_demo/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./communication_with_other_FIPA_compliant_agents/mc_to_jade_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./composing_agents/mc_compose_agent_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./composing_agents/multi_task_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./cspace-agentspace_interface/persistent_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_comm/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_protocol/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_test/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/jade_to_mc_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./getting_started/bluetooth/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./getting_started/hello_world/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/agent_squad_test/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/assembly_simulation/
+	nmake -f makefile.win32
+	cd ../..
+#cd ./miscellaneous/mc_dll_sample_app/
+#nmake -f makefile.win32
+#cd ../..
+	cd ./miscellaneous/mc_max_num_agents_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/mc_sample_app/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/message_box/
+	nmake -f makefile.win32
+	cd ../..
+#cd ./miscellaneous/migration_tests_20090522/
+#nmake -f makefile.win32
+#cd ../..
+	cd ./miscellaneous/multiple_agency_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/prompt_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/simple_send/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./miscellaneous/steer_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./mobilec_c-space_functionality/cspace_misc_examples/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./mobilec_security/agent_workgroup_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./mobilec_security/hello_world_secure/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./mobilec_security/multi_task_example_secure/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/agent_cond_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/agent_mutex_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/agent_semaphore_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/cspace_cond_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/cspace_mutex_example/
+	nmake -f makefile.win32
+	cd ../..
+	cd ./synchronization/mc_barrier_example/
+	nmake -f makefile.win32
+	cd ../..
+
+clean:  
+	cd ./agent_migration_message_format/agent_datastate_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_migration_message_format/agent_saved_variables_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_migration_message_format/mc_array_return_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_migration_message_format/mc_migration_message_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_migration_message_format/multi_data_retrieval/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_migration_message_format/multi_task_example2/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_space_functionality/agent_self_migrate/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_space_functionality/mc_delete_agent_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_space_functionality/mc_df_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./agent_space_functionality/mc_df_service_test/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./binary_stationary_agents/stationary_agent_communication/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./binary_stationary_agents/stationary_agent_demo/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./communication_with_other_FIPA_compliant_agents/mc_to_jade_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./composing_agents/mc_compose_agent_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./composing_agents/multi_task_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./cspace-agentspace_interface/persistent_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_comm/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_protocol/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/fipa_test/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./FIPA_compliant_ACL_messages/jade_to_mc_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./getting_started/bluetooth/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./getting_started/hello_world/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/agent_squad_test/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/assembly_simulation/
+	nmake -f makefile.win32 clean
+	cd ../..
+#cd ./miscellaneous/mc_dll_sample_app/
+#nmake -f makefile.win32 clean
+#cd ../..
+	cd ./miscellaneous/mc_max_num_agents_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/mc_sample_app/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/message_box/
+	nmake -f makefile.win32 clean
+	cd ../..
+#cd ./miscellaneous/migration_tests_20090522/
+#nmake -f makefile.win32 clean
+#cd ../..
+	cd ./miscellaneous/multiple_agency_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/prompt_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/simple_send/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./miscellaneous/steer_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./mobilec_c-space_functionality/cspace_misc_examples/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./mobilec_security/agent_workgroup_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./mobilec_security/hello_world_secure/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./mobilec_security/multi_task_example_secure/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/agent_cond_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/agent_mutex_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/agent_semaphore_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/cspace_cond_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/cspace_mutex_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+	cd ./synchronization/mc_barrier_example/
+	nmake -f makefile.win32 clean
+	cd ../..
+

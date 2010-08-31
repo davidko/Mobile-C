@@ -1,0 +1,48 @@
+\rhead{\bf MC\_LoadAgentFromFile()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_LoadAgentFromFile()\index{MC\_LoadAgentFromFile()}}\\
+\addcontentsline{toc}{section}{MC\_LoadAgentFromFile()}
+\label{api:MC_LoadAgentFromFile()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_LoadAgentFromFile}({\bf MCAgency\_t} $agency$, {\bf const char*} $filename$);\\
+
+\noindent
+{\bf Purpose}\\
+Add a mobile agent into a local agency from an XML file.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agency$ & An initialized agency handle to add an agent to.\\
+$filename$ & An xml file containing a MobileC mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function adds a mobile agent to an agency. The agent is loaded from 
+an xml file referenced by the \texttt{filename} function argument. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/communication_with_other_FIPA_compliant_agents/mc_to_jade_example/client.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

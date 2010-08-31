@@ -1,0 +1,51 @@
+\rhead{\bf mc\_AclSetContent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AclSetContent()\index{mc\_AclSetContent()}}\\
+\addcontentsline{toc}{section}{mc\_AclSetContent()}
+\label{api:mc_AclSetContent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AclSetContent}({\bf fipa\_acl\_message\_t*} acl, {\bf const char*} name);\\
+
+\noindent
+{\bf Purpose}\\
+Set the content on an ACL message.\\
+
+\noindent
+{\bf Return Value}\\
+Returns 0 on success or non-zero on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$acl$ & An initialized ACL message. \\
+$content$ & Set the content field of an ACL message.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function sets the ``content'' field of an ACL message. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize \verbatiminput{../demos/FIPA_compliant_ACL_messages/fipa_test/test2.xml}}
+
+\noindent
+{\bf See Also}\\
+\texttt{
+  mc\_AclSetPerformative(), mc\_AclSetSender(), mc\_AclAddReceiver(), 
+    \linebreak mc\_AclAddReplyTo()
+}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,38 @@
+
+#The location of the Mobile-C root directory
+#MOBILEC_DIR=C:/mobilec/MobileC-v1.10.12
+MOBILEC_DIR=..\..\..
+
+CC=cl
+LN=link
+INC=-IC:\Ch\extern\include -I$(MOBILEC_DIR)\src\include
+CFLAG=/MD
+#LFLAG=C:\Ch\extern\lib\chsdk.lib \
+#      C:\Ch\extern\lib\embedch.lib advapi32.lib
+LFLAG=/INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\ch\extern\lib" \
+	/NODEFAULTLIB:"libcmt.lib" \
+	/DEBUG \
+	/DYNAMICBASE:NO \
+	/ERRORREPORT:PROMPT $(MOBILEC_DIR)\src\libmc.lib $(MOBILEC_DIR)\src\security\xyssl-0.9\library\xyssl.lib chsdk.lib wsock32.lib \
+	kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib \
+	shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+
+target: manifest server.exe steer_command.exe
+
+server.obj: server.c 
+	$(CC) -c server.c $(INC) $(CFLAG) 
+
+server.exe: server.obj
+	$(LN) server.obj /OUT:server.exe $(LFLAG)
+
+steer_command.obj: steer_command.c 
+	$(CC) -c steer_command.c $(INC) $(CFLAG) 
+
+steer_command.exe: steer_command.obj
+	$(LN) steer_command.obj /OUT:steer_command.exe $(LFLAG)
+
+clean:
+	rm -f *.obj *.exe *.manifest *.exp *.lib *.pdb
+
+manifest:
+	cp -R C:\ch\extern\lib\Microsoft.VC80.CRT .

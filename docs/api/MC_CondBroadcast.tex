@@ -1,0 +1,60 @@
+\rhead{\bf MC\_CondBroadcast()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_CondBroadcast()\index{MC\_CondBroadcast()}}\\
+\addcontentsline{toc}{section}{MC\_CondBroadcast()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_CondBroadcast}({\bf MCAgency\_t} agency, {\bf int} $id$);\\
+
+\noindent
+{\bf Purpose}\\
+Signal all mobile agents and threads which are waiting on a condition 
+variable.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 if the condition variable is successfully found and 
+signalled.
+It returns non-zero if the condition variable was not found.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A Mobile-C agency handle. \\
+$id$ & The id of the condition variable to signal.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to signal all other mobile agents and threads that are 
+waiting on a Mobile-C condition variable. 
+The function that calls {\bf MC\_CondBroadcast()} must know beforehand the id of 
+the condition variable which a mobile agent might be waiting on.\\
+
+\noindent
+{\bf Example}\\
+Please see Program \vref{prog:mobileagent2_ex5.xml} and 
+Program \vref{prog:binary_sync_example_agent} in Chapter 
+\ref{chap:synchronization}.
+\noindent
+%Compare with output for examples in \CPlot::\Arrow(), \CPlot::\AutoScale(),
+%\CPlot::\DisplayTime(), \CPlot::\Label(), \CPlot::\TicsLabel(), 
+%\CPlot::\Margins(), \CPlot::\BoundingBoxOffsets(), \CPlot::\TicsDirection(),\linebreak
+%\CPlot::\TicsFormat(), and \CPlot::\Title().
+%{\footnotesize\verbatiminput{template/example/Data2D.ch}}
+
+\noindent
+{\bf See Also}\\
+MC\_CondDelete(), MC\_CondInit(), MC\_CondSignal().\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

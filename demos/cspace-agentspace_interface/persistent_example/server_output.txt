@@ -1,0 +1,9 @@
+$ ./server
+Please press 'enter' once the sample agent has arrived.
+The sample persistent agent has now arrived.
+
+Hello!!!
+This text is being generated from within the 'hello()' function!
+I received arguments of value 50 51.
+Value of 4 was returned.
+$

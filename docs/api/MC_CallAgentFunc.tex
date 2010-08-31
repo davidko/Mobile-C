@@ -1,0 +1,51 @@
+\rhead{\bf MC\_CallAgentFunc()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_CallAgentFunc()\index{MC\_CallAgentFunc()}}\\
+\addcontentsline{toc}{section}{MC\_CallAgentFunc()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_CallAgentFunc}({\bf MCAgent\_t} $agent$, {\bf const char*} $funcName$, {\bf void*} $returnVal$, ...);\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to call a function that is defined in an agent. \\
+
+\noindent
+{\bf Return Value}\\
+This function returns 0 on success, or a non-zero error code on failure. \\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{ll}
+$agent$ & The agent in which to call a function. \\
+$funcName$ & The function to call. \\
+$returnVal$ & (Output) The return value of the agent function. \\
+$...$ &  Arguments to pass to the function. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function enables a program to treat agents as libraries of functions. Thus, an agent
+may provide a library of functions that may be called from binary space with this function, 
+or from another agent by the agent-space version of this function. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/cspace-agentspace_interface/persistent_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+MC\_CallAgentFuncVar()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

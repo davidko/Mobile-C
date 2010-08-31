@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>agent</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="1" num="0">
+     <TASK num="0" complete="0" server="localhost:5051">
+     </TASK>
+     <AGENT_CODE>
+      <![CDATA[
+#include <stdio.h>
+#define COND_ID 55
+int main()
+{
+    int i;
+    printf("This is agent 1.\n");
+    for(i = 0; i < 5; i++) {
+        printf("Agent: Perform some task here.\n");
+        sleep(2);
+        printf("Agent: signal C space for followup action.\n");
+        mc_CondSignal(COND_ID);
+        sleep(1);
+    }
+
+    return 0;
+}
+      ]]>
+     </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

@@ -1,0 +1,39 @@
+all:
+	cd src/mc_list
+	nmake -f mc_list.mak
+	cd ../../
+	cd src/mc_sync
+	nmake -f mc_sync.mak
+	cd ../../
+	cd src/mxml-2.2.2
+	nmake -f mxml.mak
+	cd ../../
+	cd src/security/xyssl-0.9/library
+	nmake -f xyssl.mak
+	cd ../../../../
+	cd src
+	nmake -f mobilec.mak
+	cd ../
+	cd demos
+	nmake -f makefile.win32
+	cd ../
+
+clean:
+	cd src/mc_list
+	nmake -f mc_list.mak clean
+	cd ../../
+	cd src/mc_sync
+	nmake -f mc_sync.mak clean
+	cd ../../
+	cd src/mxml-2.2.2
+	nmake -f mxml.mak clean
+	cd ../../
+	cd src/security/xyssl-0.9/library
+	nmake -f xyssl.mak clean
+	cd ../../../../
+	cd src
+	nmake -f mobilec.mak clean
+	cd ../
+	cd demos
+	nmake -f makefile.win32 clean
+	cd ../

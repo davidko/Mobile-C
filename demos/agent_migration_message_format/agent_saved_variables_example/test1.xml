@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+ <MESSAGE message="MOBILE_AGENT">
+  <MOBILE_AGENT>
+   <AGENT_DATA>
+    <NAME>mobagent1</NAME>
+    <OWNER>IEL</OWNER>
+    <HOME>localhost:5050</HOME>
+    <TASKS task="2" num="0">
+     <TASK num="0" complete="0" server="localhost:5051" code_id="1" />
+     <TASK num="1" complete="0" server="localhost:5050" code_id="2" />
+     <AGENT_CODE id="1">
+      <![CDATA[
+#include <stdio.h>
+#include <math.h>
+int savevar;
+int another_savevar;
+int array_savevar[10];
+int main()
+{
+  int i;
+  printf("Hello World!\n");
+  printf("This is mobagent1 from the agency at port 5050.\n");
+  printf("I am performing the task on the agency at port 5051 now.\n");
+  printf("%f\n", hypot(1,2)); 
+  savevar = 10;
+  another_savevar = 20;
+  mc_AgentVariableSave(mc_current_agent, "savevar");
+  mc_AgentVariableSave(mc_current_agent, "another_savevar");
+  for(i = 0; i < 10; i++) {
+    array_savevar[i] = i*3;
+  }
+  mc_AgentVariableSave(mc_current_agent, "array_savevar");
+  return 0;
+}
+      ]]>
+     </AGENT_CODE>
+     <AGENT_CODE id="2">
+      <![CDATA[
+#include <stdio.h>
+int retvar;
+int main()
+{
+  const int *i;
+  i = (int*)mc_AgentVariableRetrieve(mc_current_agent, "savevar", 0);
+  if (i==NULL) {
+    printf("Variable 'savevar' not found.\n");
+  } else {
+    printf("Variable 'savevar' has value %d.\n", *i);
+  }
+  retvar = *i*2;
+  return 0;
+}
+      ]]>
+    </AGENT_CODE>
+    </TASKS>
+   </AGENT_DATA>
+  </MOBILE_AGENT>
+ </MESSAGE>
+</MOBILEC_MESSAGE>

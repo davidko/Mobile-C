@@ -1,0 +1,17 @@
+This example directory is used to quickly generate teams of agents, each of which have multiple tasks. The main setup script is called
+"template_generator.sh". These agents are used in a relay-race example.
+A sample execution of the script would be
+
+    sh ./template_generator.sh 4 10
+
+where the first argument, '4', is the number of agents per team you wish
+to generate, and the second argument, '10', is the number of total teams. 
+With the above commands, a total of 40 agents will be generated in 10
+separate teams.
+
+The shell script reads and uses data from the following files:
+  host_list.txt : The script reads this list of hosts for each task. Each host
+    should be separated by a newline.
+  template_* : These are templates for racers and triggers. Triggers are 
+    special racers that start the relay race.
+

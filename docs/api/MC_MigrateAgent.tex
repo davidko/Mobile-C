@@ -1,0 +1,51 @@
+\rhead{\bf MC\_MigrateAgent()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_MigrateAgent()\index{MC\_MigrateAgent()}}\\
+\addcontentsline{toc}{section}{MC\_MigrateAgent()}
+\label{api:MC_MigrateAgent()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_MigrateAgent}({\bf MCAgent\_t} $agent$, {\bf const char*} $hostname$, {\bf int} $port$);\\
+
+\noindent
+{\bf Purpose}\\
+Instructs an agent to migrate to another host.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{15 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent. \\
+$hostname$ & The new host to migrate to. \\
+$port$ & The port on the new host to migrate to. \\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function instructs an agent to migrate to a new host. The task of the
+agent is not incremented. The agent will executed whatever task it was
+currently on when this function was invoked on the new host. Note that this
+function only prepends a task to the agents task list. The agent still needs
+to finish before the migration step occurs.\\
+
+\noindent
+{\bf Example}\\
+
+\noindent
+{\bf See Also}\\
+mc\_MigrateAgent()
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

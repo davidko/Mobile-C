@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE myMessage SYSTEM "mobilec.dtd">
+
+<MOBILEC_MESSAGE>
+  <MESSAGE message="MOBILE_AGENT">
+    <MOBILE_AGENT>
+     <AGENT_DATA>
+       <NAME>agent3</NAME>
+       <OWNER>IEL</OWNER>
+       <HOME>localhost:5050</HOME>
+       <TASKS task="1" num="0">
+        <TASK num="0" complete="0" server="localhost:5051" persistent="1" >
+        </TASK>
+	  <AGENT_CODE>
+          <![CDATA[
+#include <stdio.h>
+
+int main()
+{
+    int i;
+    char **agentNames;
+    char **serviceNames;
+    int *agentIDs;
+    int numResults;
+
+    mc_SearchForService(
+            "bonus",
+            &agentNames,
+            &serviceNames,
+            &agentIDs,
+            &numResults
+            );
+    for (i = 0; i < numResults; i++) {
+        printf("%s:%d %s\n",
+                agentNames[i],
+                agentIDs[i],
+                serviceNames[i]
+              );
+    }
+
+    printf("\n");
+
+    return 0;
+}
+        ]]>
+        </AGENT_CODE>
+      </TASKS>
+      </AGENT_DATA>
+    </MOBILE_AGENT>
+  </MESSAGE>
+</MOBILEC_MESSAGE>

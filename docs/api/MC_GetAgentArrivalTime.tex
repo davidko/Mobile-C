@@ -1,0 +1,50 @@
+\rhead{\bf MC\_GetAgentArrivalTime()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_GetAgentArrivalTime()\index{MC\_GetAgentArrivalTime()}}\\
+\addcontentsline{toc}{section}{MC\_GetAgentArrivalTime()}
+\label{api:MC_GetAgentArrivalTime()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf time\_t MC\_GetAgentArrivalTime}({\bf MCAgent\_t} $agent$);\\
+
+\noindent
+{\bf Purpose}\\
+Get the agent's arrival time.\\
+
+\noindent
+{\bf Return Value}\\
+This function returns a valid \texttt{time\_t} type variable under unix,
+or a valid \texttt{SYSTEMTIME} type variable under Microsoft Windows.
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{10 mm}p{145 mm}} 
+$agent$ & An initialized mobile agent.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+Each agent that arrives at an agency keeps a record of the system time
+at the point at which is arrives. This API function is used to access
+that data. \\
+
+\noindent
+{\bf Example}\\
+\noindent
+% FIXME: Need an example here
+%{\footnotesize\verbatiminput{../demos/multiple_agency_example/server.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\
