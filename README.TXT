@@ -107,6 +107,19 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.0.3, September 16, 2010
+*)  Fixed configuration files to allow Mobile-C to build on machines that do
+    not have Bluetooth support. 
+
+Version MobileC v2.0.2, August 31, 2010
+*)  Added experimental Bluetooth support for Mobile-C agencies.
+
+Version MobileC v2.0.1, August 6, 2010
+*)  Fixed bug in function MC_SendAgent() where the agents would not be 
+    sent to the correct destination.
+*)  Updated some demos and documentation to use MC_SendAgent*() instead
+    of MC_SendAgentMigrationMessage*(), which is now deprecated.
+
 Version MobileC v2.0.0, June 17, 2010
 *)  Major changes to the organization and presentation of the User's guide
 *)  Added new API function to append tasks onto existing agents, called
