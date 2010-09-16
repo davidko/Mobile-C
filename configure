@@ -15479,51 +15479,7 @@ _ACEOF
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for keyok in -lcurses" >&5
-$as_echo_n "checking for keyok in -lcurses... " >&6; }
-if test "${ac_cv_lib_curses_keyok+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lcurses  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char keyok ();
-int
-main ()
-{
-return keyok ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_curses_keyok=yes
-else
-  ac_cv_lib_curses_keyok=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_curses_keyok" >&5
-$as_echo "$ac_cv_lib_curses_keyok" >&6; }
-if test "x$ac_cv_lib_curses_keyok" = x""yes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBCURSES 1
-_ACEOF
-
-  LIBS="-lcurses $LIBS"
-
-fi
-
+#AC_CHECK_LIB([curses], [keyok])
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for str2ba in -lbluetooth" >&5
 $as_echo_n "checking for str2ba in -lbluetooth... " >&6; }
 if test "${ac_cv_lib_bluetooth_str2ba+set}" = set; then :

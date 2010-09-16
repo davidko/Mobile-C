@@ -45,7 +45,7 @@ AC_CHECK_LIB([mc], [MC_Start])
 AC_CHECK_LIB([pthread], [pthread_create])
 AC_CHECK_LIB([m], [hypot])
 AC_CHECK_LIB([crypt], [crypt])
-AC_CHECK_LIB([curses], [keyok])
+#AC_CHECK_LIB([curses], [keyok])
 AC_CHECK_LIB([bluetooth], [str2ba])
 if test $use_readline = yes; then
   AC_CHECK_LIB([readline], [readline])
