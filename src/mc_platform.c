@@ -103,12 +103,14 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
 #else
 	  fprintf(stderr, "Fatal Error %s:%d\n", __FILE__, __LINE__);
 #endif
-	  exit(0);
+	  //exit(0);
   }
   mc_platform->hostname = (char*)malloc(sizeof(char)*DEFAULT_HOSTNAME_LENGTH);
   CHECK_NULL(mc_platform->hostname, agency->last_error = MC_ERR_MEMORY;return NULL);
 
-  if(localhost->h_name)
+  if(localhost == NULL) 
+    strcpy(mc_platform->hostname, "127.0.0.1"); 
+  else if(localhost->h_name)
     strcpy(mc_platform->hostname, localhost->h_name); 
   else
     // might always be 127.0.0.1 which is not good for ACL messaging on a network
