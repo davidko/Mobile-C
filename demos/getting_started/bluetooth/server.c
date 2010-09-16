@@ -6,7 +6,7 @@
 int main() 
 {
   MCAgency_t agency;
-  int local_port = 20; /* Bluetooth RFCOMM ports only go from 0 to 30 */
+  int local_port = 10; /* Bluetooth RFCOMM ports only go from 0 to 30 */
 
   MCAgencyOptions_t options;
   MC_InitializeAgencyOptions(&options);

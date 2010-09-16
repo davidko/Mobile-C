@@ -9,7 +9,7 @@ int main()
   MCAgency_t agency;
   MCAgencyOptions_t options;
   MCAgent_t agent;
-  int local_port=20;
+  int local_port=21;
 
   MC_InitializeAgencyOptions(&options);
   options.bluetooth = 1;
@@ -19,9 +19,9 @@ int main()
       "mobagent1",      /* Name */
       "localhost:5050", /* Home */
       "IEL",            /* Owner */
-      "hello_world.c",  /* Filename */
+      "master_slave.cpp",  /* Filename */
       NULL,             /* Return var name. NULL for no return */
-      "00:80:37:27:03:D8 20", /* Server to execute task on */
+      "00:80:37:2E:45:D2 10", /* Server to execute task on */
                            /* Note that the address is a bluetooth
                             * device address, aka MAC address. The number after
                             * the space is the RFCOMM channel to send to. */
