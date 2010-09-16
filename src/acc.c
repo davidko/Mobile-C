@@ -43,8 +43,11 @@
 #include <netdb.h>
 #include <pthread.h>
 #include "config.h"
+#if HAVE_LIBBLUETOOTH
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
+#endif
+
 #else
 #include <winsock2.h>
 #include <windows.h>
@@ -661,7 +664,9 @@ listen_Thread( LPVOID arg )
   int sockfd;
   struct sockaddr_in sktin;
   struct sockaddr_in peer_addr;
+#if HAVE_LIBBLUETOOTH
   struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
+#endif
 #else
   SOCKET connectionsockfd;
   SOCKET sockfd;
@@ -697,16 +702,25 @@ listen_Thread( LPVOID arg )
 #ifdef _WIN32
     connectionlen = sizeof(SOCKADDR_BTH);
 #else
+#if HAVE_LIBBLUETOOTH
     connectionlen = sizeof(struct sockaddr_rc);
+#else
+    fprintf(stderr, "ERROR: This copy of Mobile-C was not compiled with Bluetooth support, but\n"
+     "bluetooth support was requested in the Mobile-C options. Please re-compile \n"
+     "Mobile-C with Bluetooth support.\n");
+    exit(-1);
+#endif
 #endif
   }
 
   /* Set up the socket */
   if(mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
 #ifndef _WIN32
     sockfd = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 #else
     sockfd = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM); 
+#endif
 #endif
   } else {
     sockfd = socket(PF_INET, SOCK_STREAM, 0);
@@ -718,6 +732,7 @@ listen_Thread( LPVOID arg )
   mc_platform->sockfd = sockfd;
 
   if(mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
 #ifndef _WIN32
     loc_addr.rc_family = AF_BLUETOOTH;
     loc_addr.rc_bdaddr = *BDADDR_ANY;
@@ -732,6 +747,7 @@ listen_Thread( LPVOID arg )
         strerror(errno), errno);
       exit(1);
     }
+#endif
   } else {
     sktin.sin_family = AF_INET;
     sktin.sin_port = htons(mc_platform->port);

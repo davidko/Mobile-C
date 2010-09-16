@@ -26,6 +26,10 @@ AC_ARG_ENABLE(readline,
     AC_HELP_STRING([--enable-readline], [Enable gnu readline support for the command line.]),
     [use_readline=$enableval], [use_readline=yes])
 
+AC_ARG_ENABLE(bluetooth,
+    AC_HELP_STRING([--enable-bluetooth], [Enable BlueZ Bluetooth stack support.]),
+    [use_bluetooth=$enableval], [use_bluetooth=yes])
+
 # touch 'NEWS' and 'COPYING' to trick automake.
 touch NEWS
 touch COPYING
@@ -46,7 +50,9 @@ AC_CHECK_LIB([pthread], [pthread_create])
 AC_CHECK_LIB([m], [hypot])
 AC_CHECK_LIB([crypt], [crypt])
 #AC_CHECK_LIB([curses], [keyok])
-AC_CHECK_LIB([bluetooth], [str2ba])
+if test $use_bluetooth = yes; then
+  AC_CHECK_LIB([bluetooth], [str2ba])
+fi
 if test $use_readline = yes; then
   AC_CHECK_LIB([readline], [readline])
 fi

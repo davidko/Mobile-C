@@ -42,8 +42,10 @@
 #include <netdb.h>
 #include <errno.h>
 #include "config.h"
+#if HAVE_LIBBLUETOOTH
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
+#endif
 #else
 #include <winsock2.h>
 #include <Ws2bth.h>
@@ -655,7 +657,9 @@ message_send_Thread( LPVOID arg )
 #ifndef _WIN32
   int skt;
   struct sockaddr_in sktin;
+#if HAVE_LIBBLUETOOTH
   struct sockaddr_rc btsktin;
+#endif
   struct addrinfo* myaddrinfo;
   struct addrinfo hint_addrinfo;
 #else
@@ -697,6 +701,7 @@ message_send_Thread( LPVOID arg )
   }
 
   if(mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
 #ifndef _WIN32
     if((skt = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)) < 0) 
     { 
@@ -723,6 +728,7 @@ message_send_Thread( LPVOID arg )
     sscanf( strtok_r(NULL, " ", &saveptr), "%d", &port );
     btsktin.port =  port;
     str2ba( hostname, (bdaddr_t*)&btsktin.btAddr );
+#endif
 #endif
   } else {
     /* We need to split up the address into a hostname and port. */
@@ -769,13 +775,17 @@ message_send_Thread( LPVOID arg )
 
 #ifndef _WIN32
   if (mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
     errnum = connect(skt, (struct sockaddr *)&btsktin, sizeof(btsktin));
+#endif
   } else {
     errnum = connect(skt, myaddrinfo->ai_addr, sizeof(struct sockaddr));
   }
 #else
   if (mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
     errnum = connect(skt, (struct sockaddr *) &btsktin, sizeof(btsktin));
+#endif
   } else {
     errnum = connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));
   }
@@ -793,13 +803,17 @@ message_send_Thread( LPVOID arg )
 		num_tries++;
 #ifndef _WIN32
     if (mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
       errnum = connect(skt, (struct sockaddr *)&btsktin, sizeof(btsktin));
+#endif
     } else {
       errnum = connect(skt, myaddrinfo->ai_addr, sizeof(struct sockaddr));
     }
 #else
     if (mc_platform->bluetooth) {
+#if HAVE_LIBBLUETOOTH
       errnum = connect(skt, (struct sockaddr *) &btsktin, sizeof(btsktin));
+#endif
     } else {
       errnum = connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));
     }

@@ -85,7 +85,7 @@ AUTOMAKE = ${SHELL} /home/dko/Projects/mobilec/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O0 -I/usr/local/ch/extern/include
+CFLAGS = -g -O2 -I/usr/local/ch/extern/include
 CHHOME = /usr/local/ch
 CPP = gcc -E
 CPPFLAGS = 
@@ -113,7 +113,7 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld
 LDFLAGS = -u __builtin_Ch_VaArg  -L/usr/local/ch/extern/lib
 LIBOBJS = 
-LIBS = -lchsdk -lembedch -lreadline -lbluetooth -lcrypt -lm -lpthread -ldl 
+LIBS = -lchsdk -lembedch -lreadline -lcrypt -lm -lpthread -ldl 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
