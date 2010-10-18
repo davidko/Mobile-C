@@ -125,17 +125,7 @@ MC_WaitSignal
 #ifndef _MOBILEC_H_
 #define _MOBILEC_H_
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-#ifndef THREAD_T
-#ifdef _WIN32
-#define THREAD_T HANDLE
-#else
-#define THREAD_T pthread_t
-#endif
-#endif
+#include "macros.h"
 
 #ifdef WIN32
 	#ifdef _MC_DLL
