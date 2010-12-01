@@ -44,9 +44,12 @@
 #include <pthread.h>
 #include "config.h"
 #if HAVE_LIBBLUETOOTH
+#ifdef _WIN32
+#include <Ws2bth.h>
+#else
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
-#include <Ws2bth.h>
+#endif
 #endif
 
 #else
@@ -665,8 +668,11 @@ listen_Thread( LPVOID arg )
   struct sockaddr_in sktin;
   struct sockaddr_in peer_addr;
 #if HAVE_LIBBLUETOOTH
-  struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
+#ifdef _WIN32
   SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
+#else
+  struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
+#endif
 #endif
 #else
   SOCKET connectionsockfd;

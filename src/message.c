@@ -43,9 +43,12 @@
 #include <errno.h>
 #include "config.h"
 #if HAVE_LIBBLUETOOTH
+#ifdef _WIN32
+#include <Ws2bth.h>
+#else
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
-#include <Ws2bth.h>
+#endif
 #endif
 #else
 #include <winsock2.h>
@@ -658,8 +661,11 @@ message_send_Thread( LPVOID arg )
   int skt;
   struct sockaddr_in sktin;
 #if HAVE_LIBBLUETOOTH
-  struct sockaddr_rc btsktin;
+#ifdef _WIN32
   SOCKADDR_BTH btsktin;
+#else
+  struct sockaddr_rc btsktin;
+#endif
 #endif
   struct addrinfo* myaddrinfo;
   struct addrinfo hint_addrinfo;

@@ -189,6 +189,9 @@ cmd_prompt_Thread( LPVOID arg )
         /* We want to repeatedly grab and execute the user's commands. */
 #ifdef HAVE_LIBREADLINE
         buf = readline("MobileC > ");
+        if (buf == NULL) {
+          break;
+        }
         if (*buf) {
             add_history(buf);
         }
