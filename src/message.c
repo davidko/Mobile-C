@@ -659,13 +659,13 @@ message_send_Thread( LPVOID arg )
   struct sockaddr_in sktin;
 #if HAVE_LIBBLUETOOTH
   struct sockaddr_rc btsktin;
+  SOCKADDR_BTH btsktin;
 #endif
   struct addrinfo* myaddrinfo;
   struct addrinfo hint_addrinfo;
 #else
   SOCKET skt;
   SOCKADDR_IN sktin;
-  SOCKADDR_BTH btsktin;
   struct hostent host;
   struct hostent* host_result;
 #endif

@@ -666,6 +666,7 @@ listen_Thread( LPVOID arg )
   struct sockaddr_in peer_addr;
 #if HAVE_LIBBLUETOOTH
   struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
+  SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
 #endif
 #else
   SOCKET connectionsockfd;
@@ -673,7 +674,6 @@ listen_Thread( LPVOID arg )
   struct sockaddr_in sktin;
   struct sockaddr_in peer_addr;
   struct sockaddr_in name_addr;  
-  SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
 
   struct hostent *remoteHost;
     struct in_addr addr;
@@ -699,17 +699,17 @@ listen_Thread( LPVOID arg )
   if (mc_platform->bluetooth == 0) {
     connectionlen = sizeof(struct sockaddr_in);
   } else {
+#if HAVE_LIBBLUETOOTH
 #ifdef _WIN32
     connectionlen = sizeof(SOCKADDR_BTH);
 #else
-#if HAVE_LIBBLUETOOTH
     connectionlen = sizeof(struct sockaddr_rc);
+#endif
 #else
     fprintf(stderr, "ERROR: This copy of Mobile-C was not compiled with Bluetooth support, but\n"
      "bluetooth support was requested in the Mobile-C options. Please re-compile \n"
      "Mobile-C with Bluetooth support.\n");
     exit(-1);
-#endif
 #endif
   }
 
@@ -796,6 +796,7 @@ listen_Thread( LPVOID arg )
           continue;
         }
     } else {
+#if HAVE_LIBBLUETOOTH
 #ifndef _WIN32
       if((connectionsockfd = accept(sockfd, 
               (struct sockaddr *)&peer_addr, 
@@ -812,6 +813,7 @@ listen_Thread( LPVOID arg )
 #endif
           continue;
         }
+#endif
     }
     if(connectionsockfd > 0) 
     {
