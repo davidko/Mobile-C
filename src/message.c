@@ -45,10 +45,10 @@
 #if HAVE_LIBBLUETOOTH
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
+#include <Ws2bth.h>
 #endif
 #else
 #include <winsock2.h>
-#include <Ws2bth.h>
 #include "winconfig.h"
 #endif
 #include <mxml.h>
