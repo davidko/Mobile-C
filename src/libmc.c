@@ -3130,7 +3130,7 @@ MC_ComposeAgent_chdl(void *varg) /*{{{*/
   server = Ch_VaArg(interp, ap, const char*);
   persistent = Ch_VaArg(interp, ap, int);
 
-  retval= MC_ComposeAgentS(
+  retval= MC_ComposeAgentWithWorkgroup(
       name,
       home,
       owner,

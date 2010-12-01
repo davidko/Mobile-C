@@ -34,7 +34,6 @@ int main()
           }\n",
         "no-return",
         "localhost:5050",
-        NULL,
         0 );
           
     mc_AddAgent(agent);
