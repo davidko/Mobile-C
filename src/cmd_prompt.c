@@ -190,7 +190,8 @@ cmd_prompt_Thread( LPVOID arg )
 #ifdef HAVE_LIBREADLINE
         buf = readline("MobileC > ");
         if (buf == NULL) {
-          break;
+          sleep(5);
+          continue;
         }
         if (*buf) {
             add_history(buf);
