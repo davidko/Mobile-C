@@ -33,25 +33,18 @@ int main()
   /* Print relevant data */
   printf("%d tasks.\n", MC_GetAgentNumTasks(agent) );
   for (i = 0; i < MC_GetAgentNumTasks(agent); i++) {
-    MC_GetAgentReturnData(
-        agent,
-        i,
-        (void**)&data,
-        &dim,
-        &extent );
+    dim = MC_AgentReturnArrayDim(agent, i);
+    extent = malloc(sizeof(int) * dim);
+    data = MC_AgentReturnDataGetSymbolAddr(agent, i);
+    size = MC_AgentReturnArrayNum(agent, i);
     printf("Task: %d\n", i);
-    size = 1;
     printf("dim is %d\n", dim);
-    for (j = 0; j < dim; j++) {
-      size *= extent[j];
-    }
     printf("Size: %d\n", size);
     printf("Data elements: ");
     for (j = 0; j < size; j++) {
       printf("%f ", data[j]);
     }
     printf("\n\n");
-    free(data);
     free(extent);
   }
 
