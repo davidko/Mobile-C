@@ -26,7 +26,6 @@ echo "Starting Client..."
 PIDS="$PIDS $!"
 
 sleep 5
-jobs
 echo "Killing processes..."
 #terminate the processes
 for p in $PIDS
@@ -34,28 +33,26 @@ for p in $PIDS
   kill $p
 done
 
-jobs
-
 # Now, compare the acquired outputs with the expected outputs
 for server in $SERVERS
   do
-  if diff $server.output.tmp $server.output > /dev/null 
+  if diff -w $server.output.tmp $server.output > /dev/null 
     then
     echo "."
-    exit 0
     else
     echo "ERROR: Files Differ: $server.output $server.output.tmp"
-    exit 1
+    echo "in `pwd`"
+    diff -wc $server.output.tmp $server.output 
+    cp $server.output.tmp $server.output.err
   fi
 done
 
-if diff client.output.tmp client.output > /dev/null 
+if diff -w client.output.tmp client.output > /dev/null 
   then
   echo "."
-  exit 0
   else
   echo "ERROR: Files Differ: client.output client.output.tmp"
-  exit 1
+  echo "in `pwd`"
 fi
 
 # Remove tmp files

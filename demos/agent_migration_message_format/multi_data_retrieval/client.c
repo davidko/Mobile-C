@@ -10,8 +10,8 @@ int main()
   MCAgencyOptions_t options;
   int my_port = 5125;
   int remote_port1 = 5130, remote_port2 = 5052;
-  int dim, *extent, i;
-  double *data;		
+  int dim, i;
+  const double *data;		
   char *name;  
   MC_InitializeAgencyOptions(&options);
   MC_SetThreadOff(&options, MC_THREAD_CP); /* Turn off command prompt */
@@ -36,13 +36,12 @@ int main()
 		fprintf(stderr, "Did not receive correct agent. \n");
 		exit(1);
 	}
-    MC_GetAgentReturnData( agent, 0, (void**)&data, &dim, &extent );
+    dim = MC_AgentReturnArrayDim(agent, 0);
+    data = MC_AgentReturnDataGetSymbolAddr(agent, 0);
     printf("Return Data from agent %d is %0.3f \n",i+1, data[0]);
     MC_DeleteAgent(agent);
     MC_ResetSignal(agency); 	
   }// end for
-  free(data);
-  free(extent);
   MC_End(agency);
   exit(0);
 }

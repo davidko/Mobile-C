@@ -6,7 +6,7 @@ int main()
   MCAgency_t agency;
   MCAgencyOptions_t options;
   MCAgent_t agent;
-  int dim, *extent;
+  int dim;
   double *data;
   int i, j, size;
   int local_port=5050;
@@ -34,7 +34,6 @@ int main()
   printf("%d tasks.\n", MC_GetAgentNumTasks(agent) );
   for (i = 0; i < MC_GetAgentNumTasks(agent); i++) {
     dim = MC_AgentReturnArrayDim(agent, i);
-    extent = malloc(sizeof(int) * dim);
     data = MC_AgentReturnDataGetSymbolAddr(agent, i);
     size = MC_AgentReturnArrayNum(agent, i);
     printf("Task: %d\n", i);
@@ -45,7 +44,6 @@ int main()
       printf("%f ", data[j]);
     }
     printf("\n\n");
-    free(extent);
   }
 
   /* Every usage of MC_WaitSignal() must be reset by MC_ResetSignal() to allow
