@@ -39,21 +39,20 @@ for server in $SERVERS
   if diff -w $server.output.tmp $server.output > /dev/null 
     then
     echo "."
-    exit 0
     else
     echo "ERROR: Files Differ: $server.output $server.output.tmp"
-    exit 1
+    echo "in `pwd`"
+    diff -wc $server.output.tmp $server.output 
+    cp $server.output.tmp $server.output.err
   fi
 done
 
 if diff -w client.output.tmp client.output > /dev/null 
   then
   echo "."
-  exit 0
   else
   echo "ERROR: Files Differ: client.output client.output.tmp"
   echo "in `pwd`"
-  exit 1
 fi
 
 # Remove tmp files
