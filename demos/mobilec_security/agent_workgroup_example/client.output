@@ -1,0 +1,31 @@
+Welcome to the Mobile-C agent workgroup demonstration example.
+To begin, the demonstration, we will send a worker agent named 
+"agent1" to the server agency. "agent1" is not protected by a workgroup
+code. Press the return key to send agent1.
+agent1 has been sent. You should be able to see agent1's arrival
+message on the server agency, and it should begin printing periodic
+messages to show that it is working. 
+
+Next, we will send another worker agent, except this second agent,
+"agent2", will be protected by a secret workgroup code. This workgroup
+code is kept secret and only shared among agents that trust each other.
+In our example, the workgroup code we have assigned to "agent2" is
+"12345abCD". Press the return key to send agent2.
+You should now notice two agents performing work at the server
+agency. Next, we will send a malicious agent to the server who's goal is to
+terminate other agents. This malicous agent does not belong to any workgroups.
+Press the return key to send agent3, the malicious agent.
+You should notice now that agent1 has been terminated, but agent2
+is still performing its task. This is due to the fact that since agent1 did 
+not belong to any workgroups, any agent is able to modify it or terminate
+it. However, since agent2 belongs to a different workgroup than agent3,
+agent3 is unable to terminate agent2.
+
+Next, we will send an agent in the same workgroup as agent2 to try to
+terminate agent2. Press the return key to send agent4, who is also in
+the "12345abCD" workgroup who will try to terminate agent2.
+You should notice now that all activity has ceased on the server
+agency. agent4 was successfully able to terminate agent2 because they belong
+to the same workgroup.
+
+Press the return key to end this demo.
