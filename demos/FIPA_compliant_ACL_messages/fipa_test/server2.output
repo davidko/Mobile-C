@@ -1,0 +1,11 @@
+
+MobileC > MobileC > 
+mobagent2: Arried at http://boxzor:5052/acc
+
+mobagent2: Creating new ACL message.
+mobagent2: Waiting for a message.
+mobagent2: Received a message from mobagent1.
+	Content is 'Reply from mobagent1.'.
+	Protocol is '8'.
+	ConverationID is 'cn1'.
+MobileC > MobileC > 

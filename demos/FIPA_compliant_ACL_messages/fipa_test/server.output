@@ -1,0 +1,11 @@
+
+MobileC > 
+mobagent1: Arrived at http://boxzor:5051/acc.
+mobagent1: Waiting for a message.
+MobileC > mobagent1: Received a message from mobagent2.
+	Content is 'Content from mobagent2'.
+	Protocol is '8'.
+	ConverationID is 'cn1'.
+mobagent1: Generating a reply message.
+mobagent1: Sending message...
+MobileC > MobileC > 
