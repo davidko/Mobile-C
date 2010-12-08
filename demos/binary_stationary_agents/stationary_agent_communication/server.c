@@ -28,6 +28,10 @@ void* stationary_agent_func(stationary_agent_info_t* stationary_agent_info)
   } else {
     printf("Error retrieving ACL message\n");
   }
+
+#ifndef _WIN32
+  fflush(stdout);
+#endif
   return NULL;
 }
 
