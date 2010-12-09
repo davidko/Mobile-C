@@ -205,6 +205,7 @@ cmd_prompt_Thread( LPVOID arg )
 #endif
             {
                 fprintf(stderr, "fgets failed at %s:%d\n", __FILE__, __LINE__);
+                Sleep(5000);
             }
 #endif
         /* Get rid of newline character */
