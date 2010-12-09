@@ -1,0 +1,11 @@
+
+MobileC > Sleep agent has arrived.
+This is agent 1.
+Agent 1: I am locking the mutex now.
+Agent 1: Mutex locked. Perform protected operations here
+Agent 1: Waiting for 5 seconds...
+Agent 2: Has arrivedAgent 2: Attempting to lock the mutex...
+Agent 1: Unlocking mutex now...
+Agent 2: Mutex locked.
+Agent 2: Perform protected operations here.
+Agent 2: Mutex Unlocked
