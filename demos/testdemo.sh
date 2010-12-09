@@ -25,7 +25,16 @@ echo "Starting Client..."
 ./client 1> client.output.tmp &
 PIDS="$PIDS $!"
 
-sleep 5
+# Some demos take longer to run than others. If there is a file called
+# "demo_exec_time.txt" in the demo directory, sleep for the number of seconds
+# contained in that file instead of the default 5 seconds.
+if [ -e demo_exec_time.txt ]
+  then
+    sleep `cat demo_exec_time.txt`
+  else
+    sleep 5
+fi
+  
 echo "Killing processes..."
 #terminate the processes
 for p in $PIDS
