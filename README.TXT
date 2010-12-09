@@ -107,6 +107,11 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.0.5, December 9, 2010
+*)  Fixed some bugs related to the Mobile-C command line
+*)  Updated some old demo code that was still using deprecated functions
+*)  Added experimental testing script to automatically test demos
+
 Version MobileC v2.0.4, December 1, 2010
 *)  Fixed a bug where mc_ComposeAgent calls a deprecated function.
 *)  Fixed the mc_compose_agent_example demo.
