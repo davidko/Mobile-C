@@ -1103,6 +1103,9 @@ agent_RunChScriptThread(void* ChAgent)
     MUTEX_LOCK(agent->run_lock);
     if(Ch_RunScript(*agent->agent_interp, ChShellArg) < 0) {
       fprintf(stderr, "Ch_RunScript error. %s:%d\n", __FILE__, __LINE__);
+    } else {
+      /* Flush the output buffer, in case the agent printed anything */
+      fflush(stdout);
     }
 
     /* if(Ch_CallFuncByName(((MCAgent_t)ChAgent)->agent_interp, "main", NULL))
