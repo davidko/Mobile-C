@@ -1,0 +1,20 @@
+
+MobileC > Service provider 1 has arrived.
+I provide addition and subtraction service.
+Service provider 2 has arrived.
+I provide multiplication and modulus service.
+
+
+
+Searching for addition service.
+Done searching.
+Using agent service_provider_1 for addition.
+Adding 44 and 45...
+Result of addition 44 + 45 is 89.
+
+
+ Searching for Multiplication service...
+Using agent service_provider_2 for multiplication.
+Multiplying 44 and 45...
+Result of multiplication 44 * 45 is 1980.
+MobileC > 

@@ -1,0 +1,15 @@
+
+MobileC > Squad leader at port 5053. Setting up barriers.
+Agent 2: Arrived at port 5053: Nothing to do.
+Agent 1: Begin Task 1.
+Agent 3: Begin Task 1.
+Agent 1: End task 1.
+Agent 3: End task 1.
+Agent 3: Begin Task 2.
+Agent 1: Begin Task 2.
+Agent 3: End task 2.
+Agent 1: End task 2.
+Agent 1: Begin Task 3.
+Agent 3: Begin Task 3.
+Agent 3: End task 3.
+Agent 1: End task 3.

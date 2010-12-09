@@ -22,7 +22,7 @@ int main()
     char** services;
     services = (char**)malloc(sizeof(char*) * 2);
     for (i = 0; i < 2; i++) {
-        services[i] = (char*)malloc(sizeof(char)*20);
+        services[i] = (char*)malloc(sizeof(char)*30);
     }
     strcpy(services[0], "agent1_service");
     strcpy(services[1], "agent1_bonus_service");

@@ -1,0 +1,28 @@
+The agent status is: 0
+This agent has 1 task(s).
+Agent XML String:
+<MOBILE_AGENT><AGENT_DATA><NAME>mobagent1</NAME><OWNER>IEL</OWNER><HOME>localhost:5050</HOME><WG_CODE /><TASKS
+task="1" num="0"><TASK num="0" server="localhost:5051" return="no-return"><DATA
+name="no-return" dim="0" type="0" value="0" /></TASK><AGENT_CODE><![CDATA[ 
+#include <stdio.h>
+int main()
+{
+    printf("\nHello World! This is mobagent1 from the port 5050.\n");
+    printf("I am performing the task on the agency at port 5051 now.\n");
+    return 0;
+}
+         ]]></AGENT_CODE></TASKS></AGENT_DATA></MOBILE_AGENT>
+
+Agent Code:
+ 
+#include <stdio.h>
+int main()
+{
+    printf("\nHello World! This is mobagent1 from the port 5050.\n");
+    printf("I am performing the task on the agency at port 5051 now.\n");
+    return 0;
+}
+         
+
+Hello World! This is mobagent1 from the port 5050.
+I am performing the task on the agency at port 5051 now.

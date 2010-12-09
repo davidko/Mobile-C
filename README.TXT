@@ -69,7 +69,7 @@ Mobile C Library Compilation For Unix
 The following commands compile and install the Mobile-C library into
 the directory $HOME/sys. If you wish to install Mobile-C into the default
 system directories, simply remove the '--prefix=$HOME/sys' argument from
-the './configure' command on the second step. From the MobileC root 
+the './configure' command on the first step. From the MobileC root 
 directory, execute the following commands:
 
     ./configure --prefix=$HOME/sys
