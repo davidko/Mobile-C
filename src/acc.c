@@ -679,7 +679,6 @@ listen_Thread( LPVOID arg )
   SOCKET sockfd;
   struct sockaddr_in sktin;
   struct sockaddr_in peer_addr;
-  struct sockaddr_in name_addr;  
 
   struct hostent *remoteHost;
     struct in_addr addr;
@@ -696,7 +695,11 @@ listen_Thread( LPVOID arg )
   connection_p connection;
   u_long connection_number;
   int connectionlen;
+#ifndef _WIN32
   int yes = 1;
+#else
+  bool yes = true;
+#endif
   mc_platform_p mc_platform = (mc_platform_p)arg;
 
   /* basic initialization */
@@ -737,7 +740,11 @@ listen_Thread( LPVOID arg )
 	}
 
   mc_platform->sockfd = sockfd;
+#ifndef _WIN32
   setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+#else
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char*)&yes, sizeof(int));
+#endif
 
   if(mc_platform->bluetooth) {
 #if HAVE_LIBBLUETOOTH
@@ -765,7 +772,11 @@ listen_Thread( LPVOID arg )
         == -1) {
       fprintf(stderr, "bind() error. %s:%d\n",
           __FILE__, __LINE__ );
+#ifndef _WIN32
       sleep(1);
+#else
+      Sleep(1000);
+#endif
     }
   }
   listen(sockfd, BACKLOG);
@@ -883,7 +894,12 @@ listen_Thread( LPVOID arg )
     }
   }
 
-  if(close(sockfd) != 0) {
+#ifndef _WIN32
+  if(close(sockfd) != 0) 
+#else
+  if(closesocket(sockfd) != 0) 
+#endif
+  {
     fprintf(stderr, "Socket close failed: %d\n", errno);
   } else {
     printf("close success.\n");
@@ -906,7 +922,11 @@ udplisten_Thread( LPVOID arg )
   mc_platform_p mc_platform = (mc_platform_p)arg;
 	struct sockaddr_in si_me, si_remote;
 	int s;
+#ifndef _WIN32
   unsigned int slen = sizeof(si_remote);
+#else
+  int slen = sizeof(si_remote);
+#endif
 	char buf[BUFLEN];
 	char mc_req_string[] = "Mobile-C Agency Information Request";
 

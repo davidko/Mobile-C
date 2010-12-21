@@ -992,6 +992,8 @@ agent_RunChScriptThread(void* ChAgent)
   progress = agent->datastate->task_progress;
   mc_platform = agent->mc_platform;
 
+  setbuf(stdout, NULL);
+  setbuf(stderr, NULL);
   /* check to see if the agent is null */
   if(ChAgent == NULL)
   {

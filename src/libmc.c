@@ -40,6 +40,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/socket.h>
+#include <netdb.h>
 #else
 #include <windows.h>
 #include <memory.h>
@@ -47,9 +49,7 @@
 #include <embedch.h>
 
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <sys/stat.h>
-#include <netdb.h>
 #ifndef _WIN32
 #include <sys/time.h>
 #else
@@ -1304,6 +1304,8 @@ MC_End(MCAgency_t agency) /*{{{*/
 #else
   SOCKET skt;
   SOCKADDR_IN sktin;
+  struct hostent host;
+  struct hostent* host_result;
 #endif
 
   /* Now, we must stop all the running pthreads somehow... */
@@ -1316,6 +1318,7 @@ MC_End(MCAgency_t agency) /*{{{*/
   MUTEX_UNLOCK(agency->mc_platform->quit_lock);
   /* We need to send a ghost message to the local listening port to get out of
    * the "accept()" function. */
+#ifndef _WIN32
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
@@ -1327,6 +1330,19 @@ MC_End(MCAgency_t agency) /*{{{*/
   close(skt);
 
   sleep(1);
+#else
+  sktin.sin_family = PF_INET;
+  sktin.sin_port = htons(agency->portno);
+  host_result = gethostbyname("localhost");
+  host = *host_result;
+  memcpy(&sktin.sin_addr, host.h_addr, host.h_length);
+  sktin.sin_addr.s_addr = inet_addr("localhost");
+  connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));
+  send(skt, "\0", 1, 0);
+  closesocket(skt);
+
+  Sleep(1000);
+#endif
 
   /* Stop the listen thread */
   if( GET_THREAD_MODE( agency->threads, MC_THREAD_ACC)) {

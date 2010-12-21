@@ -7,6 +7,7 @@ int main()
 {
   MCAgency_t agency;
   int local_port = 5051;
+  setbuf(stdout, NULL);
   
   agency = MC_Initialize(local_port, NULL);
 
