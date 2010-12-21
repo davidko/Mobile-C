@@ -1299,7 +1299,6 @@ MC_End(MCAgency_t agency) /*{{{*/
 {
 #ifndef _WIN32
   int skt;
-  struct sockaddr_in sktin;
   struct addrinfo hints, *res;
   char buf[20];
 #else
@@ -2152,7 +2151,7 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
   struct stat filestat;
   char *buf;
   FILE *fp;
-  int ret;
+  int ret = 0;
   message_p message;
   agent_t *agent;
   extern mc_platform_p g_mc_platform;
@@ -2254,7 +2253,7 @@ MC_SendAgentMigrationMessageFile(MCAgency_t attr,  /*{{{*/
   struct stat filestat;
   char *buf;
   FILE *fp;
-  int ret;
+  int ret = 0;
   message_p message;
   agent_t *agent;
   extern mc_platform_p g_mc_platform;

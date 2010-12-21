@@ -671,7 +671,7 @@ listen_Thread( LPVOID arg )
 #ifdef _WIN32
   SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
 #else
-  struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
+  struct sockaddr_rc loc_addr = { 0 };
 #endif
 #endif
 #else
@@ -905,7 +905,8 @@ udplisten_Thread( LPVOID arg )
 {
   mc_platform_p mc_platform = (mc_platform_p)arg;
 	struct sockaddr_in si_me, si_remote;
-	int s, slen = sizeof(si_remote);
+	int s;
+  unsigned int slen = sizeof(si_remote);
 	char buf[BUFLEN];
 	char mc_req_string[] = "Mobile-C Agency Information Request";
 

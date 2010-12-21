@@ -279,7 +279,7 @@ mc_platform_Destroy(mc_platform_p platform)
   barrier_queue_Destroy(platform->barrier_queue);
 
   /* End each of the allocated Ch Interpreters */
-  while(interp = interpreter_queue_Pop(platform->interpreter_queue)) {
+  while((interp = (ChInterp_t*)interpreter_queue_Pop(platform->interpreter_queue))) {
     Ch_End(*interp);
   }
   interpreter_queue_Destroy(platform->interpreter_queue);
