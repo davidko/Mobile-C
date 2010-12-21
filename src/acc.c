@@ -696,6 +696,7 @@ listen_Thread( LPVOID arg )
   connection_p connection;
   u_long connection_number;
   int connectionlen;
+  int yes = 1;
   mc_platform_p mc_platform = (mc_platform_p)arg;
 
   /* basic initialization */
@@ -736,6 +737,7 @@ listen_Thread( LPVOID arg )
 	}
 
   mc_platform->sockfd = sockfd;
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
   if(mc_platform->bluetooth) {
 #if HAVE_LIBBLUETOOTH
@@ -759,11 +761,11 @@ listen_Thread( LPVOID arg )
     sktin.sin_port = htons(mc_platform->port);
     sktin.sin_addr.s_addr = INADDR_ANY;
     memset(sktin.sin_zero, '\0', sizeof sktin.sin_zero);
-    if (bind(sockfd, (struct sockaddr *)&sktin, sizeof(struct sockaddr))
+    while(bind(sockfd, (struct sockaddr *)&sktin, sizeof(struct sockaddr))
         == -1) {
       fprintf(stderr, "bind() error. %s:%d\n",
           __FILE__, __LINE__ );
-      exit(1);
+      sleep(1);
     }
   }
   listen(sockfd, BACKLOG);
@@ -823,6 +825,12 @@ listen_Thread( LPVOID arg )
     }
     if(connectionsockfd > 0) 
     {
+      /* See if the quit flag is enabled. If it is, we should terminate instead
+       * of accepting more connections. */
+      if(mc_platform->quit) {
+        break;
+      }
+
       /* Acquire host name of connected   */
 #ifndef _WIN32
       getnameinfo((const struct sockaddr*)&peer_addr, sizeof(peer_addr),
@@ -873,6 +881,12 @@ listen_Thread( LPVOID arg )
       }
 #endif /* NEW_SECURITY */
     }
+  }
+
+  if(close(sockfd) != 0) {
+    fprintf(stderr, "Socket close failed: %d\n", errno);
+  } else {
+    printf("close success.\n");
   }
 
   /* Free the current thread */

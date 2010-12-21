@@ -248,6 +248,8 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
 int
 mc_platform_Destroy(mc_platform_p platform)
 {
+#if 0
+  /* This step is now performed inside of the listen_thread */
   /* Close the listen socket */
 #ifdef _WIN32
   closesocket(platform->sockfd);
@@ -256,6 +258,8 @@ mc_platform_Destroy(mc_platform_p platform)
 		SOCKET_ERROR();
 	}
 #endif
+#endif
+  ChInterp_t* interp;
 
   message_queue_Destroy(platform->message_queue);
 
@@ -274,6 +278,10 @@ mc_platform_Destroy(mc_platform_p platform)
   /* FIXME: Destroy syncList and barrierList here */
   barrier_queue_Destroy(platform->barrier_queue);
 
+  /* End each of the allocated Ch Interpreters */
+  while(interp = interpreter_queue_Pop(platform->interpreter_queue)) {
+    Ch_End(*interp);
+  }
   interpreter_queue_Destroy(platform->interpreter_queue);
 
   COND_DESTROY(platform->MC_signal_cond);

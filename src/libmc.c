@@ -47,7 +47,9 @@
 #include <embedch.h>
 
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
+#include <netdb.h>
 #ifndef _WIN32
 #include <sys/time.h>
 #else
@@ -1295,6 +1297,16 @@ MC_DeregisterService( /*{{{*/
 EXPORTMC int
 MC_End(MCAgency_t agency) /*{{{*/
 {
+#ifndef _WIN32
+  int skt;
+  struct sockaddr_in sktin;
+  struct addrinfo hints, *res;
+  char buf[20];
+#else
+  SOCKET skt;
+  SOCKADDR_IN sktin;
+#endif
+
   /* Now, we must stop all the running pthreads somehow... */
   /* We will set the quit flag and signal some important threads to make
    * sure they exit cleanly. We want the df, ams, and especially the acc
@@ -1303,6 +1315,19 @@ MC_End(MCAgency_t agency) /*{{{*/
   agency->mc_platform->quit = 1;
   COND_BROADCAST( agency->mc_platform->quit_cond );
   MUTEX_UNLOCK(agency->mc_platform->quit_lock);
+  /* We need to send a ghost message to the local listening port to get out of
+   * the "accept()" function. */
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  sprintf(buf, "%d", agency->portno);
+  getaddrinfo("localhost", buf, &hints, &res);
+  skt = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  connect(skt, res->ai_addr, res->ai_addrlen);
+  send(skt, "\0", 1, 0);
+  close(skt);
+
+  sleep(1);
 
   /* Stop the listen thread */
   if( GET_THREAD_MODE( agency->threads, MC_THREAD_ACC)) {
