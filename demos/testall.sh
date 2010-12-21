@@ -10,7 +10,7 @@ for d in $DIRS; do
     cp ../../testdemo.sh .
     sh ./testdemo.sh >> $LOGFILE
 # Wait for bound port to timeout
-    sleep 60
+    sleep 2
     rm testdemo.sh
   fi
   cd -
