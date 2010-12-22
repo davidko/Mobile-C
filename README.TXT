@@ -107,6 +107,13 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.0.6, December 22, 2010
+*)  Fixed numerous memory leaks related to the Mobile-C data structures
+*)  Fixed bigs in MC_End() including:
+      - MC_End() now deallocates the Ch interpreters properly
+      - MC_End() now closes the listening socket properly
+*)  Fixed bind() errors.
+
 Version MobileC v2.0.5, December 9, 2010
 *)  Fixed some bugs related to the Mobile-C command line
 *)  Updated some old demo code that was still using deprecated functions
