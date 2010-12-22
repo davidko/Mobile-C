@@ -901,9 +901,7 @@ listen_Thread( LPVOID arg )
 #endif
   {
     fprintf(stderr, "Socket close failed: %d\n", errno);
-  } else {
-    printf("close success.\n");
-  }
+  } 
 
   /* Free the current thread */
   THREAD_EXIT();
