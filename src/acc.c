@@ -104,6 +104,10 @@ acc_Destroy(acc_p acc)
   if(acc == NULL) {
     return MC_SUCCESS;
   }
+  MUTEX_DESTROY(acc->waiting_lock);
+  free(acc->waiting_lock);
+  COND_DESTROY(acc->waiting_cond);
+  free(acc->waiting_cond);
   free(acc);
   acc = NULL;
   return MC_SUCCESS;

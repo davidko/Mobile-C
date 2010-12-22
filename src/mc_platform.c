@@ -276,11 +276,15 @@ mc_platform_Destroy(mc_platform_p platform)
   cmd_prompt_Destroy(platform->cmd_prompt);
 
   /* FIXME: Destroy syncList and barrierList here */
+  syncListDestroy(platform->syncList);
   barrier_queue_Destroy(platform->barrier_queue);
+
+  free(platform->hostname);
 
   /* End each of the allocated Ch Interpreters */
   while((interp = (ChInterp_t*)interpreter_queue_Pop(platform->interpreter_queue))) {
     Ch_End(*interp);
+    free(interp);
   }
   interpreter_queue_Destroy(platform->interpreter_queue);
 
@@ -298,12 +302,15 @@ mc_platform_Destroy(mc_platform_p platform)
   COND_DESTROY(platform->MC_steer_cond);
   free(platform->MC_steer_cond);
 
+  MUTEX_DESTROY(platform->quit_lock);
+  free(platform->quit_lock);
+  COND_DESTROY(platform->quit_cond);
+  free(platform->quit_cond);
+
   MUTEX_DESTROY(platform->giant_lock);
   free(platform->giant_lock);
   COND_DESTROY(platform->giant_cond);
   free(platform->giant_cond);
-
-  MUTEX_DESTROY(platform->quit_lock);
 
   /* Free up the interp options */
   if (platform->interp_options != NULL) {

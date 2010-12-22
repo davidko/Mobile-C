@@ -337,6 +337,10 @@ df_request_list_Destroy(df_request_list_p df_request_list)
       df_request_list_node_Destroy(node);
     }
   ListTerminate(df_request_list->request_list);
+  MUTEX_DESTROY(df_request_list->lock);
+  free(df_request_list->lock);
+  COND_DESTROY(df_request_list->cond);
+  free(df_request_list->cond);
   free(df_request_list);
   return MC_SUCCESS;
 }

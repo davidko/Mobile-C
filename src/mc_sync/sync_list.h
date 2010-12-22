@@ -40,6 +40,7 @@ struct syncListNode_s* syncListNodeNew(void);
 int syncListDelete(int id, struct syncList_s *list);
 syncListNode_t* syncListRemove(int id, struct syncList_s *list);
 struct syncList_s* syncListInit(void);
+int syncListDestroy(struct syncList_s* list);
 int syncListAddNode(struct syncListNode_s *node, struct syncList_s *list);
 int syncListNew(int id, struct syncList_s *list);
 syncListNode_t* syncListGet(int id, struct syncList_s *list);

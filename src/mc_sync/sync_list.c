@@ -83,6 +83,27 @@ struct syncList_s* syncListInit(void) /*{{{*/
     return newList;
 } /*}}}*/
 
+int syncListDestroy(struct syncList_s* list)
+{
+    int i;
+    syncListNode_t *tmp;
+    RWLOCK_WRLOCK(list->lock);
+    for(i = 0; i < list->list->size; i++) {
+        tmp = (syncListNode_t*)ListSearch(list->list, i);
+        ListDelete(list->list, i);
+        syncListNodeDestroy(tmp);
+        RWLOCK_WRUNLOCK(list->lock);
+    }
+    RWLOCK_WRUNLOCK(list->lock);
+    ListTerminate(list->list);
+    MUTEX_DESTROY(list->lock);
+    free(list->lock);
+    MUTEX_DESTROY(list->giant_lock);
+    free(list->giant_lock);
+    free(list);
+    return 0;
+}
+
 int syncListAddNode(struct syncListNode_s *node, struct syncList_s *list) { /*{{{*/
     /* Check to see if there are identical ID nums */
     listNode_t *tmp;

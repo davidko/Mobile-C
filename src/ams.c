@@ -49,6 +49,10 @@ ams_Destroy(ams_p ams)
   free(ams->runflag_lock);
   COND_DESTROY(ams->runflag_cond);
   free(ams->runflag_cond);
+  MUTEX_DESTROY(ams->waiting_lock);
+  free(ams->waiting_lock);
+  COND_DESTROY(ams->waiting_cond);
+  free(ams->waiting_cond);
   free(ams);
   return MC_SUCCESS;
 }

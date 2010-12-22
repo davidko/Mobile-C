@@ -1328,6 +1328,7 @@ MC_End(MCAgency_t agency) /*{{{*/
   connect(skt, res->ai_addr, res->ai_addrlen);
   send(skt, "\0", 1, 0);
   close(skt);
+  freeaddrinfo(res);
 
   sleep(1);
 #else
