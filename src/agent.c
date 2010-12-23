@@ -985,6 +985,7 @@ agent_RunChScriptThread(void* ChAgent)
   char *ChShellArg[2];
   void *result;
   int progress;
+  int callbackErrCode;
   interpreter_variable_data_t* temp_interp_data;
 
   /* set up the agent object */
@@ -1070,6 +1071,26 @@ agent_RunChScriptThread(void* ChAgent)
   }
   else
   {
+    /* If there is a callback registered, we must call it and inspect the
+     * result. */
+    if(mc_platform->agency->agentInitCallback) {
+      callbackErrCode = (mc_platform->agency->agentInitCallback)(
+          *agent->agent_interp,
+          agent,
+          mc_platform->agency->agentInitUserData );
+      if(callbackErrCode) {
+        /* Clean up and exit the thread */
+        ((MCAgent_t) ChAgent)->agent_status = MC_AGENT_NEUTRAL;
+        /* Reset the interpreter and put it back into the queue */
+        Ch_Reset(*agent->agent_interp);
+        interpreter_queue_Add(mc_platform->interpreter_queue, (struct AP_GENERIC_s*)agent->agent_interp);
+#ifndef _WIN32
+        pthread_exit(ChAgent);  
+#else
+        return 0;
+#endif
+      }
+    }
 
 #ifndef _WIN32
     /* save the agent to an external file %agentname%%d%d */

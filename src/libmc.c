@@ -444,6 +444,16 @@ EXPORTMC int MC_AddStationaryAgent(
   return 0;
 }
 
+EXPORTMC int MC_AddAgentInitCallback(
+    MCAgency_t agency,
+    MC_CallbackFunc function,
+    void* user_data)
+{
+  agency->agentInitCallback = function;
+  agency->agentInitUserData = user_data;
+  return 0;
+}
+
 EXPORTMC MCAgency_t MC_AgentInfo_GetAgency(stationary_agent_info_t* stationary_agent_info)
 {
   return stationary_agent_info->agency;
@@ -1722,6 +1732,9 @@ MC_Initialize( /*{{{*/
   strcpy(ret -> mc_platform -> private_key, privkey);
 //  printf("My private key length =%d \n%s.\n",strlen(privkey), privkey);
 #endif /* NEW_SECURITY */
+
+  ret->agentInitCallback = NULL;
+  ret->agentInitUserData = NULL;
 
   /* Set up the global platform */
   g_mc_platform = ret->mc_platform;
