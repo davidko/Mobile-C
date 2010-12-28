@@ -2,16 +2,16 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([MobileC], 2.0.6, [dko@ucdavis.edu])
+AC_INIT([MobileC], 2.0.7, [dko@ucdavis.edu])
 AC_CONFIG_SRCDIR([src/libmc.c])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([MobileC], 2.0.6)
+AM_INIT_AUTOMAKE([MobileC], 2.0.7)
 AM_PROG_LIBTOOL
 AC_CONFIG_MACRO_DIR([m4])
 
 MC_VER_MAJ=2
 MC_VER_MIN=0
-MC_VER_REV=6
+MC_VER_REV=7
 
 # Set up configure options
 AC_ARG_ENABLE(security, 

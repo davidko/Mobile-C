@@ -107,6 +107,10 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.0.7, December 28, 2010
+*)  Added API function MC_AddAgentInitCallback()
+*)  Fixed numerous compiler warnings
+
 Version MobileC v2.0.6, December 22, 2010
 *)  Fixed numerous memory leaks related to the Mobile-C data structures
 *)  Fixed bugs in MC_End() including:
