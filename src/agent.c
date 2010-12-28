@@ -1076,7 +1076,7 @@ agent_RunChScriptThread(void* ChAgent)
     if(mc_platform->agency->agentInitCallback) {
       callbackErrCode = (mc_platform->agency->agentInitCallback)(
           *agent->agent_interp,
-          agent,
+          (struct agent_s*)agent,
           mc_platform->agency->agentInitUserData );
       if(callbackErrCode) {
         /* Clean up and exit the thread */

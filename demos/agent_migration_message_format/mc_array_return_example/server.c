@@ -4,7 +4,6 @@
 int main()
 {
     MCAgency_t agency;
-    int i;
     int local_port=5050;
     agency = MC_Initialize(
         local_port,

@@ -5,7 +5,6 @@ int main() {
   MCAgency_t agency;
   MCAgencyOptions_t options;
 
-  int local_port = 5050;
   char *file_name = "./test1.xml";
 
   /* If server is not running on localhost, replace 'localhost' with the

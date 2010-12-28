@@ -96,7 +96,7 @@ int syncListDestroy(struct syncList_s* list)
     }
     RWLOCK_WRUNLOCK(list->lock);
     ListTerminate(list->list);
-    MUTEX_DESTROY(list->lock);
+    RWLOCK_DESTROY(list->lock);
     free(list->lock);
     MUTEX_DESTROY(list->giant_lock);
     free(list->giant_lock);

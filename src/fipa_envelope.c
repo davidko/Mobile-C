@@ -753,12 +753,12 @@ int fipa_envelope_ParseAddresses(
   }
   for (
       i = 1; 
-      url_node = mxmlFindElement(
+      (url_node = mxmlFindElement(
         url_node, 
         addresses_node, 
         "url", 
         NULL, NULL, 
-        MXML_NO_DESCEND) ; 
+        MXML_NO_DESCEND)) ; 
       i++
       );
   aid->addresses = (fipa_url_sequence_t*)malloc(sizeof(fipa_url_sequence_t));
@@ -781,12 +781,12 @@ int fipa_envelope_ParseAddresses(
   strcpy(aid->addresses->urls[0]->str, url_node->child->value.text.string);
   for (
       i = 1; 
-      url_node = mxmlFindElement(
+      (url_node = mxmlFindElement(
         url_node, 
         addresses_node, 
         "url", 
         NULL, NULL, 
-        MXML_NO_DESCEND) ; 
+        MXML_NO_DESCEND)) ; 
       i++
       )
   {
@@ -821,12 +821,12 @@ int fipa_envelope_ParseResolvers(
   }
   for(
       i = 1; 
-      agent_id_node = mxmlFindElement(
+      (agent_id_node = mxmlFindElement(
         agent_id_node,
         resolvers_node,
         "agent-identifier",
         NULL, NULL, 
-        MXML_NO_DESCEND);
+        MXML_NO_DESCEND));
       i++);
 
   /* Now we allocate space and parse */
@@ -848,12 +848,12 @@ int fipa_envelope_ParseResolvers(
       &(aid->resolvers->fipa_agent_identifiers[0]), agent_id_node);
   for(
       i = 1; 
-      agent_id_node = mxmlFindElement(
+      (agent_id_node = mxmlFindElement(
         agent_id_node,
         resolvers_node,
         "agent-identifier",
         NULL, NULL,
-        MXML_NO_DESCEND);
+        MXML_NO_DESCEND));
       i++
      )
   {

@@ -5,8 +5,6 @@ int main() {
   MCAgency_t agency;
   MCAgencyOptions_t options;
   int local_port = 5050;
-  int server_port = 5051;
-  char *server_name = "localhost";
 
   /* If server is not running on localhost, replace 'localhost' with the
    * fully qualified hostname of your server. i.e., if the server is running

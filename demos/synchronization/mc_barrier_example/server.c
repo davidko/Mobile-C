@@ -14,12 +14,8 @@
 int main()
 {
   MCAgency_t agency;
-  MCAgent_t agent;
-  ChInterp_t interp;
   MCAgencyOptions_t options;
   int i;
-  int retval;
-  int arg[2];
   int local_port=5050;
   /* We want _all_ the threads on: EXCEPT, the command prompt thread */
   MC_InitializeAgencyOptions(&options);

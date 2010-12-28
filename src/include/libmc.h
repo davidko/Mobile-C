@@ -152,6 +152,7 @@ extern "C" {
 
 /* Mobile-C Agent Initialization callback function */
 /* Should return 0 on success, non-zero on failure */
+struct agent_s;
 typedef int (*MC_CallbackFunc)(
     ChInterp_t interp, 
     struct agent_s* agent, 

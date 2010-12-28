@@ -293,7 +293,8 @@ SUBDIRS = \
   demos/composing_agents/mc_compose_agent_example \
   demos/binary_stationary_agents/stationary_agent_communication \
   demos/binary_stationary_agents/stationary_agent_demo \
-  demos/mobilec_c-space_functionality/cspace_misc_examples
+  demos/mobilec_c-space_functionality/cspace_misc_examples \
+  demos/mobilec_c-space_functionality/agent_init_callback
 
 LDADD = ./src/mxml-2.2.2/libmxml.a 
 pkgconfigdir = $(libdir)/pkgconfig

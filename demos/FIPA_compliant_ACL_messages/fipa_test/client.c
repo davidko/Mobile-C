@@ -9,8 +9,6 @@ int main()
   MCAgency_t agency;
   MCAgencyOptions_t options;
   int local_port=5050;
-  int remote_port1=5051;
-  int remote_port2=5052;
 
   MC_InitializeAgencyOptions(&options);
   MC_SetThreadOff(&options, MC_THREAD_CP); /* Turn off command prompt */

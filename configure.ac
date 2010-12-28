@@ -167,6 +167,7 @@ AC_CONFIG_FILES([Makefile
                 demos/binary_stationary_agents/stationary_agent_communication/Makefile
                 demos/binary_stationary_agents/stationary_agent_demo/Makefile
                 demos/mobilec_c-space_functionality/cspace_misc_examples/Makefile
+                demos/mobilec_c-space_functionality/agent_init_callback/Makefile
                 demos/mobilec_security/hello_world_secure/client/Makefile
                 demos/mobilec_security/hello_world_secure/server/Makefile
 								 mobilec.pc

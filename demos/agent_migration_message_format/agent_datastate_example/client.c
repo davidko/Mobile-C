@@ -10,7 +10,6 @@ int main()
   double *data;
   int i, j, size;
   int local_port=5050;
-  int remote_port=5051;
 
   MC_InitializeAgencyOptions(&options);
   MC_SetThreadOff(&options, MC_THREAD_CP); /* Turn off command prompt */
@@ -34,7 +33,7 @@ int main()
   printf("%d tasks.\n", MC_GetAgentNumTasks(agent) );
   for (i = 0; i < MC_GetAgentNumTasks(agent); i++) {
     dim = MC_AgentReturnArrayDim(agent, i);
-    data = MC_AgentReturnDataGetSymbolAddr(agent, i);
+    data = (double*)MC_AgentReturnDataGetSymbolAddr(agent, i);
     size = MC_AgentReturnArrayNum(agent, i);
     printf("Task: %d\n", i);
     printf("dim is %d\n", dim);

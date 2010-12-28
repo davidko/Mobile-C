@@ -8,7 +8,6 @@ int main()
     int i;
     char buf[50];
     int local_port=5051;
-    int remote_port=5050;
     /* We want _all_ the threads on: including the command
      * prompt thread, which is off by default */
     MC_InitializeAgencyOptions(&options);

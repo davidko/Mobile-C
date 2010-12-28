@@ -11,7 +11,6 @@ int main()
   double *agent_return_value;
   int task_num;
   int local_port=5050;
-  int remote_port=5051;
 
   MC_InitializeAgencyOptions(&options);
   MC_SetThreadOff(&options, MC_THREAD_CP); /* Turn off command prompt */

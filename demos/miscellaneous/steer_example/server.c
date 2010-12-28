@@ -2,6 +2,8 @@
 #include <libmc.h>
 #ifdef _WIN32
 #include <windows.h>
+#else
+#include <stdlib.h>
 #endif
 
 int algorithm(void* boo);

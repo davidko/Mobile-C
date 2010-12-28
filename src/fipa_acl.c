@@ -129,6 +129,7 @@ fipa_message_string_t* fipa_message_string_Copy(fipa_message_string_t* src)
 {
   fipa_message_string_t* copy;
   if (src == NULL) return NULL;
+  copy = (fipa_message_string_t*)malloc(sizeof(fipa_message_string_t));
   copy->message = strdup(src->message);
   copy->parse = copy->message + (src->parse - src->message);
   return copy;

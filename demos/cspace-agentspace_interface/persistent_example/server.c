@@ -6,7 +6,6 @@ int main()
 {
   MCAgency_t agency;
   MCAgent_t agent;
-  ChInterp_t interp;
   int retval;
   MCAgencyOptions_t options;
   int local_port=5051;

@@ -10,7 +10,6 @@ int main()
     MCAgencyOptions_t options;
     int i;
     int local_port = 5050;
-    int remote_port = 5051;
     MC_InitializeAgencyOptions(&options);
     /* We want _all_ the threads on: EXCEPT, the command prompt thread */
     for (i = 0; i < MC_THREAD_ALL; i++) {
