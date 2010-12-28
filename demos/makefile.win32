@@ -47,6 +47,9 @@ all:
 	cd ./cspace-agentspace_interface/persistent_example/
 	nmake -f makefile.win32
 	cd ../..
+	cd ./cspace-agentspace_interface/agent_init_callback/
+	nmake -f makefile.win32
+	cd ../..
 	cd ./FIPA_compliant_ACL_messages/fipa_comm/
 	nmake -f makefile.win32
 	cd ../..
