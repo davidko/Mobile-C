@@ -132,6 +132,7 @@ AC_CONFIG_FILES([Makefile
                 demos/getting_started/hello_world/Makefile
                 demos/getting_started/bluetooth/Makefile
                 demos/cspace-agentspace_interface/persistent_example/Makefile
+                demos/cspace-agentspace_interface/agent_init_callback/Makefile
                 demos/miscellaneous/multiple_agency_example/Makefile
                 demos/miscellaneous/steer_example/Makefile
                 demos/miscellaneous/agent_squad_test/Makefile

@@ -8,7 +8,6 @@ int main()
   MCAgent_t agent;
   MCAgencyOptions_t options;
   int local_port=5050;
-  int remote_port = 5051;
   char address[100];
 
   MC_InitializeAgencyOptions(&options);

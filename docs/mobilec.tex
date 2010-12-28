@@ -1465,6 +1465,30 @@ The Embedded Ch toolkit has a small footprint.
 The pointer and time deterministic nature of the C language provide a 
 perfect interface with hardware in real-time systems.
 
+\section{Using an Agent Initialization Callback Function to Intergrate Binary
+and Script Space Code}
+The user may register a callback function to be called during the initialization
+of mobile agents inside of an agency. This allows the user to fine-tune 
+an agent and the Ch interpreter before an agent is executed. The callback
+function is added using the \texttt{MC\_AddAgentInitCallback()} function,
+and the callback function is of the form
+\begin{verbatim}
+int callback(ChInterp_t interp, MCAgent_t agent, void* user_data);
+\end{verbatim}
+The user may call any applicable Ch API function on the interpreter,
+as well as any applicable Mobile-C API function on the supplied agent.
+For instance, the user may use the \texttt{Ch\_DeclareVar()} function
+to declare extra variables inside of the interpereter which the agent
+will be able to access during its execution. 
+
+The demo located at \texttt{demos/cspace-agentspace\_interface/agent\_init\_callback/} 
+provides a demonstration of the callback function. This demo uses the callback
+function to declare a new function in each of the incoming agent interpreters
+called \texttt{mult()}, which simply multiplies two numbers together. This
+means that any incoming agent will be able to call the \texttt{mult()} function,
+which resides in C-space, from the agent script-space. This demo may also be seen with
+the documentation for \texttt{MC\_AddAgentInitCallback()} on page \pageref{api:MC_AddAgentInitCallback()}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Invoke a Mobile Agent Space Function from Binary Space {{{
 \noindent

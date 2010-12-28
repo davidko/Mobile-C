@@ -9,7 +9,6 @@ int main()
   MCAgent_t agent;
   MCAgencyOptions_t options;
   int my_port = 5125;
-  int remote_port1 = 5130, remote_port2 = 5052;
   int dim, i;
   const double *data;		
   char *name;  

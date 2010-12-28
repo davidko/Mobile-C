@@ -6,7 +6,6 @@ int main()
     MCAgencyOptions_t options;
     int i;
     int local_port = 5051;
-    int remote_port = 5052;
     MC_InitializeAgencyOptions(&options);
 
     for (i = 0; i < MC_THREAD_ALL; i++) {

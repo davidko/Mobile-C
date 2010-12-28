@@ -150,6 +150,14 @@ MC_WaitSignal
 extern "C" {
 #endif
 
+/* Mobile-C Agent Initialization callback function */
+/* Should return 0 on success, non-zero on failure */
+struct agent_s;
+typedef int (*MC_AgentInitCallbackFunc_t)(
+    ChInterp_t interp, 
+    struct agent_s* agent, 
+    void* user_data);
+
 #ifndef _ERROR_CODE_E_
 #define _ERROR_CODE_E_
 /*
@@ -232,6 +240,10 @@ typedef struct agency_s {
 		char* priv_key_filename;
 		char* known_host_filename;
     error_code_t last_error;
+
+    /* Agent init callback stuff */
+    MC_AgentInitCallbackFunc_t agentInitCallback;
+    void* agentInitUserData;
 } agency_t;
 typedef agency_t* agency_p;
 typedef agency_p MCAgency_t;
@@ -458,13 +470,38 @@ EXPORTMC extern int MC_AddAgent(
     MCAgency_t attr, 
     MCAgent_t agent);
 
-
+/**
+ * \brief         Add a stationary agent to the agency 
+ *
+ * \param agency  a MobileC agency
+ * \param agent_thread The binary-space agent function
+ * \param name    The new agent's name
+ * \param agent_args user arguments to pass to the agent
+ *
+ * \return        0 if successful, or error_code_t type
+ */
 int MC_AddStationaryAgent(
     MCAgency_t agency, 
     void* (*agent_thread)(stationary_agent_info_t*), 
     const char* name, 
     void* agent_args);
 
+/**
+ * \brief         Add an agenct initialization callback function
+ *
+ * \param agency  a MobileC agency
+ * \param function The callback function to add. This callback function will be
+ *                 called after an interpreter is initialized for an agent but
+ *                 before the agent is executed. 
+ * \param user_data A pointer to any user data that should be made available to
+ *                  the callback function
+ *
+ * \return        0 if successful, or error_code_t type
+ */
+int MC_AddAgentInitCallback(
+    MCAgency_t agency,
+    MC_AgentInitCallbackFunc_t function,
+    void* user_data);
 
 /**
  * \brief           Add a new task to an already existing agent

@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
   ChOptions_t ch_options;
 
   struct timeval temp1, temp2;
-  long elapsed_utime;            // elapsed time in microseconds
   long elapsed_mtime[NUM_DATA];  // elapsed time in milliseconds
   long elapsed_seconds;          // time difference in seconds
   long elapsed_useconds;         // time difference in microseconds
@@ -89,7 +88,7 @@ int main(int argc, char *argv[]) {
       }
       fptr = fopen("./output", "w");
       for(i=0; i<NUM_DATA; i++) {
-        fprintf(fptr, "%d\n", elapsed_mtime[i]);
+        fprintf(fptr, "%ld\n", elapsed_mtime[i]);
       }
       fclose(fptr);
       printf("Done!\n");
@@ -99,4 +98,5 @@ int main(int argc, char *argv[]) {
   else { 
     MC_MainLoop(agency);
   }
+  return 0;
 }

@@ -7,7 +7,6 @@ int main()
   MCAgency_t agency;
   MCAgencyOptions_t options;
   int local_port=5050;
-  int remote_port = 5051;
   int i;
 
   MC_InitializeAgencyOptions(&options);

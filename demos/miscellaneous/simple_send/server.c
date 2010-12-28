@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <libmc.h>
+#ifndef _WIN32
+#include <stdlib.h>
+#endif
 
 int main() 
 {
