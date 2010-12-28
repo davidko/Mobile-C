@@ -132,6 +132,7 @@ AC_CONFIG_FILES([Makefile
                 demos/getting_started/hello_world/Makefile
                 demos/getting_started/bluetooth/Makefile
                 demos/cspace-agentspace_interface/persistent_example/Makefile
+                demos/cspace-agentspace_interface/agent_init_callback/Makefile
                 demos/miscellaneous/multiple_agency_example/Makefile
                 demos/miscellaneous/steer_example/Makefile
                 demos/miscellaneous/agent_squad_test/Makefile
@@ -167,7 +168,6 @@ AC_CONFIG_FILES([Makefile
                 demos/binary_stationary_agents/stationary_agent_communication/Makefile
                 demos/binary_stationary_agents/stationary_agent_demo/Makefile
                 demos/mobilec_c-space_functionality/cspace_misc_examples/Makefile
-                demos/mobilec_c-space_functionality/agent_init_callback/Makefile
                 demos/mobilec_security/hello_world_secure/client/Makefile
                 demos/mobilec_security/hello_world_secure/server/Makefile
 								 mobilec.pc

@@ -153,7 +153,7 @@ extern "C" {
 /* Mobile-C Agent Initialization callback function */
 /* Should return 0 on success, non-zero on failure */
 struct agent_s;
-typedef int (*MC_CallbackFunc)(
+typedef int (*MC_AgentInitCallbackFunc_t)(
     ChInterp_t interp, 
     struct agent_s* agent, 
     void* user_data);
@@ -242,7 +242,7 @@ typedef struct agency_s {
     error_code_t last_error;
 
     /* Agent init callback stuff */
-    MC_CallbackFunc agentInitCallback;
+    MC_AgentInitCallbackFunc_t agentInitCallback;
     void* agentInitUserData;
 } agency_t;
 typedef agency_t* agency_p;
@@ -500,7 +500,7 @@ int MC_AddStationaryAgent(
  */
 int MC_AddAgentInitCallback(
     MCAgency_t agency,
-    MC_CallbackFunc function,
+    MC_AgentInitCallbackFunc_t function,
     void* user_data);
 
 /**

@@ -259,6 +259,7 @@ SUBDIRS = \
   demos/getting_started/bluetooth \
   demos/getting_started/hello_world \
   demos/cspace-agentspace_interface/persistent_example \
+  demos/cspace-agentspace_interface/agent_init_callback \
   demos/miscellaneous/multiple_agency_example \
   demos/miscellaneous/steer_example \
   demos/miscellaneous/agent_squad_test \
@@ -293,8 +294,7 @@ SUBDIRS = \
   demos/composing_agents/mc_compose_agent_example \
   demos/binary_stationary_agents/stationary_agent_communication \
   demos/binary_stationary_agents/stationary_agent_demo \
-  demos/mobilec_c-space_functionality/cspace_misc_examples \
-  demos/mobilec_c-space_functionality/agent_init_callback
+  demos/mobilec_c-space_functionality/cspace_misc_examples 
 
 LDADD = ./src/mxml-2.2.2/libmxml.a 
 pkgconfigdir = $(libdir)/pkgconfig

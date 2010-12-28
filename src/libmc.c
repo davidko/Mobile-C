@@ -446,7 +446,7 @@ EXPORTMC int MC_AddStationaryAgent(
 
 EXPORTMC int MC_AddAgentInitCallback(
     MCAgency_t agency,
-    MC_CallbackFunc function,
+    MC_AgentInitCallbackFunc_t function,
     void* user_data)
 {
   agency->agentInitCallback = function;

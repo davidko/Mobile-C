@@ -35,7 +35,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 noinst_PROGRAMS = client$(EXEEXT) server$(EXEEXT)
-subdir = demos/mobilec_c-space_functionality/agent_init_callback
+subdir = demos/cspace-agentspace_interface/agent_init_callback
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	COPYING INSTALL config.guess config.sub depcomp install-sh \
 	ltmain.sh missing
@@ -220,9 +220,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu demos/mobilec_c-space_functionality/agent_init_callback/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu demos/cspace-agentspace_interface/agent_init_callback/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu demos/mobilec_c-space_functionality/agent_init_callback/Makefile
+	  $(AUTOMAKE) --gnu demos/cspace-agentspace_interface/agent_init_callback/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
