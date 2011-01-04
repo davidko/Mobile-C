@@ -197,6 +197,11 @@ fprintf(stderr, "pthread lock error: %s:%d\n", __FILE__, __LINE__)
 /* Init */
 #define COND_INIT(cond) \
   pthread_cond_init(cond, NULL)
+/* New */
+#define COND_NEW(cond) \
+  cond = (pthread_cond_t*)malloc(sizeof(pthread_cond_t)); \
+  if (cond == NULL)  \
+    fprintf(stderr, "Memory Error. %s:%d\n", __FILE__,__LINE__); \
 /* Destroy */
 #define COND_DESTROY(cond) \
   pthread_cond_destroy(cond)

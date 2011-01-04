@@ -186,6 +186,10 @@ agent_Copy(const agent_p agent)
   /*lock*/
   cp_agent->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
   MUTEX_INIT(cp_agent->lock);
+  MUTEX_NEW(cp_agent->agent_status_lock);
+  MUTEX_INIT(cp_agent->agent_status_lock);
+  COND_NEW(cp_agent->agent_status_cond);
+  COND_INIT(cp_agent->agent_status_cond);
 
 	/* Mailbox */
 	cp_agent->mailbox = agent_mailbox_New();
@@ -213,6 +217,11 @@ agent_New(void)
   MUTEX_NEW(agent->lock);
   MUTEX_INIT(agent->lock);
 
+  MUTEX_NEW(agent->agent_status_lock);
+  MUTEX_INIT(agent->agent_status_lock);
+  COND_NEW(agent->agent_status_cond);
+  COND_INIT(agent->agent_status_cond);
+
   return agent;
 }
 
@@ -228,6 +237,12 @@ agent_NewBinary( struct mc_platform_s *mc_platform)
   /* Set up general agent data access mutex */
   agent->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
   MUTEX_INIT(agent->lock);
+
+  /* set up agent status mutex and cond */
+  MUTEX_NEW(agent->agent_status_lock);
+  MUTEX_INIT(agent->agent_status_lock);
+  COND_NEW(agent->agent_status_cond);
+  COND_INIT(agent->agent_status_cond);
 
   /* Set up run_lock mutex */
   agent->run_lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
@@ -269,7 +284,10 @@ agent_NewBinary( struct mc_platform_s *mc_platform)
     agent->agent_status = mc_platform->default_agentstatus;
     }
     */
+  MUTEX_LOCK(agent->agent_status_lock);
   agent->agent_status = MC_AGENT_ACTIVE;
+  COND_BROADCAST(agent->agent_status_cond);
+  MUTEX_UNLOCK(agent->agent_status_lock);
 
   agent->mc_platform = mc_platform;
 
@@ -304,6 +322,12 @@ agent_Initialize(
   /* Set up general agent data access mutex */
   agent->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
   MUTEX_INIT(agent->lock);
+
+  /* Set up agent status cond/mutex */
+  MUTEX_NEW(agent->agent_status_lock);
+  MUTEX_INIT(agent->agent_status_lock);
+  COND_NEW(agent->agent_status_cond);
+  COND_INIT(agent->agent_status_cond);
 
   /* Set up run_lock mutex */
   agent->run_lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
@@ -350,7 +374,10 @@ agent_Initialize(
           return NULL;
         }
         if (mc_platform->default_agentstatus != -1) {
+          MUTEX_LOCK(agent->agent_status_lock);
           agent->agent_status = (enum MC_AgentStatus_e)mc_platform->default_agentstatus;
+          COND_BROADCAST(agent->agent_status_cond);
+          MUTEX_UNLOCK(agent->agent_status_lock);
         }
         break;
       case RETURN_MSG:
@@ -373,6 +400,10 @@ agent_Initialize(
     free(agent->lock);
     MUTEX_DESTROY(agent->run_lock);
     free(agent->run_lock);
+    MUTEX_DESTROY(agent->agent_status_lock);
+    free(agent->agent_status_lock);
+    COND_DESTROY(agent->agent_status_cond);
+    free(agent->agent_status_cond);
 
     free(agent);
     return NULL;
@@ -389,7 +420,10 @@ agent_Initialize(
     agent->agent_status = mc_platform->default_agentstatus;
     }
     */
+  MUTEX_LOCK(agent->agent_status_lock);
   agent->agent_status = MC_WAIT_CH;
+  COND_BROADCAST(agent->agent_status_cond);
+  MUTEX_UNLOCK(agent->agent_status_lock);
 
   agent->mc_platform = mc_platform;
 
@@ -433,12 +467,22 @@ agent_Destroy(agent_p agent)
 	}
   /* Terminate the agent datastate memory */
   MUTEX_DESTROY(agent->lock);
+  MUTEX_LOCK(agent->agent_status_lock);
   if (agent->agent_status == MC_AGENT_NEUTRAL) {
+    MUTEX_UNLOCK(agent->agent_status_lock);
     if ((agent->agent_interp) != NULL) {
       Ch_Reset(*agent->agent_interp);
 			interpreter_queue_Add(agent->mc_platform->interpreter_queue, (struct AP_GENERIC_s*)agent->agent_interp);
     }
+  } else {
+    MUTEX_UNLOCK(agent->agent_status_lock);
   }
+  MUTEX_DESTROY(agent->agent_status_lock);
+  free(agent->agent_status_lock);
+  COND_DESTROY(agent->agent_status_cond);
+  free(agent->agent_status_cond);
+
+
   free(agent->lock);
   agent_datastate_Destroy(agent->datastate);
   free(agent->run_lock);
@@ -475,7 +519,10 @@ agent_RunChScript(agent_p agent, mc_platform_p mc_platform)
 	  stack_size = mc_platform->stack_size[MC_THREAD_AGENT];
   }
 #endif
+  MUTEX_LOCK(agent->agent_status_lock);
   agent->agent_status = MC_AGENT_ACTIVE;
+  COND_BROADCAST(agent->agent_status_cond);
+  MUTEX_UNLOCK(agent->agent_status_lock);
   agent->mc_platform = mc_platform;
 
   THREAD_CREATE(&agent->agent_thread,
@@ -987,6 +1034,7 @@ agent_RunChScriptThread(void* ChAgent)
   int progress;
   int callbackErrCode;
   interpreter_variable_data_t* temp_interp_data;
+  int persistent = 0;
 
   /* set up the agent object */
   agent = (MCAgent_t)ChAgent;
@@ -1191,6 +1239,7 @@ agent_RunChScriptThread(void* ChAgent)
 
   if (agent->datastate->persistent || 
       agent->datastate->tasks[progress]->persistent ) {
+    persistent = 1;
     /* TODO: We need a large while loop here that waits on a condition 
        variable. Upon waking up, we will need to check a 'mailbox' for
        a struct containing
@@ -1256,7 +1305,17 @@ agent_RunChScriptThread(void* ChAgent)
   mc_platform->ams->run = 1;
   COND_SIGNAL(mc_platform->ams->runflag_cond);
   MUTEX_UNLOCK(mc_platform->ams->runflag_lock);
-
+  
+  if(persistent)
+  {
+    /* If the agent was persistent, we do not want to terminate the thread
+     * until the agent is purged. */
+    MUTEX_LOCK(agent->agent_status_lock);
+    while(agent->agent_status == MC_AGENT_NEUTRAL) {
+      COND_WAIT(agent->agent_status_cond, agent->agent_status_lock);
+    }
+    MUTEX_UNLOCK(agent->agent_status_lock);
+  }
 #ifndef _WIN32
   pthread_exit(ChAgent);  
 #else

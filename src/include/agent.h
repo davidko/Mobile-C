@@ -101,6 +101,8 @@ struct agent_s {
   struct mc_platform_s *mc_platform;
 
   MUTEX_T* lock;
+  MUTEX_T* agent_status_lock;
+  COND_T*  agent_status_cond;
 
 	int binary; /* Indicates whether or not this is a binary space agent */
 };

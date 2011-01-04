@@ -240,7 +240,10 @@ acc_MessageHandlerThread(LPVOID arg)
           if (agent != NULL) {
             MUTEX_LOCK(agent->lock);
             agent->datastate->persistent = 1;
+            MUTEX_LOCK(agent->agent_status_lock);
             agent->agent_status = MC_AGENT_NEUTRAL;
+            COND_BROADCAST(agent->agent_status_cond);
+            MUTEX_UNLOCK(agent->agent_status_lock);
             MUTEX_UNLOCK(agent->lock);
             mobile_agent_counter++;
             agent_queue_Add(

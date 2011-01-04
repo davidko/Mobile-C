@@ -106,10 +106,12 @@ ams_Print(ams_p ams)
   for(i=0; i<alist->size; i++)
   {
     agent = (MCAgent_t)ListSearch(alist->list, i);
+    MUTEX_LOCK(agent->agent_status_lock);
     printf("Agent id: %lu, Connect id: %lu, status: %u\n",
         agent->id,
         agent->connect_id,
         agent->agent_status);
+    MUTEX_UNLOCK(agent->agent_status_lock);
   }
 
   MUTEX_UNLOCK(alist->lock);
@@ -141,7 +143,9 @@ ams_ManageAgentList(ams_p ams)
       MUTEX_LOCK(current_agent->lock);
       current_agent->orphan = 0;
       MUTEX_LOCK(global->quit_lock);
+      MUTEX_LOCK(current_agent->agent_status_lock);
       if(global->quit && current_agent->agent_status != MC_WAIT_MESSGSEND) {
+        MUTEX_UNLOCK(current_agent->agent_status_lock);
         MUTEX_UNLOCK(global->quit_lock);
         MUTEX_UNLOCK(current_agent->lock);
         MC_TerminateAgent(current_agent);
@@ -149,20 +153,27 @@ ams_ManageAgentList(ams_p ams)
         MUTEX_LOCK(current_agent->run_lock);
         MUTEX_UNLOCK(current_agent->run_lock);
         continue;
+      } else {
+        MUTEX_UNLOCK(current_agent->agent_status_lock);
       }
       MUTEX_UNLOCK(global->quit_lock);
+      MUTEX_LOCK(current_agent->agent_status_lock);
       switch(current_agent->agent_status)
       {
         case MC_WAIT_CH :
           MUTEX_UNLOCK(current_agent->lock);
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           agent_RunChScript(current_agent, global);
           break;
         case MC_AGENT_ACTIVE :
           MUTEX_UNLOCK(current_agent->lock);
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           /* nothing is done if the agent in question is ACTIVE */
           break;
         case MC_WAIT_MESSGSEND :
           current_agent->agent_status = MC_WAIT_FINISHED;
+          COND_BROADCAST(current_agent->agent_status_cond);
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
           MUTEX_LOCK(ams->runflag_lock);
           ams->run = 1;
@@ -212,6 +223,8 @@ ams_ManageAgentList(ams_p ams)
                  current_agent->agent_status);
           /* Flush the invalid agent. */
           current_agent->agent_status = MC_WAIT_FINISHED;
+          COND_BROADCAST(current_agent->agent_status_cond);
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
       }
     } else {

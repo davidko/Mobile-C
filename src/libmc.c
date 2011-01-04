@@ -1457,7 +1457,9 @@ MC_GetAgentStatus(MCAgent_t agent) /*{{{*/
 {
   int status;
   MUTEX_LOCK(agent->lock);
+  MUTEX_LOCK(agent->agent_status_lock);
   status = agent->agent_status;
+  MUTEX_UNLOCK(agent->agent_status_lock);
   MUTEX_UNLOCK(agent->lock);
   return status;
 } /*}}}*/
@@ -1999,17 +2001,24 @@ MC_RetrieveAgent(MCAgency_t attr) /*{{{*/
   for (i = 0; i < attr->mc_platform->agent_queue->size; i++) {
     agent = (MCAgent_t)ListSearch(
         attr->mc_platform->agent_queue->list, i);
+    MUTEX_LOCK(agent->agent_status_lock);
     if (agent->agent_status == MC_AGENT_NEUTRAL) {
+      MUTEX_UNLOCK(agent->agent_status_lock);
       break;
     }
+    MUTEX_UNLOCK(agent->agent_status_lock);
   }
   if (agent == NULL) {
     MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
     return NULL;
   }
+  MUTEX_LOCK(agent->agent_status_lock);
   if (agent->agent_status != MC_AGENT_NEUTRAL) {
+    MUTEX_UNLOCK(agent->agent_status_lock);
     MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
     return NULL;
+  } else {
+    MUTEX_UNLOCK(agent->agent_status_lock);
   }
   MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
   return agent;
@@ -2163,7 +2172,10 @@ MC_SendAgent(MCAgency_t attr, /*{{{*/
     if (agent == NULL) {
       fprintf(stderr, "Error initializing agent. %s:%d", __FILE__, __LINE__);
     }
+    MUTEX_LOCK(agent->agent_status_lock);
     agent->agent_status = MC_WAIT_MESSGSEND;
+    COND_BROADCAST(agent->agent_status_cond);
+    MUTEX_UNLOCK(agent->agent_status_lock);
     agent_queue_Add( platform->agent_queue, agent);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
@@ -2228,7 +2240,10 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
     if (agent == NULL) {
       fprintf(stderr, "Error initializing agent. %s:%d", __FILE__, __LINE__);
     }
+    MUTEX_LOCK(agent->agent_status_lock);
     agent->agent_status = MC_WAIT_MESSGSEND;
+    COND_BROADCAST(agent->agent_status_cond);
+    MUTEX_UNLOCK(agent->agent_status_lock);
     agent_queue_Add( platform->agent_queue, agent);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
@@ -2332,7 +2347,10 @@ MC_SendAgentMigrationMessageFile(MCAgency_t attr,  /*{{{*/
     if (agent == NULL) {
       fprintf(stderr, "Error initializing agent. %s:%d", __FILE__, __LINE__);
     }
+    MUTEX_LOCK(agent->agent_status_lock);
     agent->agent_status = MC_WAIT_MESSGSEND;
+    COND_BROADCAST(agent->agent_status_cond);
+    MUTEX_UNLOCK(agent->agent_status_lock);
     agent_queue_Add( platform->agent_queue, agent);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
@@ -2358,7 +2376,10 @@ EXPORTMC int
 MC_SetAgentStatus(MCAgent_t agent, enum MC_AgentStatus_e status) /*{{{*/
 {
   MUTEX_LOCK(agent->lock);
+  MUTEX_LOCK(agent->agent_status_lock);
   agent->agent_status = status;
+  COND_BROADCAST(agent->agent_status_cond);
+  MUTEX_UNLOCK(agent->agent_status_lock);
   if (!agent->orphan) {
     MUTEX_LOCK(agent->mc_platform->ams->runflag_lock);
     agent->mc_platform->ams->run = 1;

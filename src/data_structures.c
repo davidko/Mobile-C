@@ -184,9 +184,11 @@ agent_queue_Print(agent_queue_p queue)
   for(i = 0; i < queue->size; i++) {
     node = (agent_p)ListSearch(queue->list, i);
     if (node != NULL) {
+      MUTEX_LOCK(node->agent_status_lock);
       printf("agent id %d:\n\tname:%s  status:%d\n",
           (int)node->id,
           node->name, node->agent_status);
+      MUTEX_UNLOCK(node->agent_status_lock);
     }
   }
   MUTEX_UNLOCK(queue->lock);
@@ -202,8 +204,10 @@ agent_queue_Flush(agent_queue_p queue)
   for(i = 0; i < queue->size; i++) {
     node = (agent_p)ListSearch(queue->list, i);
     if (node != NULL) {
+      MUTEX_LOCK(node->agent_status_lock);
       printf("flushing agent id %d: name:%s status:%d\n",
           (int)node->id, node->name, node->agent_status);
+      MUTEX_UNLOCK(node->agent_status_lock);
       agent_queue_RemoveIndex((agent_queue_p)queue->list, i);
     }
   }
