@@ -382,6 +382,11 @@ pthread_cond_wait( queue->touched_signal, queue->thread_mutex )
  * **** */
 /* Typedef */
 #define COND_T HANDLE
+/* New */
+#define COND_NEW(cond) \
+  cond = (HANDLE*)malloc(sizeof(HANDLE)); \
+  if(cond == NULL) \
+    fprintf(stderr, "Memory Error. %s:%d\n", __FILE__, __LINE__)
 /* Init */
 #define COND_INIT(cond) \
   *cond = CreateEvent(NULL, TRUE, TRUE, NULL);\
