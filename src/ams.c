@@ -207,9 +207,11 @@ ams_ManageAgentList(ams_p ams)
           }
           break;
         case MC_AGENT_NEUTRAL :
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
           break;
         case MC_WAIT_FINISHED :
+          MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
           agent_queue_RemoveIndex(alist, index);
           // Change index = 0 to index-- to fix the problem where agents 
