@@ -107,9 +107,18 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.1.0, January 4, 2010
+*)  Modified persistent agents so that the agent thread does not terminate if
+    the agent is persistent. This allows thread specific resources to be
+    maintained, which is especially uselful in some Win32 applications.
+
+Version MobileC v2.0.7, December 28, 2010
+*)  Added API function MC_AddAgentInitCallback()
+*)  Fixed numerous compiler warnings
+
 Version MobileC v2.0.6, December 22, 2010
 *)  Fixed numerous memory leaks related to the Mobile-C data structures
-*)  Fixed bigs in MC_End() including:
+*)  Fixed bugs in MC_End() including:
       - MC_End() now deallocates the Ch interpreters properly
       - MC_End() now closes the listening socket properly
 *)  Fixed bind() errors.
