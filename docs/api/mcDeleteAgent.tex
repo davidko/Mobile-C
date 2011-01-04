@@ -10,7 +10,7 @@
 
 \noindent
 {\bf Synopsis}\\
-{\bf int mc\_DeleteAgent}({\bf MCAgent\_t} $agent$);\\
+{\bf int mc\_DeleteAgent}({\bf const char*} $agent\_name$);\\
 
 \noindent
 {\bf Purpose}\\
@@ -25,8 +25,8 @@ The function returns 0 on success and non-zero otherwise.\\
 \vspace{-0.1in}
 \begin{description}
 \item
-\begin{tabular}{p{10 mm}p{145 mm}} 
-$agent$ & An initialized mobile agent.
+\begin{tabular}{p{20 mm}p{145 mm}} 
+$agent\_name$ & The name of an initialized mobile agent.
 \end{tabular}
 \end{description}
 

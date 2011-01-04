@@ -11,7 +11,7 @@
 \noindent
 {\bf Synopsis}\\
 %{\bf \#include $<$mobilec.h$>$}\\
-{\bf int mc\_TerminateAgent}({\bf MCAgent\_t} $agent$);\\
+{\bf int mc\_TerminateAgent}({\bf const char*} $agent\_name$);\\
 
 \noindent
 {\bf Purpose}\\
@@ -26,8 +26,8 @@ The function returns 0 on success and an error code on failure.\\
 \vspace{-0.1in}
 \begin{description}
 \item
-\begin{tabular}{p{10 mm}p{145 mm}}
-$agent$ & A valid mobile agent.
+\begin{tabular}{p{20 mm}p{145 mm}}
+$agent\_name$ & The name of a valid mobile agent.
 \end{tabular}
 \end{description}
 
