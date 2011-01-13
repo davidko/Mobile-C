@@ -42,6 +42,10 @@
 #include <netdb.h>
 #include <errno.h>
 #include "config.h"
+#else
+#include <winsock2.h>
+#include "winconfig.h"
+#endif
 #if HAVE_LIBBLUETOOTH
 #ifdef _WIN32
 #include <Ws2bth.h>
@@ -49,10 +53,6 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 #endif
-#endif
-#else
-#include <winsock2.h>
-#include "winconfig.h"
 #endif
 #include <mxml.h>
 #include "include/libmc.h"
