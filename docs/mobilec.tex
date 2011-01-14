@@ -1251,6 +1251,14 @@ technique. This technique creates an agent which is not automatically flushed by
 after it completes it's task. Thus, the agent remains dormant and stationary in
 the agency without external stimulus.
 
+\subsubsection{Terminating Persistent Agents}
+Persistent agents should be terminated when they are no longer needed to free
+up resources. They may be terminated by using the API functions 
+\texttt{MC\_DeleteAgent()} or \texttt{MC\_TerminateAgent()} functions from C-space,
+or the functions \texttt{mc\_DeleteAgent()} or \texttt{MC\_TerminateAgent()} functions 
+from agent-space. Since a persistent agent cannot terminate itself, it is up to either
+the host agency or another agent to terminate the persistent agent.
+
 \begin{Program}[ph]
 \begin{center}
 {\footnotesize \linespread{1.0}
