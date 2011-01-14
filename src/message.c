@@ -660,6 +660,12 @@ message_send_Thread( LPVOID arg )
 #ifndef _WIN32
   int skt;
   struct sockaddr_in sktin;
+#else
+  SOCKET skt;
+  SOCKADDR_IN sktin;
+  struct hostent host;
+  struct hostent* host_result;
+#endif
 #if HAVE_LIBBLUETOOTH
 #ifdef _WIN32
   SOCKADDR_BTH btsktin;
@@ -669,12 +675,6 @@ message_send_Thread( LPVOID arg )
 #endif
   struct addrinfo* myaddrinfo;
   struct addrinfo hint_addrinfo;
-#else
-  SOCKET skt;
-  SOCKADDR_IN sktin;
-  struct hostent host;
-  struct hostent* host_result;
-#endif
   char *buf;
   char *hostname;
 #ifndef _WIN32

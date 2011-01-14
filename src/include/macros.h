@@ -323,7 +323,8 @@ pthread_cond_wait( queue->touched_signal, queue->thread_mutex )
  * W I N D O W S   M A C R O S *
  * * * * * * * * * * * * * * * */
 
-#define SOCKET_ERROR() 
+#define SOCKET_ERROR() \
+  fprintf(stderr, "Socket error: %d\n", WSAGetLastError())
 /* ******* *
  * THREADS *
  * ******* */

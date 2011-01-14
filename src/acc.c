@@ -43,6 +43,12 @@
 #include <netdb.h>
 #include <pthread.h>
 #include "config.h"
+#else
+#include <winsock2.h>
+#include <windows.h>
+#include <time.h>
+#include "winconfig.h"
+#endif
 #if HAVE_LIBBLUETOOTH
 #ifdef _WIN32
 #include <Ws2bth.h>
@@ -52,12 +58,6 @@
 #endif
 #endif
 
-#else
-#include <winsock2.h>
-#include <windows.h>
-#include <time.h>
-#include "winconfig.h"
-#endif
 
 #include <stdlib.h>
 #include "include/acc.h"
@@ -674,13 +674,6 @@ listen_Thread( LPVOID arg )
   int sockfd;
   struct sockaddr_in sktin;
   struct sockaddr_in peer_addr;
-#if HAVE_LIBBLUETOOTH
-#ifdef _WIN32
-  SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
-#else
-  struct sockaddr_rc loc_addr = { 0 };
-#endif
-#endif
 #else
   SOCKET connectionsockfd;
   SOCKET sockfd;
@@ -689,7 +682,13 @@ listen_Thread( LPVOID arg )
 
   struct hostent *remoteHost;
     struct in_addr addr;
-
+#endif
+#if HAVE_LIBBLUETOOTH
+#ifdef _WIN32
+  SOCKADDR_BTH loc_addr = { 0 }, rem_addr = { 0 };
+#else
+  struct sockaddr_rc loc_addr = { 0 };
+#endif
 #endif
 
 #ifdef NEW_SECURITY
@@ -744,7 +743,7 @@ listen_Thread( LPVOID arg )
   }
 	if (sockfd < 0) {
 		SOCKET_ERROR();
-	}
+	}  
 
   mc_platform->sockfd = sockfd;
 #ifndef _WIN32
@@ -765,8 +764,13 @@ listen_Thread( LPVOID arg )
     loc_addr.port = mc_platform->agency->portno;
 #endif
     if(bind(sockfd, (struct sockaddr *)&loc_addr, sizeof(loc_addr))) {
+#ifndef _WIN32 
       fprintf(stderr, "error binding to bluetooth socket. %s:%d\n", 
         strerror(errno), errno);
+#else
+      fprintf(stderr, "error binding to bluetooth socket. %d\n", 
+        WSAGetLastError());
+#endif
       exit(1);
     }
 #endif
