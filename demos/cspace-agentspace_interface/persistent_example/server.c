@@ -42,6 +42,9 @@ identical results. */
 
   printf("Value of %d was returned.\n", retval);
 
+  /* End the persistent agent */
+  MC_DeleteAgent(agent);
+
   MC_End(agency);
   return 0;
 }
