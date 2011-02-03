@@ -266,7 +266,12 @@ typedef struct MCAgencyOptions_s{
     int initInterps;
     int bluetooth; /* Startup in bluetooth mode */
     ChOptions_t* ch_options;
+
+    unsigned long long initialized; /* This will contain a magic number if the struct
+    has been initialized. The magic number is kept in the define
+    MC_INITIALIZED_CODE */
 } MCAgencyOptions_t;
+#define MC_INITIALIZED_CODE 63280583
 
 typedef struct stationary_agent_info_s{
 	void* args;

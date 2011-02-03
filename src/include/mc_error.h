@@ -49,6 +49,7 @@ typedef enum error_code_e {
     MC_ERR_NOT_FOUND,
     MC_ERR_MEMORY,
     MC_ERR_SEND,
+    MC_ERR_OPTIONS_UNINITIALIZED,
     MC_WARN_DUPLICATE
 } error_code_t;
 
