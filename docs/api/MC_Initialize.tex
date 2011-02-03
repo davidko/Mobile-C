@@ -30,7 +30,9 @@ The function returns an {\bf MCAgency\_t} on success and NULL on failure.\\
 $port$ & The port number to listen on for incoming mobile agents.\\
 $options$ & The address of a structure of type {\bf MCAgencyOptions\_t} for 
 specifying which thread(s) to be activated in an agency and setting the 
-default agent status for incoming mobile agents.
+default agent status for incoming mobile agents. This variable must be
+initialized with \texttt{MC\_InitializeAgencyOptions()} before
+modifications are made to it.
 \end{tabular}
 \end{description}
 {\bf MCAgencyOptions\_t} is defined as a structure as the following:
@@ -43,8 +45,8 @@ type \texttt{MCAgency\_t} containing the information about the current agency.
 
 The \texttt{MC\_Initialize} function also accepts an optional argument of type
 \texttt{MCAgencyOptions\_t} which allows a user to modify which components to
-start on their Mobile-C agency. The \texttt{MCAgencyOptions\_t} struct should be initialized with the 
-\texttt{MC\_InitializeAgencyOptions} before modifications are made. The struct contains the following
+start on their Mobile-C agency. The \texttt{MCAgencyOptions\_t} struct must be initialized with the 
+\texttt{MC\_InitializeAgencyOptions()} before modifications are made. The struct contains the following
 members:
 \begin{itemize}
   \item \texttt{int threads;} : This member is a bitmasked variable which contains information
