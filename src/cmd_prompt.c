@@ -205,7 +205,11 @@ cmd_prompt_Thread( LPVOID arg )
 #endif
             {
                 fprintf(stderr, "fgets failed at %s:%d\n", __FILE__, __LINE__);
+#ifdef _WIN32
                 Sleep(5000);
+#else
+                sleep(5);
+#endif
                 return NULL;
             }
 #endif
