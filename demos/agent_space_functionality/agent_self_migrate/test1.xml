@@ -25,7 +25,7 @@ int main()
     if(mc_host_port == 5050) {
       mc_MigrateAgent(mc_current_agent, "localhost", 5051);
     } else if (mc_host_port == 5051) {
-      //mc_MigrateAgent(mc_current_agent, "localhost", 5050);
+      mc_MigrateAgent(mc_current_agent, "localhost", 5050);
     }
 
     return 0;
