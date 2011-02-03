@@ -57,6 +57,7 @@
 #endif
 
 #include "include/libmc.h"
+#include "include/mc_error.h"
 #include "include/macros.h"
 #include "include/mc_platform.h"
 #include "include/message.h"
@@ -1647,6 +1648,13 @@ MC_Initialize( /*{{{*/
   char buf[5];
   FILE* f;
 #endif
+  if(options && options->initialized != MC_INITIALIZED_CODE) {
+#ifdef _WIN32
+    /* TODO: Popup message box */
+#else
+#endif
+    return NULL;
+  }
 
   memset(privkey, '\0', 1210);
   ret = (MCAgency_t)malloc(sizeof(struct agency_s));
@@ -1766,6 +1774,7 @@ MC_InitializeAgencyOptions(struct MCAgencyOptions_s* options) /*{{{*/
   options->bluetooth = 0;
 
   options->initInterps = 4; // 4 interpreters are loaded
+  options->initialized = MC_INITIALIZED_CODE;
   return 0;
 } /*}}}*/
 
