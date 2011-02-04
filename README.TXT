@@ -107,7 +107,14 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
-Version MobileC v2.1.0, January 4, 2010
+Version MobileC v2.1.1, February 4, 2011
+*)  Fixed a preprocessing bug that caused a syntax error on Linux systems w/out
+    the readline library
+*)  Modified the MC_Initialize() function to detect uninitialized MC_options
+*)  Fixed several bugs w/ the Windows Bluetooth operation of Mobile-C
+*)  Updated the persistent agent demo
+
+Version MobileC v2.1.0, January 4, 2011
 *)  Modified persistent agents so that the agent thread does not terminate if
     the agent is persistent. This allows thread specific resources to be
     maintained, which is especially uselful in some Win32 applications.
