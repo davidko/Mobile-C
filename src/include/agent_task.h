@@ -54,6 +54,8 @@ typedef struct agent_task_s{
   char** saved_variables;
   int num_saved_variables;
 
+  struct agent_file_list_s* agent_file_list;
+
 } agent_task_t;
 
 typedef agent_task_t* agent_task_p;

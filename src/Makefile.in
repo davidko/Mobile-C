@@ -74,14 +74,15 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(stuffdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmc_la_DEPENDENCIES = mc_sync/libmc_sync.la mc_list/libmc_list.la \
 	security/xyssl-0.9/library/libxyssl.la
-am_libmc_la_OBJECTS = acc.lo agent.lo agent_return_data.lo \
-	agent_datastate.lo agent_mailbox.lo agent_task.lo ams.lo \
-	barrier.lo cmd_prompt.lo connection.lo data_structures.lo \
-	df.lo dynstring.lo fipa_acl.lo fipa_envelope.lo libmc.lo \
-	mc_platform.lo mc_rwlock.lo message.lo message_queue.lo \
-	mtp_http.lo xml_compose.lo xml_helper.lo xml_parser.lo asm.lo \
-	asm_node.lo asm_message_parser.lo asm_message_composer.lo \
-	mc_dh.lo interface.lo
+am_libmc_la_OBJECTS = acc.lo agent.lo agent_file_data.lo \
+	agent_return_data.lo agent_datastate.lo agent_mailbox.lo \
+	agent_task.lo ams.lo barrier.lo cmd_prompt.lo connection.lo \
+	data_structures.lo df.lo dynstring.lo fipa_acl.lo \
+	fipa_envelope.lo libmc.lo mc_platform.lo mc_rwlock.lo \
+	message.lo message_queue.lo mtp_http.lo xml_compose.lo \
+	xml_helper.lo xml_parser.lo asm.lo asm_node.lo \
+	asm_message_parser.lo asm_message_composer.lo mc_dh.lo \
+	interface.lo
 libmc_la_OBJECTS = $(am_libmc_la_OBJECTS)
 libmc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(libmc_la_LDFLAGS) \
@@ -266,10 +267,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = gnu
-SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library
+SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2
 lib_LTLIBRARIES = libmc.la
 libmc_la_SOURCES = acc.c \
 									 agent.c \
+									 agent_file_data.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
 									 agent_mailbox.c \
@@ -299,9 +301,9 @@ libmc_la_SOURCES = acc.c \
 									 security/mc_dh.c \
                                                                          security/interface.c
 
-libmc_la_LIBADD = mc_sync/libmc_sync.la mc_list/libmc_list.la security/xyssl-0.9/library/libxyssl.la -Lmxml-2.2.2 -lmxml 
+libmc_la_LIBADD = mc_sync/libmc_sync.la mc_list/libmc_list.la security/xyssl-0.9/library/libxyssl.la -Lmxml-2.2.2 -lmxml -Llibb64-1.2/src -lb64
 libmc_la_LDFLAGS = -rdynamic
-INCLUDES = -Imc_sync -Imc_list -Imxml-2.2.2 -Isecurity/xyssl-0.9/include
+INCLUDES = -Imc_sync -Imc_list -Imxml-2.2.2 -Isecurity/xyssl-0.9/include -Ilibb64-1.2/include
 stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h
 noinst_HEADERS = include/ams.h \
@@ -411,6 +413,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_datastate.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_file_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_mailbox.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_return_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_task.Plo@am__quote@

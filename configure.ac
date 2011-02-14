@@ -135,6 +135,7 @@ AC_CONFIG_FILES([Makefile
                 demos/cspace-agentspace_interface/agent_init_callback/Makefile
                 demos/miscellaneous/multiple_agency_example/Makefile
                 demos/miscellaneous/steer_example/Makefile
+                demos/miscellaneous/agent_file_attachment/Makefile
                 demos/miscellaneous/agent_squad_test/Makefile
                 demos/miscellaneous/assembly_simulation/Makefile
                 demos/miscellaneous/mc_max_num_agents_example/Makefile

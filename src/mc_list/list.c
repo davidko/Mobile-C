@@ -70,7 +70,7 @@ void ListTerminate(list_p list)
  * Purpose : 
  * Return : size of the list;
  *********************************************************/
-int list_pGetSize(list_p list)
+int ListGetSize(list_p list)
 {
     return list->size;
 }

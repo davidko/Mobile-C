@@ -9,6 +9,7 @@ SUBDIRS = \
   demos/cspace-agentspace_interface/agent_init_callback \
   demos/miscellaneous/multiple_agency_example \
   demos/miscellaneous/steer_example \
+  demos/miscellaneous/agent_file_attachment \
   demos/miscellaneous/agent_squad_test \
   demos/miscellaneous/assembly_simulation \
   demos/miscellaneous/mc_max_num_agents_example \

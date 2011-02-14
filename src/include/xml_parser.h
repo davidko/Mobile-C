@@ -85,6 +85,9 @@ error_code_t
 agent_xml_parse__data(agent_p agent, xml_parser_p xml_parser, int index);
 
 error_code_t
+agent_xml_parse__file(agent_p agent, xml_parser_p xml_parser, int index);
+
+error_code_t
 agent_xml_parse__row(interpreter_variable_data_t* interp_variable, xml_parser_p xml_parser, int index);
 
 void agent_xml_parse__fill_row_data(

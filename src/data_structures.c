@@ -96,6 +96,26 @@ AP_QUEUE_REMOVE_TEMPLATE(
     char*,
     (!strcmp(node->name, key))
     )
+
+/* Agent Data Files */
+#include "include/agent_file_data.h"
+AP_QUEUE_STD_DEFN_TEMPLATE(agent_file_list, agent_file_data)
+
+AP_QUEUE_SEARCH_TEMPLATE(
+    agent_file_list,
+    Search,
+    agent_file_data,
+    char*,
+    (!strcmp(node->name, key))
+    )
+
+AP_QUEUE_REMOVE_TEMPLATE(
+    agent_file_list,
+    Remove,
+    agent_file_data,
+    char*,
+    (!strcmp(node->name, key))
+    )
         
 /* Message Queue */
 AP_QUEUE_STD_DEFN_TEMPLATE(

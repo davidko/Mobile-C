@@ -345,6 +345,7 @@ agent_xml_compose__task(agent_p agent, int index)
   mxml_node_t* node;
   mxml_node_t* tmp_node;
   interpreter_variable_data_t* tmp_interp_var;
+  agent_file_data_p agent_file_data;
   node = mxmlNewElement(
       NULL,
       "TASK"
@@ -440,6 +441,31 @@ agent_xml_compose__task(agent_p agent, int index)
         tmp_node );
   }
 
+  /* Now add all the files the agent has with it */
+  while
+    (
+     ( 
+      agent_file_data = agent_file_list_Pop(
+        agent->datastate->tasks[index]->agent_file_list )
+     ) != NULL 
+    )
+  {
+    tmp_node = agent_xml_compose__file(
+        agent,
+        index,
+        agent_file_data);
+    free(agent_file_data);
+    if(tmp_node == NULL) {
+      fprintf(stderr, "Compose error. %s:%d\n", __FILE__, __LINE__);
+      return NULL;
+    }
+    mxmlAdd(
+        node,
+        MXML_ADD_AFTER,
+        NULL,
+        tmp_node);
+  }
+
   return node;
 }
 
@@ -514,6 +540,25 @@ agent_xml_compose__data(agent_p agent, int index, interpreter_variable_data_t* i
       }
     }
   }
+  return node;
+}
+
+  mxml_node_t*
+agent_xml_compose__file(agent_p agent, int index, agent_file_data_t* agent_file_data)
+{
+  mxml_node_t* node;
+  node = mxmlNewElement(
+      MXML_NO_PARENT,
+      "FILE"
+      );
+  mxmlElementSetAttr(
+      node,
+      "name",
+      agent_file_data->name );
+  mxmlNewText(
+      node,
+      0,
+      agent_file_data->data );
   return node;
 }
 
