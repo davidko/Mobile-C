@@ -671,10 +671,10 @@ message_send_Thread( LPVOID arg )
   SOCKADDR_BTH btsktin;
 #else
   struct sockaddr_rc btsktin;
-#endif
-#endif
   struct addrinfo* myaddrinfo;
   struct addrinfo hint_addrinfo;
+#endif
+#endif
   char *buf;
   char *hostname;
 #ifndef _WIN32
