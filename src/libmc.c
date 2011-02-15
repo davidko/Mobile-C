@@ -1233,6 +1233,18 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
     /* First, make sure the agent is no longer running */
     MC_TerminateAgent(agent);
 
+    /* Set the agent status to be flushed */
+    agent->agent_status = MC_WAIT_FINISHED;
+    /* Make the AMS run */
+    if(agent->mc_platform) {
+      MUTEX_LOCK( agent->mc_platform->MC_signal_lock);
+      MUTEX_UNLOCK( agent->mc_platform->MC_signal_lock );
+      MUTEX_LOCK(agent->mc_platform->ams->runflag_lock);
+      agent->mc_platform->ams->run = 1;
+      COND_SIGNAL(agent->mc_platform->ams->runflag_cond);
+      MUTEX_UNLOCK(agent->mc_platform->ams->runflag_lock);
+    }
+
     return MC_SUCCESS;
 } /*}}}*/
 
@@ -1253,6 +1265,18 @@ MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
 
     /* First, make sure the agent is no longer running */
     MC_TerminateAgentWG(calling_agent, agent);
+
+    /* Set the agent status to be flushed */
+    agent->agent_status = MC_WAIT_FINISHED;
+    /* Make the AMS run */
+    if(agent->mc_platform) {
+      MUTEX_LOCK( agent->mc_platform->MC_signal_lock);
+      MUTEX_UNLOCK( agent->mc_platform->MC_signal_lock );
+      MUTEX_LOCK(agent->mc_platform->ams->runflag_lock);
+      agent->mc_platform->ams->run = 1;
+      COND_SIGNAL(agent->mc_platform->ams->runflag_cond);
+      MUTEX_UNLOCK(agent->mc_platform->ams->runflag_lock);
+    }
 
     return MC_SUCCESS;
 } /*}}}*/
