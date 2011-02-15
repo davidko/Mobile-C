@@ -101,42 +101,45 @@ Data Type & Description \\
 \hline
 Function & Description \\
 \hline
-{\bf mc\_AclAddReceiver()} & Add a receiver to a FIPA ACL message. \\
-{\bf mc\_AclAddReplyTo()} & Add a reply-to address to a FIPA ACL message. \\
-{\bf mc\_AclNew()} & Allocate a new empty FIPA ACL message. \\
-{\bf mc\_AclPost()} & Post a FIPA ACL message. \\
-{\bf mc\_AclReply()} & Generate a reply to a FIPA ACL message. \\
-{\bf mc\_AclRetrieve()} & Retrieve a FIPA ACL message from the mailbox. \\
-{\bf mc\_AclSend()} & Send a FIPA ACL message. \\
-{\bf mc\_AclSetContent()} & Set the content of a FIPA ACL message. \\
-{\bf mc\_AclSetPerformative()} & Set the performative of a FIPA ACL message. \\
-{\bf mc\_AclSetProtocol()} & Set the protocol of a FIPA ACL message. \\
-{\bf mc\_AclSetSender()} & Set the sender of a FIPA ACL message.\\
-{\bf mc\_AclWaitRetrieve()} & Wait for the arrival of a new FIPA ACL message. \\
-{\bf mc\_AddAgent()} & Add a mobile agent into an agency. \\
-{\bf mc\_AgentVariableSave()} & Save a variable to an agent's datastate. \\
-{\bf mc\_AgentVariableRetrieve()} & Retrieve a previously saved variable. \\
-{\bf mc\_Barrier()} & Block until all agents in an agency have called this function. \\
-{\bf mc\_BarrierDelete()} & Delete a Mobile-C barrier. \\
-{\bf mc\_BarrierInit()} & Initialize a Mobile-C barrier. \\
-{\bf mc\_CallAgentFunc()} & Call a function defined in an agent. \\
-{\bf mc\_ComposeAgent()} & Compose an agent from program source code. \\
-{\bf mc\_ComposeAgentS()} & Compose an agent from program source code with a workgroup code. \\
-{\bf mc\_ComposeAgentFile()} & Compose an agent from a program source code file. \\
-{\bf mc\_ComposeAgentFileS()} & Compose an agent from a program source code file with a workgroup code. \\
-{\bf mc\_CondBroadcast()} & Wake up all agents/threads waiting on a condition variable. \\
-{\bf mc\_CondReset()} & Reset a Mobile-C condition variable. \\
-{\bf mc\_CondSignal()} & Signal another agent that is waiting on a condition variable. \\
-{\bf mc\_CondWait()} & Cause the calling agent or thread to wait on a Mobile C condition variable with the ID specified by the argument. \\
-{\bf mc\_DeleteAgent()} & Stop and remove an agent from an agency. \\
-{\bf mc\_DeregisterService()} & Deregister a service with the Directory Facilitator. \\
-{\bf mc\_End()} & Terminate a Mobile-C agency. \\
-{\bf mc\_FindAgentByID()} & Find a mobile agent by its ID in an agency. \\
-{\bf mc\_FindAgentByName()} & Find a mobile agent by its name in an agency. \\
-{\bf mc\_GetAgentArrivalTime()} & Get the time when an agent arrives an agency. \\
-{\bf mc\_GetAgentExecEngine()} & Get the AEE associated with a mobile agent in an agency. \\
-{\bf mc\_GetAgentID()} & Get the ID of an agent. \\
-{\bf mc\_GetAgentName()} & Get the name of an agent. \\
+{\bf mc\_AclAddReceiver()} \dotfill & Add a receiver to a FIPA ACL message. \\
+{\bf mc\_AclAddReplyTo()} \dotfill & Add a reply-to address to a FIPA ACL message. \\
+{\bf mc\_AclNew()} \dotfill & Allocate a new empty FIPA ACL message. \\
+{\bf mc\_AclPost()} \dotfill & Post a FIPA ACL message. \\
+{\bf mc\_AclReply()} \dotfill & Generate a reply to a FIPA ACL message. \\
+{\bf mc\_AclRetrieve()} \dotfill & Retrieve a FIPA ACL message from the mailbox. \\
+{\bf mc\_AclSend()} \dotfill  &  Send a FIPA ACL message. \\
+{\bf mc\_AclSetContent()} \dotfill  &  Set the content of a FIPA ACL message. \\
+{\bf mc\_AclSetPerformative()} \dotfill  &  Set the performative of a FIPA ACL message. \\
+{\bf mc\_AclSetProtocol()} \dotfill  &  Set the protocol of a FIPA ACL message. \\
+{\bf mc\_AclSetSender()} \dotfill  &  Set the sender of a FIPA ACL message.\\
+{\bf mc\_AclWaitRetrieve()} \dotfill  &  Wait for the arrival of a new FIPA ACL message. \\
+{\bf mc\_AddAgent()} \dotfill  &  Add a mobile agent into an agency. \\
+{\bf mc\_AgentAttachFile()} \dotfill & Attach a file to the agent's current task. \\
+{\bf mc\_AgentListFiles()} \dotfill & List files attached to an agent's task. \\
+{\bf mc\_AgentRetrieveFile()} \dotfill & Retrieve and save an agent's attached file onto the filesystem. \\
+{\bf mc\_AgentVariableSave()} \dotfill  &  Save a variable to an agent's datastate. \\
+{\bf mc\_AgentVariableRetrieve()} \dotfill  &  Retrieve a previously saved variable. \\
+{\bf mc\_Barrier()} \dotfill  &  Block until all agents in an agency have called this function. \\
+{\bf mc\_BarrierDelete()} \dotfill  &  Delete a Mobile-C barrier. \\
+{\bf mc\_BarrierInit()} \dotfill  &  Initialize a Mobile-C barrier. \\
+{\bf mc\_CallAgentFunc()} \dotfill  &  Call a function defined in an agent. \\
+{\bf mc\_ComposeAgent()} \dotfill  &  Compose an agent from program source code. \\
+{\bf mc\_ComposeAgentS()} \dotfill  &  Compose an agent from program source code with a workgroup code. \\
+{\bf mc\_ComposeAgentFile()} \dotfill  &  Compose an agent from a program source code file. \\
+{\bf mc\_ComposeAgentFileS()} \dotfill  &  Compose an agent from a program source code file with a workgroup code. \\
+{\bf mc\_CondBroadcast()} \dotfill  &  Wake up all agents/threads waiting on a condition variable. \\
+{\bf mc\_CondReset()} \dotfill  &  Reset a Mobile-C condition variable. \\
+{\bf mc\_CondSignal()} \dotfill  &  Signal another agent that is waiting on a condition variable. \\
+{\bf mc\_CondWait()} \dotfill  &  Cause the calling agent or thread to wait on a Mobile C condition variable with the ID specified by the argument. \\
+{\bf mc\_DeleteAgent()} \dotfill  &  Stop and remove an agent from an agency. \\
+{\bf mc\_DeregisterService()} \dotfill  &  Deregister a service with the Directory Facilitator. \\
+{\bf mc\_End()} \dotfill  &  Terminate a Mobile-C agency. \\
+{\bf mc\_FindAgentByID()} \dotfill  &  Find a mobile agent by its ID in an agency. \\
+{\bf mc\_FindAgentByName()} \dotfill  &  Find a mobile agent by its name in an agency. \\
+{\bf mc\_GetAgentArrivalTime()} \dotfill  &  Get the time when an agent arrives an agency. \\
+{\bf mc\_GetAgentExecEngine()} \dotfill  &  Get the AEE associated with a mobile agent in an agency. \\
+{\bf mc\_GetAgentID()} \dotfill  &  Get the ID of an agent. \\
+{\bf mc\_GetAgentName()} \dotfill  &  Get the name of an agent. \\
 \hline
 \end{tabular}
 \end{center}
@@ -154,33 +157,32 @@ Function & Description \\
 \hline
 Function & Description \\
 \hline
-{\bf mc\_MigrateAgent()} & Migrate an agent. \\
-{\bf mc\_ResumeAgency()} &  Resume an agency's operation. \\
-{\bf mc\_RetrieveAgent()} & Retrieve the first neutral mobile agent from the mobile agent list. \\
-{\bf mc\_RetrieveAgentCode()} & Retrieve a mobile agent code in the form of a character string. \\
-{\bf mc\_SearchForService()} & Search the Directory Facilitator for a service. \\
-{\bf mc\_SemaphorePost()} & Unlock one resource from a Mobile-C semaphore. \\
-{\bf mc\_SemaphoreWait()} & Allocate one resource from a Mobile-C synchronization \\
-  & semaphore variable. \\
-{\bf mc\_SendAgentMigrationMessage()} & Send an ACL mobile agent message to a remote agency. \\
-{\bf mc\_SendAgentMigrationMessageFile()} & Send an ACL mobile agent message saved as a file to a remote agency. \\
-{\bf mc\_SendSteerCommand()} & Send a command to control a steerable binary space function. \\
-{\bf mc\_SetAgentStatus()} & Set the status of a mobile agent in an agency. \\
-{\bf mc\_SetDefaultAgentStatus()} & Assign a user defined default status to all incoming mobile agents. \\
-{\bf mc\_SyncDelete()} & Delete a previously initialized synchronization variable. \\
-{\bf mc\_SyncInit()} & Initialize a new synchronization variable. \\
-{\bf mc\_TerminateAgent()} & Terminate the execution of a mobile agent in an agency. \\
-{\bf mc\_GetAgentNumTasks()} & Get the number of tasks a mobile agent has. \\
-{\bf mc\_GetAgentReturnData()} & Get the return data of a mobile agent. \\
-{\bf mc\_GetAgentStatus()} & Get the status of a mobile agent in an agency. \\
-{\bf mc\_GetAgentType()} & Get the type of a mobile agent. \\
-{\bf mc\_GetAgentXMLString()} & Retrieve a mobile agent message in XML format as a character string. \\
-{\bf mc\_GetAllAgents()} & Obtain all the agents in an agency. \\
-{\bf mc\_HaltAgency()} & Halt an agency's operation. \\
-{\bf mc\_MutexLock()} & Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
-{\bf mc\_MutexUnlock()} & Unlock a locked Mobile-C synchronization variable. \\
-{\bf mc\_PrintAgentCode()} & Print a mobile agent code for inspection. \\
-{\bf mc\_RegisterService()} &  Register a new service with the Directory Facilitator. \\
+{\bf mc\_MigrateAgent()} \dotfill  &  Migrate an agent. \\
+{\bf mc\_ResumeAgency()} \dotfill  &   Resume an agency's operation. \\
+{\bf mc\_RetrieveAgent()} \dotfill  &  Retrieve the first neutral mobile agent from the mobile agent list. \\
+{\bf mc\_RetrieveAgentCode()} \dotfill  &  Retrieve a mobile agent code in the form of a character string. \\
+{\bf mc\_SearchForService()} \dotfill  &  Search the Directory Facilitator for a service. \\
+{\bf mc\_SemaphorePost()} \dotfill  &  Unlock one resource from a Mobile-C semaphore. \\
+{\bf mc\_SemaphoreWait()} \dotfill  &  Allocate one resource from a Mobile-C synchronization semaphore variable. \\
+{\bf mc\_SendAgentMigrationMessage()} \dotfill  &  Send an ACL mobile agent message to a remote agency. \\
+{\bf mc\_SendAgentMigrationMessageFile()} \dotfill  &  Send an ACL mobile agent message saved as a file to a remote agency. \\
+{\bf mc\_SendSteerCommand()} \dotfill  &  Send a command to control a steerable binary space function. \\
+{\bf mc\_SetAgentStatus()} \dotfill  &  Set the status of a mobile agent in an agency. \\
+{\bf mc\_SetDefaultAgentStatus()} \dotfill  &  Assign a user defined default status to all incoming mobile agents. \\
+{\bf mc\_SyncDelete()} \dotfill  &  Delete a previously initialized synchronization variable. \\
+{\bf mc\_SyncInit()} \dotfill  &  Initialize a new synchronization variable. \\
+{\bf mc\_TerminateAgent()} \dotfill  &  Terminate the execution of a mobile agent in an agency. \\
+{\bf mc\_GetAgentNumTasks()} \dotfill  &  Get the number of tasks a mobile agent has. \\
+{\bf mc\_GetAgentReturnData()} \dotfill  &  Get the return data of a mobile agent. \\
+{\bf mc\_GetAgentStatus()} \dotfill  &  Get the status of a mobile agent in an agency. \\
+{\bf mc\_GetAgentType()} \dotfill  &  Get the type of a mobile agent. \\
+{\bf mc\_GetAgentXMLString()} \dotfill  &  Retrieve a mobile agent message in XML format as a character string. \\
+{\bf mc\_GetAllAgents()} \dotfill  &  Obtain all the agents in an agency. \\
+{\bf mc\_HaltAgency()} \dotfill  &  Halt an agency's operation. \\
+{\bf mc\_MutexLock()} \dotfill  &  Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
+{\bf mc\_MutexUnlock()} \dotfill  &  Unlock a locked Mobile-C synchronization variable. \\
+{\bf mc\_PrintAgentCode()} \dotfill  &  Print a mobile agent code for inspection. \\
+{\bf mc\_RegisterService()} \dotfill  &   Register a new service with the Directory Facilitator. \\
 \hline
 \end{tabular}
 \end{center}

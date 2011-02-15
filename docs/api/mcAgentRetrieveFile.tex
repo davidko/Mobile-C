@@ -1,0 +1,57 @@
+\rhead{\bf mc\_AgentRetrieveFile()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf mc\_AgentRetrieveFile()\index{mc\_AgentRetrieveFile()}}\\
+\addcontentsline{toc}{section}{mc\_AgentRetrieveFile()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int mc\_AgentRetrieveFile}({\bf MCAgent\_t} $agent$, 
+                                  {\bf int} $tasknum$,
+                                  {\bf const char*} $name$,
+                                  {\bf const char*} $filepath$,
+																	);\\
+
+\noindent
+{\bf Purpose}\\
+This function is used to retrieve and save a file to from agent.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success or a non-zero error code on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{30 mm}p{125 mm}} 
+$agent$ & A fully initialized agent handle.\\
+$tasknum$ & The task in which to retrieve the file. \\
+$name$ & An alias to identify the attached file.\\
+$filepath$ & The path to save the file. Local paths are calculated from the
+execution directory of the agency.\\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve a file from an agent task. The file must
+be attached to the agent from a prior call to \texttt{mc\_AgentAttachFile()}. 
+The executing agency must have write permissions to save the file to the
+correct location.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example code attached with the documentation for \texttt{mc\_AgentAttachFile}.
+
+\noindent
+{\bf See Also}\\
+\texttt{mc\_AgentAttachFile(), mc\_AgentListFiles()}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

@@ -1,0 +1,57 @@
+\rhead{\bf MC\_AgentListFiles()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_AgentListFiles()\index{MC\_AgentListFiles()}}\\
+\addcontentsline{toc}{section}{MC\_AgentListFiles()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentListFiles}({\bf MCAgent\_t} $agent$, 
+                                  {\bf int} $tasknum$,
+                                  {\bf char***} $names$ \texttt{/* OUT */},
+                                  {\bf int*} $numfiles$ \texttt{/* OUT */}
+																	);\\
+
+\noindent
+{\bf Purpose}\\
+This funciton is used to list the files attached to an agent's task.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success or a non-zero error code on failure.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{30 mm}p{125 mm}} 
+$agent$ & A fully initialized agent handle.\\
+$tasknum$ & The selected task to list attached files.\\
+$names$ & A two dimensional array to fill with names of attached files. This
+data structure will need to be freed by the user after usage.\\
+$numfiles$ & An integer to fill with the number of files attached to the task.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function is used to retrieve the names of files that are attached to an
+agent's task. The names may be used in other API function called such as
+\texttt{MC\_AgentRetrieveFile()} or \texttt{mc\_AgentRetrieveFile()}.
+
+\noindent
+{\bf Example}\\
+\noindent
+Please see the example listed with the documentation for
+\texttt{MC\_AgentAttachFile()}.
+
+\noindent
+{\bf See Also}\\
+\texttt{MC\_AgentRetrieveFile(), MC\_AgentAttachFiles()}
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\
