@@ -528,6 +528,49 @@ int MC_AgentAddTask(
     int persistent);
 
 /**
+ * \brief           Attach a file to the agent's current task
+ *
+ * \param agent     An existing agent
+ * \param name      The name to give the file
+ * \param filepath  The absolute path of the file
+ *
+ * \return          Returns 0 on success, or an error code on failure.
+ */
+EXPORTMC int MC_AgentAttachFile(
+    MCAgent_t agent,
+    const char* name,
+    const char* filepath);
+
+/**
+ * \brief           Get a list of an agent's attached files
+ *
+ * \param agent     An existing agent
+ * \param names     A pointer two an unallocated two dimentional character
+ *                  array. The function will allocated any necessary memory for
+ *                  storing the names. If names are allocated, the array must
+ *                  be freed by the user.
+ * \param num_files A pointer to an integer which will be filled with the number
+ *                  of filenames
+ * \return          returns 0 on success, -1 on failure.
+ */
+EXPORTMC int MC_AgentListFiles(
+    MCAgent_t agent,
+    int task_num,
+    char*** names, /*OUT*/
+    int* num_files /*OUT*/);
+
+/**
+ * \brief           Saves an agent's attached file to the filesystem
+ * \param name      The name of the agent's stored file
+ * \param save_path The location to save the file (including the filename)
+ * \return          Returns 0 on success, -1 on failure. */
+EXPORTMC int MC_AgentRetrieveFile(
+    MCAgent_t agent, 
+    int task_num,
+    const char* name,
+    const char* save_path);
+
+/**
  * \brief           Add a new task to an already existing agent
  *                  
  * \param agent     An existing agent

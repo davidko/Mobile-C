@@ -172,6 +172,9 @@ Function & Description \\
 {\bf MC\_AclWaitRetrieve()} \dotfill & Wait for a message to arrive at an agent's mailbox. \\
 {\bf MC\_AgentAddTask()} \dotfill & Add a task to an agent based off of C source code. \\
 {\bf MC\_AgentAddTaskFromFile()} \dotfill & Add a task to an agent based off of a C source code file. \\
+{\bf MC\_AgentAttachFile()} \dotfill & Attach a file to the agent's current task. \\
+{\bf MC\_AgentListFiles()} \dotfill & List files attached to an agent's task. \\
+{\bf MC\_AgentRetrieveFile()} \dotfill & Retrieve and save an agent's attached file onto the filesystem. \\
 {\bf MC\_AgentReturnArrayDim()} \dotfill & Get the dimension of an array returned by an agent. \\
 {\bf MC\_AgentReturnArrayExtent()} \dotfill & Get the extent of a dimension of an array returned by an agent. \\
 {\bf MC\_AgentReturnArrayNum()} \dotfill & Get the number of elements of an array returned by an agent. \\
@@ -189,10 +192,6 @@ Function & Description \\
 {\bf MC\_BarrierInit()} \dotfill & Initialize a Mobile-C barrier. \\
 {\bf MC\_CallAgentFunc()} \dotfill & Call a function defined in an agent. \\
 {\bf MC\_CallAgentFuncV()} \dotfill & Call a function defined in an agent. \\
-{\bf MC\_CallAgentFuncVar()} \dotfill & Call a function defined in an agent. \\
-{\bf MC\_ChInitializeOptions()} \dotfill & Set the initialization options for a Ch to be used as one AEE in an agency. \\
-{\bf MC\_ComposeAgent()} \dotfill & Compose an agent from program source code. \\
-{\bf MC\_ComposeAgentS()} \dotfill & [Deprecated] Compose an agent from program source code with a workgroup code. \\
 \hline
 \end{tabular}
 \end{center}
@@ -209,6 +208,10 @@ Function & Description \\
 \hline
 Function & Description \\
 \hline
+{\bf MC\_CallAgentFuncVar()} \dotfill & Call a function defined in an agent. \\
+{\bf MC\_ChInitializeOptions()} \dotfill & Set the initialization options for a Ch to be used as one AEE in an agency. \\
+{\bf MC\_ComposeAgent()} \dotfill & Compose an agent from program source code. \\
+{\bf MC\_ComposeAgentS()} \dotfill & [Deprecated] Compose an agent from program source code with a workgroup code. \\
 {\bf MC\_ComposeAgentWithWorkgroup()} \dotfill & Compose an agent from program source code with a workgroup code. \\
 {\bf MC\_ComposeAgentFromFile()} \dotfill & Compose an agent from a program source code file. \\
 {\bf MC\_ComposeAgentFromFileS()} \dotfill & [Deprecated] Compose an agent from a program source code file with a workgroup code. \\
@@ -237,9 +240,6 @@ Function & Description \\
 {\bf MC\_Initialize()} \dotfill & Start a Mobile-C agency and return a handle of the launched agency. \\
 {\bf MC\_InitializeAgencyOptions()} \dotfill & Initialize Mobile-C options. \\
 {\bf MC\_LoadAgentFromFile()} \dotfill & Load an agent from an XML file into a local agency.\\
-{\bf MC\_MainLoop()} \dotfill & Cause the calling thread to wait indefinitely on an agency.\\
-{\bf MC\_MigrateAgent()} \dotfill & Migrate an agent. \\
-{\bf MC\_MutexLock()} \dotfill & Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
 \hline
 \end{tabular}
 \end{center}
@@ -256,6 +256,9 @@ Function & Description \\
 \hline
 Function & Description \\
 \hline
+{\bf MC\_MainLoop()} \dotfill & Cause the calling thread to wait indefinitely on an agency.\\
+{\bf MC\_MigrateAgent()} \dotfill & Migrate an agent. \\
+{\bf MC\_MutexLock()} \dotfill & Lock a previously initialized Mobile-C synchronization variable as a mutex. \\
 {\bf MC\_MutexUnlock()} \dotfill & Unlock a locked Mobile-C synchronization variable. \\
 {\bf MC\_PrintAgentCode()} \dotfill & Print a mobile agent code for inspection. \\
 {\bf MC\_RegisterService()} \dotfill &  Register a new service with the Directory Facilitator. \\
@@ -330,6 +333,12 @@ Function & Description \\
 \input{api/MC_AgentAddTask}
 \pagebreak
 \input{api/MC_AgentAddTaskFromFile}
+\pagebreak
+\input{api/MC_AgentAttachFile}
+\pagebreak
+\input{api/MC_AgentListFiles}
+\pagebreak
+\input{api/MC_AgentRetrieveFile}
 \pagebreak
 \input{api/MC_AgentReturnArrayDim}
 \pagebreak

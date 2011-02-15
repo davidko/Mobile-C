@@ -58,6 +58,7 @@ name##_p name##_New( void ); \
 int name##_Destroy( name##_p name ); \
 int name##_Add( name##_p name, struct node_type##_s* node ); \
 name##_p name##_Copy(name##_p name); \
+int name##_GetSize(name##_p name); \
 struct node_type##_s* name##_Pop( name##_p name ); \
 struct node_type##_s* name##_WaitPop( name##_p name ); \
 struct node_type##_s* name##_SearchIndex( name##_p name, int index ); \
@@ -129,6 +130,15 @@ name##_p name##_Copy(name##_p name) \
     name##_Add(temp, node_type##_Copy(temp_node)); \
   } \
   return temp; \
+} \
+  \
+int name##_GetSize( name##_p name ) \
+{ \
+  int size; \
+  MUTEX_LOCK(name->lock); \
+  size = name->size; \
+  MUTEX_UNLOCK(name->lock); \
+  return size; \
 } \
   \
 int name##_Add( name##_p name, node_type##_t* node ) \

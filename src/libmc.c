@@ -56,6 +56,8 @@
 #include <time.h>
 #endif
 
+#include <b64/cdecode.h>
+
 #include "include/libmc.h"
 #include "include/mc_error.h"
 #include "include/macros.h"
@@ -438,7 +440,7 @@ EXPORTMC int MC_AddStationaryAgent(
 	stationary_agent_info->agency = agency;
 	agent_queue_Add(agency->mc_platform->agent_queue, stationary_agent_info->agent);
 #ifndef _WIN32
-	THREAD_CREATE(&stationary_agent_info->thread, agent_thread, stationary_agent_info);
+	THREAD_CREATE(&stationary_agent_info->thread, (void*(*)(void*))agent_thread, stationary_agent_info);
 #else
 	THREAD_CREATE(&stationary_agent_info->thread, (LPTHREAD_START_ROUTINE)agent_thread, stationary_agent_info);
 #endif
@@ -555,6 +557,7 @@ EXPORTMC int MC_AgentAddTaskFromFile(
   int codesize;
   FILE* fptr;
   int return_val;
+  size_t len;
   if(stat(filename, &buffer)) {
     /* Stat failed. Maybe file does not exist? */
     fprintf(stderr, "MC_AgentAddTaskFromFile failed. File %s does not exist.\n",
@@ -565,8 +568,9 @@ EXPORTMC int MC_AgentAddTaskFromFile(
   code = (char *)malloc((codesize+1)*sizeof(char));
   memset(code, 0, codesize+1);
   fptr = fopen(filename, "r");
-  fread(code, sizeof(char), codesize, fptr);
+  len = fread(code, sizeof(char), codesize, fptr);
   fclose(fptr);
+  if(len != codesize) {return -1;}
   return_val = MC_AgentAddTask(
       agent,
       code,
@@ -575,6 +579,96 @@ EXPORTMC int MC_AgentAddTaskFromFile(
       persistent );
   free(code);
   return return_val;
+}
+
+EXPORTMC int MC_AgentAttachFile(
+    MCAgent_t agent,
+    const char* name,
+    const char* filepath)
+{
+  int cur_task;
+  agent_file_data_t* afd;
+  afd = agent_file_data_InitializeFromFilename(filepath);
+  if(afd == NULL) {
+    return -1;
+  }
+  free(afd->name);
+  afd->name = strdup(name);
+  cur_task = agent->datastate->task_progress;
+  agent_file_list_Add(
+    agent->datastate->tasks[cur_task]->agent_file_list,
+    afd );
+  return 0;
+}
+
+EXPORTMC int MC_AgentListFiles(
+    MCAgent_t agent,
+    int task_num,
+    char*** names /*OUT*/,
+    int* num_files /*OUT*/)
+{
+  int size;
+  int i;
+  agent_file_data_t* afd;
+  if(task_num >= agent->datastate->number_of_tasks) {
+    return -1;
+  }
+  size = agent_file_list_GetSize(
+      agent->datastate->tasks[task_num]->agent_file_list );
+  *num_files = size;
+  *names = (char**)malloc(sizeof(char*)*(size+1));
+  for( i = 0; i < size; i++) {
+    afd = agent_file_list_SearchIndex(
+        agent->datastate->tasks[task_num]->agent_file_list,
+        i);
+    if(afd == NULL) { return -1; }
+    (*names)[i] = strdup(afd->name);
+  }
+  names[i] = NULL;
+  return 0;
+}
+
+EXPORTMC int MC_AgentRetrieveFile(
+    MCAgent_t agent, 
+    int task_num,
+    const char* name,
+    const char* save_path)
+{
+  FILE *fp;
+  agent_file_data_t* agent_file_data;
+  base64_decodestate decode_state;
+  void* file_data;
+  int size;
+  /* Check the task_num */
+  if (task_num >= agent->datastate->number_of_tasks) {
+    return -2;
+  }
+  /* Find the file */
+  agent_file_data = agent_file_list_Search(
+      agent->datastate->tasks[task_num]->agent_file_list,
+      name);
+  if(agent_file_data == NULL) {
+    return -3;
+  }
+
+  /* Try to open the file for writing */
+  fp = fopen(save_path, "wb");
+  if (fp == NULL) {
+    return -1;
+  }
+
+  /* Decode the file */
+  base64_init_decodestate(&decode_state);
+  file_data = malloc(strlen(agent_file_data->data));
+  memset(file_data, 0, strlen(agent_file_data->data));
+  size = base64_decode_block(
+      agent_file_data->data, 
+      strlen(agent_file_data->data),
+      file_data, 
+      &decode_state);
+  fwrite(file_data, size, 1, fp);
+  fclose(fp);
+  return 0;
 }
 
 EXPORTMC int MC_AgentReturnArrayExtent(
@@ -1115,6 +1209,7 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFileWithWorkgroup(
   char *code;
   int codesize;
   FILE* fptr;
+  size_t len;
 
   if(stat(filename, &buffer)) {
     /* Stat failed. Maybe file does not exist? */
@@ -1124,8 +1219,9 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFileWithWorkgroup(
   code = (char *)malloc((codesize+1)*sizeof(char));
   memset(code, 0, codesize+1);
   fptr = fopen(filename, "r");
-  fread(code, sizeof(char), codesize, fptr);
+  len = fread(code, sizeof(char), codesize, fptr);
   fclose(fptr);
+  if(len != codesize) {return NULL;}
 
   agent = MC_ComposeAgentWithWorkgroup(
      name, 
@@ -1808,6 +1904,7 @@ MC_LoadAgentFromFile(MCAgency_t attr, const char* filename)
   struct stat filestat;
   char *buf;
   FILE *fp;
+  size_t len;
   message_p message;
   extern mc_platform_p g_mc_platform;
   buf = NULL;
@@ -1822,8 +1919,9 @@ MC_LoadAgentFromFile(MCAgency_t attr, const char* filename)
   }
 
   fp = fopen(filename, "r");
-  fread((void*)buf, filestat.st_size, 1, fp);
+  len = fread((void*)buf, filestat.st_size, 1, fp);
   fclose(fp);
+  if(len != filestat.st_size) {return -1;}
 
   message = message_New();
   if ( 
@@ -2227,6 +2325,7 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
   char *buf;
   FILE *fp;
   int ret = 0;
+  size_t len;
   message_p message;
   agent_t *agent;
   extern mc_platform_p g_mc_platform;
@@ -2249,8 +2348,9 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
   }
 
   fp = fopen(filename, "r");
-  fread((void*)buf, filestat.st_size, 1, fp);
+  len = fread((void*)buf, filestat.st_size, 1, fp);
   fclose(fp);
+  if(len != filestat.st_size) {return -1;}
 
   message = message_New();
   if( 
@@ -3039,6 +3139,85 @@ MC_AgentAddTask_chdl(void *varg) /*{{{*/
   Ch_VaEnd(interp, ap);
   return retval;
 } /*}}}*/
+
+/* MC_AgentAttachFile */
+EXPORTCH int
+MC_AgentAttachFile_chdl(void *varg)
+{
+  int retval;
+  MCAgent_t agent;
+  const char* name;
+  const char* filepath;
+
+  ChInterp_t interp;
+  ChVaList_t ap;
+
+  Ch_VaStart(interp, ap, varg);
+
+  agent = Ch_VaArg(interp, ap, MCAgent_t);
+  name = Ch_VaArg(interp, ap, const char*);
+  filepath = Ch_VaArg(interp, ap, const char*);
+  retval = MC_AgentAttachFile(
+      agent,
+      name,
+      filepath);
+  Ch_VaEnd(interp, ap);
+  return retval;
+}
+
+EXPORTCH int
+MC_AgentListFiles_chdl(void *varg)
+{
+  int retval;
+  MCAgent_t agent;
+  int task_num;
+  char*** names;
+  int* num_files;
+
+  ChInterp_t interp;
+  ChVaList_t ap;
+
+  Ch_VaStart(interp, ap, varg);
+
+  agent = Ch_VaArg(interp, ap, MCAgent_t);
+  task_num = Ch_VaArg(interp, ap, int);
+  names = Ch_VaArg(interp, ap, char***);
+  num_files = Ch_VaArg(interp, ap, int*);
+  retval = MC_AgentListFiles(
+      agent,
+      task_num,
+      names,
+      num_files);
+  Ch_VaEnd(interp, ap);
+  return retval;
+}
+
+EXPORTCH int
+MC_AgentRetrieveFile_chdl(void *varg)
+{
+  int retval;
+  MCAgent_t agent;
+  int task_num;
+  const char* name;
+  const char* save_path;
+
+  ChInterp_t interp;
+  ChVaList_t ap;
+
+  Ch_VaStart(interp, ap, varg);
+
+  agent = Ch_VaArg(interp, ap, MCAgent_t);
+  task_num = Ch_VaArg(interp, ap, int);
+  name = Ch_VaArg(interp, ap, const char*);
+  save_path = Ch_VaArg(interp, ap, const char*);
+  retval = MC_AgentRetrieveFile(
+      agent,
+      task_num,
+      name,
+      save_path);
+  Ch_VaEnd(interp, ap);
+  return retval;
+}
 
 /* MC_AgentVariableRetrieve */
 EXPORTCH const void*

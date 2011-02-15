@@ -1,8 +1,9 @@
 AUTOMAKE_OPTIONS = gnu
-SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library
+SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2
 lib_LTLIBRARIES = libmc.la
 libmc_la_SOURCES = acc.c \
 									 agent.c \
+									 agent_file_data.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
 									 agent_mailbox.c \
@@ -32,9 +33,9 @@ libmc_la_SOURCES = acc.c \
 									 security/mc_dh.c \
                                                                          security/interface.c
 
-libmc_la_LIBADD = mc_sync/libmc_sync.la mc_list/libmc_list.la security/xyssl-0.9/library/libxyssl.la -Lmxml-2.2.2 -lmxml 
+libmc_la_LIBADD = mc_sync/libmc_sync.la mc_list/libmc_list.la security/xyssl-0.9/library/libxyssl.la -Lmxml-2.2.2 -lmxml -Llibb64-1.2/src -lb64
 libmc_la_LDFLAGS = -rdynamic
-INCLUDES = -Imc_sync -Imc_list -Imxml-2.2.2 -Isecurity/xyssl-0.9/include
+INCLUDES = -Imc_sync -Imc_list -Imxml-2.2.2 -Isecurity/xyssl-0.9/include -Ilibb64-1.2/include
 
 stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h

@@ -742,6 +742,21 @@ agent_ChScriptInitVar(ChInterp_t* interp)
       );
   Ch_DeclareFunc(
       *interp,
+      "int mc_AgentAttachFile(void* agent, const char* name, const char* filepath);",
+      (ChFuncdl_t)MC_AgentAttachFile_chdl
+      );
+  Ch_DeclareFunc(
+      *interp,
+      "int mc_AgentListFiles(void* agent, int task_num, char*** names, int* num_files);",
+      (ChFuncdl_t)MC_AgentListFiles_chdl
+      );
+  Ch_DeclareFunc(
+      *interp,
+      "int mc_AgentRetrieveFile(void* agent, int task_num, const char* name, const char* save_path);",
+      (ChFuncdl_t)MC_AgentRetrieveFile_chdl
+      );
+  Ch_DeclareFunc(
+      *interp,
       "const void* mc_AgentVariableRetrieve(void* agent, const char* var_name, int task_num);",
       (ChFuncdl_t)MC_AgentVariableRetrieve_chdl
       );

@@ -73,6 +73,9 @@ mxml_node_t*
 agent_xml_compose__data(agent_p agent, int index, interpreter_variable_data_t* interp_variable);
 
 mxml_node_t*
+agent_xml_compose__file(agent_p agent, int index, agent_file_data_t* agent_file_data);
+
+mxml_node_t*
 agent_xml_compose__agent_code(agent_p agent, int index);
 
 mxml_node_t*

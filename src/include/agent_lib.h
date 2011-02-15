@@ -95,6 +95,15 @@ MC_AddAgent_chdl(void *varg);
 EXPORTCH int
 MC_AgentAddTask_chdl(void *varg);
 
+EXPORTCH int
+MC_AgentAttachFile_chdl(void *varg);
+
+EXPORTCH int
+MC_AgentListFiles_chdl(void *varg);
+
+EXPORTCH int
+MC_AgentRetrieveFile_chdl(void *varg);
+
 EXPORTCH const void*
 MC_AgentVariableRetrieve_chdl(void* varg);
 

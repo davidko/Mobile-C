@@ -470,6 +470,28 @@ agent_xml_parse__task(agent_p agent, xml_parser_p xml_parser, int index)
         MXML_NO_DESCEND );
   }
 
+  /* Parse the multiple FILE nodes */
+  xml_parser->node = mxmlFindElement(
+      task_node,
+      task_node,
+      "FILE",
+      NULL,
+      NULL,
+      MXML_DESCEND_FIRST);
+  while(xml_parser->node != NULL) {
+    if ((err_code = agent_xml_parse__file(agent, xml_parser, index)))
+    {
+      return err_code;
+    }
+    xml_parser->node = mxmlFindElement(
+        xml_parser->node,
+        task_node,
+        "FILE",
+        NULL,
+        NULL,
+        MXML_NO_DESCEND );
+  }
+
   /* 'persistent' */
   attribute = mxmlElementGetAttr(
       (mxml_node_t*)task_node,
@@ -675,6 +697,39 @@ agent_xml_parse__data(agent_p agent, xml_parser_p xml_parser, int index)
     agent_xml_parse__row(interp_variable, xml_parser, index);
   }
   xml_parser->node = data_node;
+  return MC_SUCCESS;
+}
+
+/* *** */
+/* agent_xml_parse__file */
+error_code_t
+agent_xml_parse__file(agent_p agent, xml_parser_p xml_parser, int index)
+{
+  char* text;
+  const char* name;
+  const mxml_node_t* file_node;
+  agent_file_data_p afd;
+  if(xml_parser->node == NULL) {
+    return MC_ERR_PARSE;
+  }
+  file_node = xml_parser->node;
+  text = xml_get_text(file_node);
+  CHECK_NULL(text, return MC_ERR_PARSE;);
+
+  /* Get the name attribute */
+  name = mxmlElementGetAttr(
+    (mxml_node_t*)file_node,
+    "name"
+    );
+  if (name == NULL) {
+    free(text);
+    return MC_ERR_PARSE;
+  }
+  afd = agent_file_data_NewWithData(name, text);
+  free(text);
+  agent_file_list_Add(
+      agent->datastate->tasks[index]->agent_file_list,
+      afd);
   return MC_SUCCESS;
 }
 

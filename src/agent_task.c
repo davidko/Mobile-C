@@ -59,6 +59,8 @@ agent_task_New(void)
   task->saved_variables = NULL;
   task->num_saved_variables = 0;
 
+  task->agent_file_list = agent_file_list_New();
+
   return task;
 }
 

@@ -133,6 +133,24 @@ AP_QUEUE_GENERIC_DECL_TEMPLATE(
     int,
     char* )
 
+/* Agent Files */
+#include "agent_file_data.h"
+AP_QUEUE_DECL_TEMPLATE(
+    agent_file_list,
+    agent_file_data)
+
+AP_QUEUE_GENERIC_DECL_TEMPLATE(
+    agent_file_list,
+    Search,
+    agent_file_data_t*,
+    char* )
+
+AP_QUEUE_GENERIC_DECL_TEMPLATE(
+    agent_file_list,
+    Remove,
+    int,
+    char* )
+
 /* Mail Queue */
 AP_QUEUE_DECL_TEMPLATE(
     mail_queue,
