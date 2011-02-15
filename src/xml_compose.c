@@ -454,7 +454,7 @@ agent_xml_compose__task(agent_p agent, int index)
         agent,
         index,
         agent_file_data);
-    free(agent_file_data);
+    agent_file_data_Destroy(agent_file_data);
     if(tmp_node == NULL) {
       fprintf(stderr, "Compose error. %s:%d\n", __FILE__, __LINE__);
       return NULL;

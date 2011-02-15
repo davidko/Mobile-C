@@ -56,6 +56,8 @@
 #include <time.h>
 #endif
 
+#include <b64/cdecode.h>
+
 #include "include/libmc.h"
 #include "include/mc_error.h"
 #include "include/macros.h"
@@ -615,14 +617,10 @@ EXPORTMC int MC_AgentListFiles(
       agent->datastate->tasks[task_num]->agent_file_list );
   *num_files = size;
   *names = (char**)malloc(sizeof(char*)*(size+1));
-  for(
-    i = 0; 
-    i < size; 
+  for( i = 0; i < size; i++) {
     afd = agent_file_list_SearchIndex(
         agent->datastate->tasks[task_num]->agent_file_list,
-        i)
-    )
-  {
+        i);
     if(afd == NULL) { return -1; }
     (*names)[i] = strdup(afd->name);
   }
@@ -636,6 +634,41 @@ EXPORTMC int MC_AgentRetrieveFile(
     const char* name,
     const char* save_path)
 {
+  FILE *fp;
+  agent_file_data_t* agent_file_data;
+  base64_decodestate decode_state;
+  void* file_data;
+  int size;
+  /* Check the task_num */
+  if (task_num >= agent->datastate->number_of_tasks) {
+    return -2;
+  }
+  /* Find the file */
+  agent_file_data = agent_file_list_Search(
+      agent->datastate->tasks[task_num]->agent_file_list,
+      name);
+  if(agent_file_data == NULL) {
+    return -3;
+  }
+
+  /* Try to open the file for writing */
+  fp = fopen(save_path, "wb");
+  if (fp == NULL) {
+    return -1;
+  }
+
+  /* Decode the file */
+  base64_init_decodestate(&decode_state);
+  file_data = malloc(strlen(agent_file_data->data));
+  memset(file_data, 0, strlen(agent_file_data->data));
+  size = base64_decode_block(
+      agent_file_data->data, 
+      strlen(agent_file_data->data),
+      file_data, 
+      &decode_state);
+  fwrite(file_data, size, 1, fp);
+  fclose(fp);
+  return 0;
 }
 
 EXPORTMC int MC_AgentReturnArrayExtent(
