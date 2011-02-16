@@ -11,6 +11,9 @@ all:
 	cd src/security/xyssl-0.9/library
 	nmake -f xyssl.mak
 	cd ../../../../
+	cd src/libb64-1.2/src
+	nmake -f makefile.win32
+	cd ../../..
 	cd src
 	nmake -f mobilec.mak
 	cd ../
