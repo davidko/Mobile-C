@@ -83,6 +83,7 @@ agent_file_data_InitializeFromFilename(const char* filename)
 agent_file_data_p
 agent_file_data_Encode(const char* name, void* data, int size)
 {
+  return NULL;
 }
 
 int agent_file_data_Destroy(agent_file_data_p agent_file_data)

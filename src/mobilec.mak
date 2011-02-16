@@ -1,17 +1,18 @@
 !include "windows.mak"
 
-CFLAGS=$(CFLAGSDEBUG) /IC:\ch\extern\include /Iinclude /I..\ /Imxml-2.2.2
+CFLAGS=$(CFLAGSDEBUG) /IC:\ch\extern\include /Iinclude /I..\ /Imxml-2.2.2 /Ilibb64-1.2\include
 #CFLAGS=$(CFLAGSRELEASE) /IC:\ch\extern\include /Iinclude /I..\ /Imxml-2.2.2
 
-LFLAGS=$(LFLAGSDEBUG) /LIBPATH:"C:\Ch\extern\lib" /LIBPATH:"mxml-2.2.2" /LIBPATH:"security\xyssl-0.9\library" /LIBPATH:"mc_list" /LIBPATH:"mc_sync"
-#LFLAGS=$(LFLAGSRELEASE) /LIBPATH:"C:\Ch\extern\lib" /LIBPATH:"mxml-2.2.2" /LIBPATH:"security\xyssl-0.9\library" /LIBPATH:"mc_list" /LIBPATH:"mc_sync"
+LFLAGS=$(LFLAGSDEBUG) /LIBPATH:"C:\Ch\extern\lib" /LIBPATH:"mxml-2.2.2" /LIBPATH:"security\xyssl-0.9\library" /LIBPATH:"mc_list" /LIBPATH:"mc_sync" /LIBPATH:"libb64-1.2\src"
+#LFLAGS=$(LFLAGSRELEASE) /LIBPATH:"C:\Ch\extern\lib" /LIBPATH:"mxml-2.2.2" /LIBPATH:"security\xyssl-0.9\library" /LIBPATH:"mc_list" /LIBPATH:"mc_sync" /LIBPATH:"libb64-1.2\src"
 
-LIBS=mc_list.lib mc_sync.lib wsock32.lib mxml.lib embedch.lib
+LIBS=mc_list.lib mc_sync.lib wsock32.lib mxml.lib embedch.lib libb64.lib
 
 OBJS= acc.obj \
 									 agent.obj \
 									 agent_return_data.obj \
 									 agent_datastate.obj \
+									 agent_file_data.obj \
 									 agent_mailbox.obj \
 									 agent_task.obj \
 									 ams.obj \
@@ -50,6 +51,8 @@ agent_return_data.obj:agent_return_data.c
 	$(CC) agent_return_data.c $(CFLAGS) 
 agent_datastate.obj:agent_datastate.c 
 	$(CC) agent_datastate.c $(CFLAGS) 
+agent_file_data.obj:agent_file_data.c
+	$(CC) agent_file_data.c $(CFLAGS)
 agent_mailbox.obj:agent_mailbox.c 
 	$(CC) agent_mailbox.c $(CFLAGS) 
 agent_task.obj:agent_task.c 

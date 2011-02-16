@@ -664,7 +664,7 @@ EXPORTMC int MC_AgentRetrieveFile(
   size = base64_decode_block(
       agent_file_data->data, 
       strlen(agent_file_data->data),
-      file_data, 
+      (char*)file_data, 
       &decode_state);
   fwrite(file_data, size, 1, fp);
   fclose(fp);

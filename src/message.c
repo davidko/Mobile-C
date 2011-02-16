@@ -673,8 +673,6 @@ message_send_Thread( LPVOID arg )
   struct sockaddr_rc btsktin;
 #endif
 #endif
-  struct addrinfo* myaddrinfo;
-  struct addrinfo hint_addrinfo;
   char *buf;
   char *hostname;
 #ifndef _WIN32
