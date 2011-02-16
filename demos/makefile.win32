@@ -199,6 +199,9 @@ clean:
 	cd ./getting_started/hello_world/
 	nmake -f makefile.win32 clean
 	cd ../..
+	cd ./miscellaneous/agent_file_attachment/
+	nmake -f makefile.win32 clean
+	cd ../..
 	cd ./miscellaneous/agent_squad_test/
 	nmake -f makefile.win32 clean
 	cd ../..

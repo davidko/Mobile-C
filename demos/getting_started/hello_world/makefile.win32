@@ -6,10 +6,11 @@ MOBILEC_DIR=..\..\..
 CC=cl
 LN=link
 INC=-IC:\Ch\extern\include -I$(MOBILEC_DIR)\src\include
-CFLAG=/MD
+CFLAGSDEBUG=/Od /D "WIN32" /D "_DEBUG" /D "_VC80_UPGRADE=0x0710" /D "_MBCS" /FD /EHsc /MDd /Fd"vc90.pdb" /W3 /nologo /c /Zi /TP /errorReport:prompt
+CFLAG=/MD /Zi /Z7 /Od
 #LFLAG=C:\Ch\extern\lib\chsdk.lib \
 #      C:\Ch\extern\lib\embedch.lib advapi32.lib
-LFLAG=/INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\ch\extern\lib" \
+LFLAG=/Zi /INCREMENTAL:yes /NOLOGO /LIBPATH:"C:\ch\extern\lib" \
 	/NODEFAULTLIB:"libcmt.lib" \
 	/DEBUG \
 	/DYNAMICBASE:NO \

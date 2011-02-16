@@ -570,7 +570,7 @@ EXPORTMC int MC_AgentAddTaskFromFile(
   fptr = fopen(filename, "r");
   len = fread(code, sizeof(char), codesize, fptr);
   fclose(fptr);
-  if(len != codesize) {return -1;}
+  if(len <= 0) {return -1;}
   return_val = MC_AgentAddTask(
       agent,
       code,
@@ -1221,7 +1221,7 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFileWithWorkgroup(
   fptr = fopen(filename, "r");
   len = fread(code, sizeof(char), codesize, fptr);
   fclose(fptr);
-  if(len != codesize) {return NULL;}
+  if(len <= 0) {return NULL;}
 
   agent = MC_ComposeAgentWithWorkgroup(
      name, 
@@ -1897,7 +1897,7 @@ MC_LoadAgentFromFile(MCAgency_t attr, const char* filename)
   fp = fopen(filename, "r");
   len = fread((void*)buf, filestat.st_size, 1, fp);
   fclose(fp);
-  if(len != filestat.st_size) {return -1;}
+  if(len <= 0) {return -1;}
 
   message = message_New();
   if ( 
@@ -2326,7 +2326,7 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
   fp = fopen(filename, "r");
   len = fread((void*)buf, filestat.st_size, 1, fp);
   fclose(fp);
-  if(len != filestat.st_size) {return -1;}
+  if(len <= 0) {return -1;}
 
   message = message_New();
   if( 
