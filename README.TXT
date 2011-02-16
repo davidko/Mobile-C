@@ -107,6 +107,14 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.1.2, February 16, 2011
+*)  Fixed some include files and preprocessor logic that caused a syntax error
+    in Windows
+*)  MC_DeleteAgent now flushes an agent from the agency after terminating it.
+*)  Added API functions to allow agents to carry files with them as they
+    migrate. The new API functions are MC_AgentAttachFile(),
+    MC_AgentListFiles(), MC_AgentRetrieveFile(), and their "mc_" counterparts.
+    
 Version MobileC v2.1.1, February 4, 2011
 *)  Fixed a preprocessing bug that caused a syntax error on Linux systems w/out
     the readline library
