@@ -1,0 +1,22 @@
+
+CC=cl
+LN=link
+INC=-I../include
+CFLAGS=/MD $(INC) /c
+#LFLAG=C:\Ch\extern\lib\chsdk.lib \
+#      C:\Ch\extern\lib\embedch.lib advapi32.lib
+LFLAGS=/INCREMENTAL:NO /NOLOGO 
+
+target: libb64.lib
+
+cencode.obj:cencode.c
+  $(CC) cencode.c $(CFLAGS)
+
+cdecode.obj:cdecode.c
+  $(CC) cdecode.c $(CFLAGS)
+
+libb64.lib:cencode.obj cdecode.obj
+  lib $(LFLAGS) cencode.obj cdecode.obj /OUT:libb64.lib
+
+clean: 
+	rm libb64.lib *.obj
