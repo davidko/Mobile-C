@@ -7,6 +7,6 @@
 	strtok( buf, delim )
 #define strdup( str ) \
   _strdup( str )
-#define HAVE_LIBBLUETOOTH 1
+//#define HAVE_LIBBLUETOOTH 1
 #undef NEW_SECURITY 
 #undef MC_SECURITY
