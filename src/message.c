@@ -660,6 +660,8 @@ message_send_Thread( LPVOID arg )
 #ifndef _WIN32
   int skt;
   struct sockaddr_in sktin;
+  struct addrinfo* myaddrinfo;
+  struct addrinfo hint_addrinfo;
 #else
   SOCKET skt;
   SOCKADDR_IN sktin;
@@ -671,8 +673,6 @@ message_send_Thread( LPVOID arg )
   SOCKADDR_BTH btsktin;
 #else
   struct sockaddr_rc btsktin;
-  struct addrinfo* myaddrinfo;
-  struct addrinfo hint_addrinfo;
 #endif
 #endif
   char *buf;
