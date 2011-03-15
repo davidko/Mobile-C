@@ -125,8 +125,6 @@ MC_WaitSignal
 #ifndef _MOBILEC_H_
 #define _MOBILEC_H_
 
-#include "macros.h"
-
 #ifdef WIN32
 	#ifdef _MC_DLL
 		// Building a .dll - export functions as marked
@@ -278,7 +276,11 @@ typedef struct stationary_agent_info_s{
 	struct agent_s* agent;
 	MCAgency_t attr; /* DEPRECATED: Use the 'agency' member instead */
 	MCAgency_t agency;
-	THREAD_T thread;
+#ifdef _WIN32
+	HANDLE thread;
+#else
+  pthread_t thread;
+#endif
 } stationary_agent_info_t;
 
 #ifndef AGENT_T
