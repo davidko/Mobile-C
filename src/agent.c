@@ -222,6 +222,8 @@ agent_New(void)
   COND_NEW(agent->agent_status_cond);
   COND_INIT(agent->agent_status_cond);
 
+  agent->mailbox = agent_mailbox_New();
+
   return agent;
 }
 
