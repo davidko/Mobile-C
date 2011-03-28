@@ -270,7 +270,7 @@ EXPORTMC int MC_AclSetProtocol(
 
 EXPORTMC int MC_AclSetConversationID(
     fipa_acl_message_t* acl,
-    char* id)
+    const char* id)
 {
 
   if(!id)

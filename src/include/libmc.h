@@ -437,7 +437,7 @@ EXPORTMC int MC_AclSetProtocol(
 
 EXPORTMC int MC_AclSetConversationID(
     struct fipa_acl_message_s* acl,
-    char* id);
+    const char* id);
 
 EXPORTMC int MC_AclSetPerformative(
     struct fipa_acl_message_s* acl,
