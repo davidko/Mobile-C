@@ -90,6 +90,7 @@ message_New(void)
   message->to_address = NULL;
   message->target = NULL;
   message->agent_xml_flag = 0;
+  message->sending_agent_name = NULL;
   return message;
 }
 
