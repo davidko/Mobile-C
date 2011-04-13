@@ -442,6 +442,9 @@ message_Destroy(message_p message)
   if(message->target != NULL) {
     free(message->target);
   }
+  if(message->sending_agent_name != NULL) {
+    free(message->sending_agent_name);
+  }
 
   free(message);
   message = NULL;
@@ -637,6 +640,9 @@ int str2ba(const char *str, bdaddr_t *ba)
 #define MSG_THREAD_EXIT() \
 	free(arg); \
 	message_Destroy(message); \
+  if(myaddrinfo) { \
+    freeaddrinfo(myaddrinfo); \
+  } \
 	MUTEX_LOCK(&mc_platform->acc->msg_thread_lock); \
 	mc_platform->acc->num_msg_threads--; \
 	COND_SIGNAL(&mc_platform->acc->msg_thread_cond); \
@@ -871,7 +877,7 @@ message_send_Thread( LPVOID arg )
 #endif /* NEW_SECURITY */
     {
       // Now we should receive an HTTP response 
-      buffer = (char*) malloc(sizeof(char) * (SOCKET_INPUT_SIZE + 1));
+      buffer = (char*) malloc(sizeof(char) * (SOCKET_INPUT_SIZE + 2));
       CHECK_NULL(buffer, exit(0););
       mtp_http = mtp_http_New();
 			message_string = dynstring_New();

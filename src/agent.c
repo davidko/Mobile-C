@@ -467,6 +467,9 @@ agent_Destroy(agent_p agent)
 	if (agent->wg_code != NULL) {
 		free(agent->wg_code);
 	}
+  if (agent->agent_address != NULL) {
+    free(agent->agent_address);
+  }
   /* Terminate the agent datastate memory */
   MUTEX_DESTROY(agent->lock);
   MUTEX_LOCK(agent->agent_status_lock);

@@ -27,26 +27,23 @@ dynstring_t* dynstring_New(void)
   return message;
 }
 
-int dynstring_Append(dynstring_t* msg, char* str)
+int dynstring_Append(dynstring_t* msg, const char* str)
 {
   char* tmp;
   /* Check to see if we need to reallocate the message buffer */
   while ( (strlen(str)+4) > (msg->size - msg->len) ) {
     /* Increase the size of the buffer by COMPOSE_BLOCKSIZE */
-    tmp = (char*)malloc(
-        sizeof(char) * 
-        (msg->size + COMPOSE_BLOCKSIZE)
-        );
-    if (tmp == NULL) {
-      fprintf(stderr, "Memory Error. %s:%d\n", __FILE__, __LINE__);
-      exit(0);
-    }
     msg->size = msg->size + COMPOSE_BLOCKSIZE;
-		memset(tmp, 0, msg->size);
-    strcpy(tmp, msg->message);
-    free(msg->message);
-    msg->message = tmp;
   }
+  tmp = (char*)malloc( sizeof(char) * (msg->size));
+  if (tmp == NULL) {
+    fprintf(stderr, "Memory Error. %s:%d\n", __FILE__, __LINE__);
+    exit(0);
+  }
+  memset(tmp, 0, msg->size);
+  strcpy(tmp, msg->message);
+  free(msg->message);
+  msg->message = tmp;
   strcat(msg->message, str);
   msg->len += strlen(str);
 

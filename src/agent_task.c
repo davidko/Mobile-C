@@ -127,6 +127,8 @@ agent_task_Copy(agent_task_p task)
 	cp_task->saved_variables[i] = NULL;
 	cp_task->num_saved_variables = task->num_saved_variables;
 
+  cp_task->agent_file_list = agent_file_list_Copy(task->agent_file_list);
+
 	return cp_task;
 }
 
@@ -157,6 +159,8 @@ agent_task_Destroy( agent_task_p agent_task )
   }
 
   interpreter_variable_data_Destroy(agent_task->agent_return_data);
+
+  agent_file_list_Destroy(agent_task->agent_file_list);
 
   free(agent_task);
 
