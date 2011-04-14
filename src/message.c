@@ -879,6 +879,7 @@ message_send_Thread( LPVOID arg )
     {
       // Now we should receive an HTTP response 
       buffer = (char*) malloc(sizeof(char) * (SOCKET_INPUT_SIZE + 2));
+      memset(buffer, 0, sizeof(char) * (SOCKET_INPUT_SIZE + 2));
       CHECK_NULL(buffer, exit(0););
       mtp_http = mtp_http_New();
 			message_string = dynstring_New();
