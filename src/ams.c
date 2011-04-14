@@ -278,7 +278,6 @@ ams_Thread( LPVOID arg )
 {
   mc_platform_p mc_platform = (mc_platform_p)arg;
   ams_p ams = mc_platform->ams;
-  int ams_thread_count = 0; 
   while(1) {
     MUTEX_LOCK(ams->runflag_lock);
     MUTEX_LOCK(mc_platform->quit_lock);
@@ -312,7 +311,6 @@ ams_Thread( LPVOID arg )
     MUTEX_UNLOCK(mc_platform->quit_lock);
     MUTEX_UNLOCK(ams->runflag_lock);
     ams_ManageAgentList(ams);
-    ams_thread_count++;
   }
   THREAD_EXIT();
 }

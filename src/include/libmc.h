@@ -1272,6 +1272,19 @@ EXPORTMC extern int MC_GetAgentStatus(MCAgent_t agent);
 EXPORTMC extern enum MC_AgentType_e MC_GetAgentType(MCAgent_t agent);
 
 /**
+ * \brief           Get all of the agents on an agency
+ *  
+ * \param agency    A handle to a running Mobile-C agency
+ * \param agents    The address of an uninitialized pointer to an agent. An
+ *                  array of agents will be allocated, which will need to be
+ *                  freed by the user. 
+ * \param num_agents A pointer to an integer. The integer will be filled with
+ *                  the number of agents allocated for the 'agents' variable. 
+ */
+EXPORTMC int 
+MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents);
+
+/**
  * \brief           Get an agent's xml string
  *
  * \return          a malloc'd character string containing the agent's xml code
