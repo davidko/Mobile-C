@@ -638,6 +638,7 @@ int str2ba(const char *str, bdaddr_t *ba)
 }
 #endif
 
+#ifndef _WIN32
 #define MSG_THREAD_EXIT() \
 	free(arg); \
 	message_Destroy(message); \
@@ -649,6 +650,16 @@ int str2ba(const char *str, bdaddr_t *ba)
 	COND_SIGNAL(&mc_platform->acc->msg_thread_cond); \
 	MUTEX_UNLOCK(&mc_platform->acc->msg_thread_lock); \
 	THREAD_EXIT()
+#else
+#define MSG_THREAD_EXIT() \
+	free(arg); \
+	message_Destroy(message); \
+	MUTEX_LOCK(&mc_platform->acc->msg_thread_lock); \
+	mc_platform->acc->num_msg_threads--; \
+	COND_SIGNAL(&mc_platform->acc->msg_thread_cond); \
+	MUTEX_UNLOCK(&mc_platform->acc->msg_thread_lock); \
+	THREAD_EXIT()
+#endif
 
 #ifndef _WIN32
   void*

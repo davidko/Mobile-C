@@ -125,7 +125,8 @@ MC_WaitSignal
 #ifndef _MOBILEC_H_
 #define _MOBILEC_H_
 
-#ifdef WIN32
+#ifdef _WIN32
+#include<windows.h>
 	#ifdef _MC_DLL
 		// Building a .dll - export functions as marked
 		#define EXPORTMC _declspec(dllexport)
