@@ -107,6 +107,13 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.1.3, April 20, 2011
+*)  Added missing makefile for Windows
+*)  Fixed some Windows syntax errors
+*)  Fixed some memory leaks
+*)  Fixed some segfaults related to buffer initialization, message structure
+    initialization.
+
 Version MobileC v2.1.2, February 16, 2011
 *)  Fixed some include files and preprocessor logic that caused a syntax error
     in Windows
