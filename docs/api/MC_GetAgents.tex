@@ -1,0 +1,57 @@
+\rhead{\bf MC\_GetAgents()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+\phantomsection
+{\LARGE \bf MC\_GetAgents()\index{MC\_GetAgents()}}\\
+\addcontentsline{toc}{section}{MC\_GetAgents()}
+\label{api:MC_GetAgents()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_GetAgents}({\bf MCAgency\_t} $agency$, {\bf MCAgent\_t**} $agents$, {\bf int*} $num\_agents$, {\bf unsigned int} $agent\_status\_flags$);\\
+
+\noindent
+{\bf Purpose}\\
+Retrieve an array agents currently registered on an agency. The types of agents
+to retrieve are filtered by the function argument
+\texttt{agent\_status\_flags}. \\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item
+\begin{tabular}{p{30 mm}p{145 mm}} 
+$agency$ & An initialized agency handle to get agents from.\\
+$agents$ & The address of a \texttt{MCAgent\_t*} type variable. \\
+$num\_agents$ & A place to store the number of returned agents.  \\
+$agent\_status\_flags$ & Agent status flags to filter the search results. \\
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function returns a filtered list of agents currently residing on an
+agency. The filter is based on agent statuses, which are enumerated by the enum
+type \texttt{MC\_AgentStatus\_e}. For instance, to obtain a list of agents
+which have an agent status of \texttt{MC\_AGENT\_ACTIVE} or \texttt{MC\_AGENT\_NEUTRAL},
+the user may set the \texttt{agent\_status\_flag} to a value of 
+\texttt{((1<<MC\_AGENT\_ACTIVE) | (1<<MC\_AGENT\_NEUTRAL))}.
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/mc_get_agents_example/client.c}}
+
+\noindent
+{\bf See Also}\\
+MC\_GetAgent().
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\
