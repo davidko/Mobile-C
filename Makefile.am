@@ -16,6 +16,7 @@ SUBDIRS = \
   demos/miscellaneous/prompt_example \
   demos/miscellaneous/mc_sample_app \
   demos/miscellaneous/simple_send \
+  demos/miscellaneous/mc_get_agents_example \
   demos/miscellaneous/migration_tests_20090522 \
   demos/mobilec_security/agent_workgroup_example \
   demos/synchronization/cspace_mutex_example \

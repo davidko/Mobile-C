@@ -142,6 +142,7 @@ AC_CONFIG_FILES([Makefile
                 demos/miscellaneous/prompt_example/Makefile
                 demos/miscellaneous/mc_sample_app/Makefile
                 demos/miscellaneous/simple_send/Makefile
+                demos/miscellaneous/mc_get_agents_example/Makefile
                 demos/miscellaneous/migration_tests_20090522/Makefile
                 demos/mobilec_security/agent_workgroup_example/Makefile
                 demos/synchronization/cspace_mutex_example/Makefile
