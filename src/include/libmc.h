@@ -1272,6 +1272,26 @@ EXPORTMC extern int MC_GetAgentStatus(MCAgent_t agent);
 EXPORTMC extern enum MC_AgentType_e MC_GetAgentType(MCAgent_t agent);
 
 /**
+ * \brief           Get a list of agents that match a certain agent status
+ * 
+ * \param agency    A handle to a running Mobile-C agency
+ * \param agents    The address of an uninitialized pointer to an agent. An
+ *                  array of agents will be allocated, which will need to be
+ *                  freed by the user. 
+ * \param num_agents A pointer to an integer. The integer will be filled with
+ *                  the number of agents allocated for the 'agents' variable. 
+ * \param agent_status_flags These contain flags of agent statuses. For
+ *                  instance, if a user wishes to retrieve all agents with
+ *                  either the status MC_WAIT_CH or MC_AGENT_NEUTRAL, they may
+ *                  use an agent_status_flag of ((1<<MC_WAIT_CH) | (1<<MC_AGENT_NEUTRAL)).
+ *                  All valid agent statuses are enumerated in the enumeration 
+ *                  MC_AgentStatus_e, located in libmc.h.
+ */
+
+EXPORTMC int
+MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int agent_status_flags);
+
+/**
  * \brief           Get all of the agents on an agency
  *  
  * \param agency    A handle to a running Mobile-C agency

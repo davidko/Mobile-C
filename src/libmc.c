@@ -1710,6 +1710,54 @@ MC_GetAgentType(MCAgent_t agent) /*{{{*/
   }
 } /*}}}*/
 
+EXPORTMC int
+MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int agent_status_flags)
+{
+  int halt;
+  int index = 0;
+  int i;
+  MCAgent_t agent;
+  MUTEX_LOCK(attr->mc_platform->giant_lock);
+  halt = (attr->mc_platform->giant == 1) ? 1 : 0;
+  MUTEX_UNLOCK(attr->mc_platform->giant_lock);
+  *num_agents = 0;
+  int total_agents;
+  if (halt)
+    MC_HaltAgency(attr);
+  /* Count the number of agents */
+  while ((agent = agent_queue_SearchIndex(attr->mc_platform->agent_queue, index)) != NULL) {
+    if((1<<agent->agent_status) & agent_status_flags) {
+      (*num_agents)++;
+    }
+    index++;
+  }
+
+  if (*num_agents == 0) {
+    *agents = NULL;
+    return -1;
+  }
+  total_agents = index;
+
+  *agents = (MCAgent_t *)malloc(sizeof(MCAgent_t*) * *num_agents);
+  /* Assign the agents */
+  i = 0;
+  for(index = 0; index < total_agents; index++) {
+    agent = agent_queue_SearchIndex
+        (
+         attr->mc_platform->agent_queue,
+         index
+        );
+
+    if((1<<agent->agent_status) & agent_status_flags) {
+      (*agents)[i] = agent;
+      i++;
+    }
+  }
+  if(halt)
+    MC_ResumeAgency(attr);
+  return 0;
+}
+
 EXPORTMC int 
 MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
 {
