@@ -1734,6 +1734,8 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
 
   if (*num_agents == 0) {
     *agents = NULL;
+    if(halt)
+      MC_ResumeAgency(attr);
     return -1;
   }
   total_agents = index;
