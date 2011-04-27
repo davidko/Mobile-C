@@ -134,7 +134,7 @@ int agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_nam
 agent_Copy(const agent_p agent)
 {
   agent_p cp_agent;
-  cp_agent = (agent_p)malloc(sizeof(agent_t));
+  cp_agent = agent_New();
 
   MUTEX_LOCK(agent->lock);
   /* id */
