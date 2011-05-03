@@ -194,6 +194,8 @@ agent_Copy(const agent_p agent)
 	/* Mailbox */
 	cp_agent->mailbox = agent_mailbox_New();
 
+  cp_agent->agent_share_data_queue = agent_share_data_queue_Copy(agent->agent_share_data_queue);
+
   return cp_agent;
 }
 
@@ -223,6 +225,8 @@ agent_New(void)
   COND_INIT(agent->agent_status_cond);
 
   agent->mailbox = agent_mailbox_New();
+
+  agent->agent_share_data_queue = agent_share_data_queue_New();
 
   return agent;
 }
@@ -274,6 +278,9 @@ agent_NewBinary( struct mc_platform_s *mc_platform)
 
   /* Set up an empty mailbox */
   agent->mailbox = agent_mailbox_New();
+
+  /* Set up data share */
+  agent->agent_share_data_queue = agent_share_data_queue_New();
 
   /* In the future we will compare the current tasks server name to 
      the one on the server, presently this is not implemented */
@@ -358,6 +365,9 @@ agent_Initialize(
 
   /* Set up an empty mailbox */
   agent->mailbox = agent_mailbox_New();
+
+  /* Set up agent share */
+  agent->agent_share_data_queue = agent_share_data_queue_New();
 
   /* parse the xml */
   agent->datastate = agent_datastate_New();
@@ -492,6 +502,7 @@ agent_Destroy(agent_p agent)
   agent_datastate_Destroy(agent->datastate);
   free(agent->run_lock);
   agent_mailbox_Destroy(agent->mailbox);
+  agent_share_data_queue_Destroy(agent->agent_share_data_queue);
   /* deallocate the agent */
   free(agent);
   agent = NULL;
@@ -749,6 +760,11 @@ agent_ChScriptInitVar(ChInterp_t* interp)
       *interp,
       "int mc_AgentAttachFile(void* agent, const char* name, const char* filepath);",
       (ChFuncdl_t)MC_AgentAttachFile_chdl
+      );
+  Ch_DeclareFunc(
+      *interp,
+      "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned int size);",
+      (ChFuncdl_t)MC_AgentDataShare_Add_chdl
       );
   Ch_DeclareFunc(
       *interp,

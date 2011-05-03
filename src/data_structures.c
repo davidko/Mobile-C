@@ -273,6 +273,58 @@ fipa_acl_message_p mail_queue_SearchReceivers( mail_queue_p mail_queue, const ch
   return ret;
 }
 
+/* Agent Data Share */
+#include "include/agent_share_data.h"
+AP_QUEUE_STD_DEFN_TEMPLATE(
+    agent_share_data_queue,
+    agent_share_data
+    )
+AP_QUEUE_SEARCH_TEMPLATE(
+    agent_share_data_queue,
+    Search,
+    agent_share_data,
+    char*,
+    (!strcmp(node->name, key))
+    )
+AP_QUEUE_REMOVE_TEMPLATE(
+    agent_share_data_queue,
+    Remove,
+    agent_share_data,
+    char*,
+    (!strcmp(node->name, key))
+    )
+
+agent_share_data_p agent_share_data_New()
+{
+  agent_share_data_p data;
+  data = (agent_share_data_t*)malloc(sizeof(agent_share_data_t));
+  memset(data, 0, sizeof(agent_share_data_t));
+  return data;
+}
+
+agent_share_data_p agent_share_data_Copy(agent_share_data_p agent_share_data)
+{
+  agent_share_data_p copy;
+  copy = agent_share_data_New();
+  copy->size = agent_share_data->size;
+  if(agent_share_data->name != NULL) {
+    copy->name = strdup(agent_share_data->name);
+  }
+  memcpy(copy->data, agent_share_data->data, agent_share_data->size);
+  return copy;
+}
+
+int agent_share_data_Destroy(agent_share_data_p agent_share_data)
+{
+  if(agent_share_data->name) {
+    free(agent_share_data->name);
+  }
+  if(agent_share_data->data) {
+    free(agent_share_data->data);
+  }
+  return 0;
+}
+
 /* Mailbox Queue */
 AP_QUEUE_STD_DEFN_TEMPLATE(
     mailbox_queue,

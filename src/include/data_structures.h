@@ -41,6 +41,20 @@ struct mc_platform_s;
 #include "connection.h"
 /* Fipa mailbox */
 #include "fipa_acl.h"
+
+/* Agent Data Share */
+#include "agent_share_data.h"
+AP_QUEUE_DECL_TEMPLATE(
+    agent_share_data_queue,
+    agent_share_data
+    )
+AP_QUEUE_GENERIC_DECL_TEMPLATE(
+    agent_share_data_queue,
+    Search,
+    agent_share_data_t*,
+    const char*
+    )
+
 /* Agent Mailbox */
 #include "agent_mailbox.h"
 AP_QUEUE_DECL_TEMPLATE(
