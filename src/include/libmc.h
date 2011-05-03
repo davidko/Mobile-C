@@ -1305,6 +1305,17 @@ EXPORTMC int
 MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents);
 
 /**
+ * \brief           Get the number of agents residing on an agency
+ *
+ * \param attr      A handle to a running Mobile-C agency
+ * \param num_agents A pointer to an integer to fill with the number of agents
+ *
+ * \return          Returns 0 on success, non-zero on failure.
+ */
+EXPORTMC int
+MC_GetNumAgents(MCAgency_t attr, int* num_agents);
+
+/**
  * \brief           Get an agent's xml string
  *
  * \return          a malloc'd character string containing the agent's xml code

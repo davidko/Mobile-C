@@ -1797,6 +1797,15 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
 } /*}}}*/
 
 EXPORTMC int
+MC_GetNumAgents(MCAgency_t attr, int* num_agents)
+{
+  int num;
+  num = agent_queue_GetSize(attr->mc_platform->agent_queue);
+  *num_agents = num;
+  return 0;
+}
+
+EXPORTMC int
 MC_HaltAgency(MCAgency_t attr) /*{{{*/
 {
   MUTEX_LOCK(attr->mc_platform->giant_lock);
