@@ -1318,6 +1318,8 @@ MC_CopyAgent(MCAgent_t* agent_out, const MCAgent_t agent_in) /*{{{*/
 EXPORTMC int 
 MC_DeleteAgent(MCAgent_t agent) /*{{{*/
 {
+    struct mc_platform_s* mc_platform;
+    char* agentName;
     /* Error Checking */
     CHECK_NULL(agent, return MC_ERR_INVALID;);
 
@@ -1326,20 +1328,15 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
       return MC_ERR_INVALID_ARGS;
     }
 
+    mc_platform = agent->mc_platform;
+    agentName = strdup(agent->name);
+
     /* First, make sure the agent is no longer running */
     MC_TerminateAgent(agent);
 
-    /* Set the agent status to be flushed */
-    agent->agent_status = MC_WAIT_FINISHED;
-    /* Make the AMS run */
-    if(agent->mc_platform) {
-      MUTEX_LOCK( agent->mc_platform->MC_signal_lock);
-      MUTEX_UNLOCK( agent->mc_platform->MC_signal_lock );
-      MUTEX_LOCK(agent->mc_platform->ams->runflag_lock);
-      agent->mc_platform->ams->run = 1;
-      COND_SIGNAL(agent->mc_platform->ams->runflag_cond);
-      MUTEX_UNLOCK(agent->mc_platform->ams->runflag_lock);
-    }
+    /* Delete the agent from the list */
+    agent_queue_RemoveName(mc_platform->agent_queue, agentName);
+    free(agentName);
 
     return MC_SUCCESS;
 } /*}}}*/
@@ -1347,6 +1344,8 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
 EXPORTMC int 
 MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
 {
+    struct mc_platform_s* mc_platform;
+    char* agentName;
     /* Error Checking */
     CHECK_NULL(agent, return MC_ERR_INVALID;);
 
@@ -1359,20 +1358,15 @@ MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
       }
     }
 
+    mc_platform = agent->mc_platform;
+    agentName = strdup(agent->name);
+
     /* First, make sure the agent is no longer running */
     MC_TerminateAgentWG(calling_agent, agent);
 
-    /* Set the agent status to be flushed */
-    agent->agent_status = MC_WAIT_FINISHED;
-    /* Make the AMS run */
-    if(agent->mc_platform) {
-      MUTEX_LOCK( agent->mc_platform->MC_signal_lock);
-      MUTEX_UNLOCK( agent->mc_platform->MC_signal_lock );
-      MUTEX_LOCK(agent->mc_platform->ams->runflag_lock);
-      agent->mc_platform->ams->run = 1;
-      COND_SIGNAL(agent->mc_platform->ams->runflag_cond);
-      MUTEX_UNLOCK(agent->mc_platform->ams->runflag_lock);
-    }
+    /* Delete the agent from the list */
+    agent_queue_RemoveName(mc_platform->agent_queue, agentName);
+    free(agentName);
 
     return MC_SUCCESS;
 } /*}}}*/

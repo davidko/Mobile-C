@@ -236,6 +236,7 @@ int name##_##func_name( name##_p name, const search_type key ) \
 { \
   int err_code = MC_ERR_NOT_FOUND; \
   struct listNode_s* parsenode; \
+  struct listNode_s* parsenode_last = NULL; \
   struct node_type##_s* node; \
   node = NULL; \
   \
@@ -252,9 +253,20 @@ int name##_##func_name( name##_p name, const search_type key ) \
   { \
     node = (node_type##_t*)parsenode->node_data; \
     if (search_expression) { \
+      if(parsenode_last == NULL) { \
+        /* Node to remove is the head */ \
+        name->list->listhead = parsenode->next; \
+        node_type##_Destroy(node); \
+        free(parsenode); \
+      } else { \
+        parsenode_last->next = parsenode->next; \
+        node_type##_Destroy(node); \
+        free(parsenode); \
+      } \
       break; \
       err_code = MC_SUCCESS; \
     } \
+    parsenode_last = parsenode; \
   } \
   MUTEX_UNLOCK(name->lock); \
   return err_code; \
