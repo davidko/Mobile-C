@@ -174,7 +174,6 @@ ams_ManageAgentList(ams_p ams)
           current_agent->agent_status = MC_WAIT_FINISHED;
           COND_BROADCAST(current_agent->agent_status_cond);
           MUTEX_UNLOCK(current_agent->agent_status_lock);
-          MUTEX_UNLOCK(current_agent->lock);
           MUTEX_LOCK(ams->runflag_lock);
           ams->run = 1;
           MUTEX_UNLOCK(ams->runflag_lock);

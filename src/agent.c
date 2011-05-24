@@ -471,7 +471,6 @@ agent_Destroy(agent_p agent)
     free(agent->agent_address);
   }
   /* Terminate the agent datastate memory */
-  MUTEX_DESTROY(agent->lock);
   MUTEX_LOCK(agent->agent_status_lock);
   if (agent->agent_status == MC_AGENT_NEUTRAL) {
     MUTEX_UNLOCK(agent->agent_status_lock);
@@ -487,7 +486,8 @@ agent_Destroy(agent_p agent)
   COND_DESTROY(agent->agent_status_cond);
   free(agent->agent_status_cond);
 
-
+  MUTEX_UNLOCK(agent->lock);
+  MUTEX_DESTROY(agent->lock);
   free(agent->lock);
   agent_datastate_Destroy(agent->datastate);
   free(agent->run_lock);

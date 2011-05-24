@@ -2714,9 +2714,11 @@ EXPORTMC int
 MC_TerminateAgent(MCAgent_t agent) /*{{{*/
 {
   int status=0;
+  MUTEX_LOCK(agent->lock);
   if(agent->agent_interp != NULL) {
     status = Ch_Abort (*agent->agent_interp);
   }
+  MUTEX_UNLOCK(agent->lock);
   return status;
 } /*}}}*/
 
