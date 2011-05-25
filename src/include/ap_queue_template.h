@@ -263,8 +263,10 @@ int name##_##func_name( name##_p name, const search_type key ) \
         node_type##_Destroy(node); \
         free(parsenode); \
       } \
-      break; \
       err_code = MC_SUCCESS; \
+      name->size--; \
+      name->list->size--; \
+      break; \
     } \
     parsenode_last = parsenode; \
   } \
