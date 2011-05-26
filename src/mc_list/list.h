@@ -26,8 +26,14 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include"../include/macros.h"
 
 #define DATA void*
+
+/* The following function pointer typedef is the list search callback function.
+ * The function should take 2 arguments and compare them, returns 0 for a
+ * match, non-zero for a non-match. */
+typedef int (*ListSearchFunc_t) (void* key, void* element);
 
 typedef struct listNode_s{
 
@@ -42,6 +48,8 @@ typedef struct list_s{
 
   listNode_p listhead;
   int size;
+  MUTEX_T* lock;
+  COND_T* cond;
 
 }list_t;
 
@@ -63,137 +71,7 @@ DATA ListGetHead(list_p list);
 DATA ListPop(list_p list);
 DATA ListSearch(list_p list, const int index);
 DATA ListDelete(list_p list, const int index);
-
-
-#define QUEUE_TEMPLATE( name, node_type, search_type, search_var_name ) \
-typedef struct name##_s name \
-{ \
-  int size; \
-  list_p list; \
-  MUTEX_T* lock; \
-  COND_T* cond; \
-} name##_t; \
-  \
-typedef name##_t* name##_p; \
-  \
-name##_p name##Initialize( void ); \
-void name##Destroy( name##_p name ); \
-int name##Add( name##_p name, node_type ); \
-name##_p name##Pop( name##_p name ); \
-name##_p name##Search( name##_p name, search_type key ); \
-int name##Remove(name##_p name, search_type key ); \
-name##_p name##SearchIndex( name##_p name, int index ); \
-int name##RemoveIndex(name##_p name, int index); \
-  \
-name##_p name##Initialize( void ) \
-{ \
-  name##_p temp; \
-  temp = (name##_p)malloc(sizeof(name##_t)); \
-  temp->size = 0; \
-  temp->list = ListInitialize(); \
-  \
-  temp->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T)); \
-  temp->cond = (COND_T*)malloc(sizeof(COND_T)); \
-  return temp; \
-} \
-  \
-int name##Destroy( name##_p name ) \
-{ \
-  ListTerminate(name->list); \
-  MUTEX_DESTROY(name->lock); \
-  COND_DESTROY(name->cond); \
-  free(name->lock); \
-  free(name->cond); \
-  return 0; \
-} \
-  \
-int name##Add( name##_p name, node_type* node ) \
-{ \
-  MUTEX_LOCK(name->lock); \
-  ListAdd(name->list, node); \
-  name->size++; \
-  COND_SIGNAL(name->cond); \
-  MUTEX_UNLOCK(name->lock); \
-  return 0; \
-} \
-  \
-node_type* name##Pop( name##_p name ) \
-{ \
-  node_type *ret; \
-  MUTEX_LOCK(name->lock); \
-  ret = ListPop(name->list); \
-  name->size--; \
-  COND_SIGNAL(name->cond); \
-  MUTEX_UNLOCK(name->lock); \
-  return ret; \
-} \
-  \
-node_type* name##Search( name##_p name, search_type value ) \
-{ \
-  listNode_t* parsenode; \
-  node_type* node; \
-  node = NULL; \
-  \
-  MUTEX_LOCK(name->lock); \
-  if (name->list->listhead == NULL) { \
-    MUTEX_UNLOCK(name->lock); \
-    return NULL; \
-  } \
-  for( \
-      parsenode = (listNode_t*)name->list->listhead; \
-      parsenode->next != NULL; \
-      parsenode = (listNode_t*)parsenode->next \
-     ) \
-  { \
-    node = (node_type*)parsenode->node_data; \
-    if (node->search_var_name == value ) \
-      break; \
-  } \
-  MUTEX_UNLOCK(name->lock); \
-  return node; \
-} \
-  \
-int name##Remove( name##_p name, search_type key ) \
-{ \
-  listNode_t* parsenode; \
-  node_type* node; \
-  node = NULL; \
-  \
-  MUTEX_LOCK(name->lock); \
-  if (name->list->listhead == NULL) { \
-    MUTEX_UNLOCK(name->lock); \
-    return MC_ERR_NOT_FOUND; \
-  } \
-  for( \
-      parsenode = (listNode_t*)name->list->listhead; \
-      parsenode->next != NULL; \
-      parsenode = (listNode_t*)parsenode->next \
-     ) \
-  { \
-    node = (node_type*)parsenode->node_data; \
-    if (node->search_var_name == key) \
-      break; \
-  } \
-  MUTEX_UNLOCK(name->lock); \
-} \
-  \
-name##_p name##SearchIndex( name##_p name, int index ) \
-{ \
-  node_type* node; \
-  MUTEX_LOCK(name->lock); \
-  node = (node_type*)ListSearch(name->list, index); \
-  MUTEX_UNLOCK(name->lock); \
-  return node; \
-} \
-  \
-int name##RemoveIndex( name##_p name, int index ) \
-{ \
-  node_type* node; \
-  MUTEX_LOCK(name->lock); \
-  node = ListDelete(name->list, index); \
-  node_type##Destroy(node); \
-  MUTEX_UNLOCK(name->lock); \
-  return 0; \
-} 
+DATA ListSearchCB(list_p list, void* key, ListSearchFunc_t cb);
+DATA ListDeleteCB(list_p list, void* key, ListSearchFunc_t cb);
 
 #endif
