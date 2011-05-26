@@ -38,32 +38,14 @@
 #include "mc_error.h"
 #include <embedch.h>
 
+#error "Deprecated"
+
 struct AP_GENERIC_s {void* none;};
 typedef struct AP_GENERIC_s AP_GENERIC_t;
 typedef AP_GENERIC_t* AP_GENERIC_p;
 
 /* Fields will be: NAME */
 #define AP_QUEUE_DECL_TEMPLATE( name, node_type) \
-typedef struct name##_s \
-{ \
-  int size; \
-  list_p list; \
-  MUTEX_T* lock; \
-  COND_T* cond; \
-} name##_t; \
-  \
-typedef name##_t* name##_p; \
-  \
-name##_p name##_New( void ); \
-int name##_Destroy( name##_p name ); \
-int name##_Add( name##_p name, struct node_type##_s* node ); \
-name##_p name##_Copy(name##_p name); \
-int name##_GetSize(name##_p name); \
-struct node_type##_s* name##_Pop( name##_p name ); \
-struct node_type##_s* name##_WaitPop( name##_p name ); \
-struct node_type##_s* name##_SearchIndex( name##_p name, int index ); \
-int name##_RemoveIndex(name##_p name, int index); 
-
 #define AP_QUEUE_GENERIC_DECL_TEMPLATE(name, func_name, return_type, search_type) \
 return_type name##_##func_name(name##_p name, const search_type key);
 
