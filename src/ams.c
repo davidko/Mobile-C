@@ -212,7 +212,14 @@ ams_ManageAgentList(ams_p ams)
         case MC_WAIT_FINISHED :
           MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
+
+          /* Make sure we can lock the giant lock before we continue */
+          MUTEX_LOCK(global->giant_lock);
+          while(global->giant == 0) {
+            COND_WAIT(global->giant_cond, global->giant_lock);
+          }
           agent_queue_RemoveIndex(alist, index);
+          MUTEX_UNLOCK(global->giant_lock);
           // Change index = 0 to index-- to fix the problem where agents 
           // remain in an agency when they should be removed from the agency.
           // Yu-Cheng Chou July 28, 2009
