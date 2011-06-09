@@ -376,7 +376,7 @@ void* ListDeleteCB(list_p list, const void* key, ListSearchFunc_t cb)
   parsenode = list->listhead;
 
   /* Check to see if the head is a match */
-  if(!cb(key, parsenode)) {
+  if(!cb(key, parsenode->node_data)) {
     node_data = parsenode->node_data;
     list->listhead = parsenode->next;
     free(parsenode);
