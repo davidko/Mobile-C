@@ -49,8 +49,11 @@ rwlock_t* rwlock_New(void)
 {
   rwlock_t* rwlock = (rwlock_t*)malloc(sizeof(rwlock_t));
   rwlock->readers = 0;
+  MUTEX_NEW(rwlock->lock);
   MUTEX_INIT(rwlock->lock);
+  COND_NEW(rwlock->reader_cond);
   COND_INIT(rwlock->reader_cond);
+  COND_NEW(rwlock->writer_cond);
   COND_INIT(rwlock->writer_cond);
   return rwlock;
 }

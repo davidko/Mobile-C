@@ -129,9 +129,9 @@ acc_MessageHandlerThread(LPVOID arg)
   char* origname;
   int i;
 
+  ListWRLock(mc_platform->message_queue);
   while(1) 
   {
-    ListWRLock(mc_platform->message_queue);
     message = ListPop(mc_platform->message_queue);
     MUTEX_LOCK(mc_platform->quit_lock);
     if(message == NULL && !mc_platform->quit) {
@@ -295,6 +295,7 @@ acc_MessageHandlerThread(LPVOID arg)
          mc_platform, message, mc_platform -> private_key 
         );
     }
+    ListWRLock(mc_platform->message_queue);
   }
   THREAD_EXIT();
 }
