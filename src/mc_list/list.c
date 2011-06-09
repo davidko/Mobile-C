@@ -22,6 +22,7 @@
 /* Filename: list.c */
 
 #include "list.h"
+#include "../include/rwlock.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -37,10 +38,7 @@ list_p ListInitialize(void)
   list = (list_p)malloc(sizeof(list_t));
   list->size = 0;
   list->listhead = NULL;
-  MUTEX_NEW(list->lock);
-  MUTEX_INIT(list->lock);
-  COND_NEW(list->cond);
-  COND_INIT(list->cond);
+  list->rwlock = rwlock_New();
 
   return list;
 }
@@ -52,7 +50,6 @@ list_p ListInitialize(void)
  ***********************************************************/
 void ListTerminate(list_p list)
 {
-  MUTEX_LOCK(list->lock);
   /* ensure that the list has no more nodes */
   if(list->size > 0)
   {
@@ -64,16 +61,20 @@ void ListTerminate(list_p list)
   if(list->listhead != NULL)
     free(list->listhead);
 
-  MUTEX_UNLOCK(list->lock);
-  MUTEX_DESTROY(list->lock);
-  COND_DESTROY(list->cond);
-  free(list->lock);
-  free(list->cond);
+  rwlock_Destroy(list->rwlock);
 
   /* deallocate the list */
   free(list);
 
   return;
+}
+
+void ListClearCB(list_p list, ListElemDestroyFunc_t cb)
+{
+  void* data;
+  while( (data = ListPop(list)) != NULL) {
+    cb(data);
+  }
 }
 
 /**********************************************************
@@ -84,36 +85,29 @@ void ListTerminate(list_p list)
 int ListGetSize(list_p list)
 {
   int size;
-  MUTEX_LOCK(list->lock);
   size = list->size;
-  MUTEX_UNLOCK(list->lock);
   return size;
 }
 
-
-DATA ListGetHead(list_p list)
+void* ListGetHead(list_p list)
 {
   void* node_data;
-  MUTEX_LOCK(list->lock);
   node_data = list->listhead->node_data;
-  MUTEX_UNLOCK(list->lock);
   return node_data;
 }
 
 /********************************************************
  * Function Name : ListPop()
  * Purpose : Removes and returns the first data element on the list
- * Return : DATA at the head of the linked list
+ * Return : void* at the head of the linked list
  *******************************************************/
-DATA ListPop(list_p list) 
+void* ListPop(list_p list) 
 {
   listNode_t *parsenode;
-  DATA data;
-  MUTEX_LOCK(list->lock);
+  void* data;
   parsenode = (listNode_t *)list->listhead;
 
   if(list->listhead == NULL) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
@@ -129,33 +123,28 @@ DATA ListPop(list_p list)
       exit(EXIT_FAILURE);
     }
     list->size--;
-    MUTEX_UNLOCK(list->lock);
-    COND_SIGNAL(list->cond);
     return data;
   }
   else
   {
-    MUTEX_UNLOCK(list->lock);
-    return (DATA)NULL;
+    return (void*)NULL;
   }
 }
 
 /***************************************************************
  * Function Name  : ListSearch()
- * Purpose : goes through the list by order of insertion, returns DATA 
- * Returns: DATA element at the index place of the list
+ * Purpose : goes through the list by order of insertion, returns void* 
+ * Returns: void* element at the index place of the list
  **************************************************************/
-DATA ListSearch(list_p list, const int index)
+void* ListSearch(list_p list, const int index)
 {
   /* variables */
   listNode_t *parsenode;
   void* node_data;
   int i;
 
-  MUTEX_LOCK(list->lock);
   /* check to make sure list is not null */
   if(list->listhead == NULL) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
@@ -174,21 +163,17 @@ DATA ListSearch(list_p list, const int index)
       break;
     }
     if(i == list->size) {
-      MUTEX_UNLOCK(list->lock);
       return NULL;
     }
     i++;
   }
 
   if (parsenode == NULL) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
   /* return the entry that matches index */
   node_data = parsenode->node_data;
-  COND_SIGNAL(list->cond);
-  MUTEX_UNLOCK(list->lock);
   return node_data;
 }
 
@@ -197,12 +182,11 @@ DATA ListSearch(list_p list, const int index)
  * Purpose : Adds a data element to the end of the list
  * Returns : 0 on success -1 on failure. 
  **************************************************************/
-int ListAdd(list_p list, DATA data)
+int ListAdd(list_p list, void* data)
 {
   /* variables */
   listNode_t *parsenode;
   listNode_t *new_listnode;
-  MUTEX_LOCK(list->lock);
   parsenode = (listNode_t *) list->listhead;
 
   /* create the new node that will be inserted into the list */
@@ -215,8 +199,6 @@ int ListAdd(list_p list, DATA data)
     list->listhead = new_listnode;
     list->listhead->next = NULL;
     list->size = 1;
-    COND_SIGNAL(list->cond);
-    MUTEX_UNLOCK(list->lock);
     return 0;
   }
 
@@ -233,17 +215,38 @@ int ListAdd(list_p list, DATA data)
   list->size++;
 
   /* return 0 for success */
-  COND_SIGNAL(list->cond);
-  MUTEX_UNLOCK(list->lock);
+  return 0;
+}
+
+int ListAppend(list_p list, void* data)
+{
+  listNode_p node;
+  /* If the head is null, just add it */
+  if(list->listhead == NULL) {
+    list->listhead = (listNode_p)malloc(sizeof(listNode_t));
+    list->listhead->node_data = data;
+    list->listhead->next = NULL;
+    list->size = 1;
+    return 0;
+  }
+  /* Otherwise, we must find the end of the list */
+  node = list->listhead;
+  while(node->next != NULL) {
+    node = node->next;
+  }
+  node->next = (listNode_p)malloc(sizeof(listNode_t));
+  node->next->next = NULL;
+  node->next->node_data = data;
+  list->size++;
   return 0;
 }
 
 /****************************************************************
  * Function Name : ListInsert
- * Purpose: To Add a DATA element to the idex place in the linked  list
+ * Purpose: To Add a void* element to the idex place in the linked  list
  *
  ****************************************************************/
-int ListInsert(list_p list, DATA data, const int index)
+int ListInsert(list_p list, void* data, const int index)
 {
   /* Function has not been written yet 
      currently there is no need for this utility */
@@ -251,25 +254,33 @@ int ListInsert(list_p list, DATA data, const int index)
   return 0;
 }
 
+list_p ListCopy(list_p list, void*(*data_copy_callback)(const void* data))
+{
+  list_p newList = ListInitialize();
+  listNode_p node;
+  for(node = list->listhead; node!=NULL; node = node->next) {
+    ListAppend(newList, data_copy_callback(node->node_data));
+  }
+  return newList;
+}
+
 /******************************************************
  * Function Name: ListDelete 
  * Purpose: Deletes an element from the list
  * Return : 0 success , -1 failure 
  *****************************************************/
-DATA ListDelete(list_p list, const int index)
+void* ListDelete(list_p list, const int index)
 {
   /* variables */
   listNode_t *parsenode;
   int i;
   listNode_t *previous_parsenode;
-  DATA return_data;
-  MUTEX_LOCK(list->lock);
+  void* return_data;
   parsenode = list->listhead;
   previous_parsenode = NULL;
 
   /* run through the list until the index element is found */
   if(index >= list->size || index < 0) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
@@ -302,22 +313,19 @@ DATA ListDelete(list_p list, const int index)
   free(parsenode); 
 
   /* return a pointer of the data */
-  MUTEX_UNLOCK(list->lock);
   return return_data;
 }
 
-DATA ListSearchCB(list_p list, void* key, ListSearchFunc_t cb)
+void* ListSearchCB(list_p list, const void* key, ListSearchFunc_t cb)
 {
   /* variables */
   listNode_t *parsenode;
   void* node_data;
   int i;
 
-  MUTEX_LOCK(list->lock);
 
   /* check to make sure list is not null */
   if(list->listhead == NULL) {
-  MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
@@ -333,38 +341,34 @@ DATA ListSearchCB(list_p list, void* key, ListSearchFunc_t cb)
      )
   {
     if(!cb(key, parsenode->node_data)) {
+      /* Found it */
       break;
     }
     if(i == list->size) {
-      MUTEX_UNLOCK(list->lock);
       return NULL;
     }
     i++;
   }
 
   if (parsenode == NULL) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
   /* return the entry that matches index */
   node_data = parsenode->node_data;
-  MUTEX_UNLOCK(list->lock);
   return node_data;
 }
 
-DATA ListDeleteCB(list_p list, void* key, ListSearchFunc_t cb)
+void* ListDeleteCB(list_p list, const void* key, ListSearchFunc_t cb)
 {
   /* variables */
   listNode_t *parsenode;
   listNode_t *lastparsenode;
   void* node_data;
 
-  MUTEX_LOCK(list->lock);
 
   /* check to make sure list is not null */
   if(list->listhead == NULL) {
-    MUTEX_UNLOCK(list->lock);
     return NULL;
   }
 
@@ -377,8 +381,6 @@ DATA ListDeleteCB(list_p list, void* key, ListSearchFunc_t cb)
     list->listhead = parsenode->next;
     free(parsenode);
     list->size--;
-    COND_SIGNAL(list->cond);
-    MUTEX_UNLOCK(list->lock);
     return node_data;
   }
 
@@ -392,11 +394,77 @@ DATA ListDeleteCB(list_p list, void* key, ListSearchFunc_t cb)
       lastparsenode->next = parsenode->next;
       free(parsenode);
       list->size--;
-      COND_SIGNAL(list->cond);
-      MUTEX_UNLOCK(list->lock);
       return node_data;
     }
   }
-  MUTEX_UNLOCK(list->lock);
   return NULL;
+}
+
+void ListWait(list_p list)
+{
+  rwlock_rdwait(list->rwlock);
+}
+
+int ListForEachCB(list_p list, ListElemGenericFunc_t cb)
+{
+  int retval;
+  listNode_t* node;
+  node = list->listhead;
+  while(node != NULL) {
+    if((retval = cb(node->node_data)) != 0) {
+      return retval;
+    }
+    node = node->next;
+  }
+  return 0;
+}
+
+void ListRDLock(list_p list)
+{
+  rwlock_rdlock(list->rwlock);
+}
+
+void ListRDUnlock(list_p list)
+{
+  rwlock_rdunlock(list->rwlock);
+}
+
+void ListWRLock(list_p list)
+{
+  rwlock_wrlock(list->rwlock);
+}
+
+void ListWRUnlock(list_p list)
+{
+  rwlock_wrunlock(list->rwlock);
+}
+
+void ListWRWait(list_p list)
+{
+  COND_WAIT(list->rwlock->reader_cond, list->rwlock->lock);
+}
+
+void ListRDWait(list_p list)
+{
+  MUTEX_LOCK(list->rwlock->lock);
+  list->rwlock->readers--;
+  COND_WAIT(list->rwlock->reader_cond, list->rwlock->lock);
+  list->rwlock->readers++;
+  MUTEX_UNLOCK(list->rwlock->lock);
+}
+
+void ListRDtoWR(list_p list)
+{
+  MUTEX_LOCK(list->rwlock->lock);
+  list->rwlock->readers--;
+  while(list->rwlock->readers > 0) {
+    COND_WAIT(list->rwlock->writer_cond, list->rwlock->lock);
+  }
+}
+
+void ListWRtoRD(list_p list)
+{
+  /* rwlock should already be locked */
+  list->rwlock->readers++;
+  MUTEX_UNLOCK(list->rwlock->lock);
 }

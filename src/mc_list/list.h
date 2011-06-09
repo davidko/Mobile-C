@@ -27,17 +27,19 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"../include/macros.h"
-
-#define DATA void*
+#include"../include/rwlock.h"
 
 /* The following function pointer typedef is the list search callback function.
  * The function should take 2 arguments and compare them, returns 0 for a
  * match, non-zero for a non-match. */
-typedef int (*ListSearchFunc_t) (void* key, void* element);
+typedef int (*ListSearchFunc_t) (const void* key, void* element);
+typedef void* (*ListElemCopyFunc_t) (const void* src);
+typedef int (*ListElemDestroyFunc_t) (void* elem);
+typedef int (*ListElemGenericFunc_t) (void* elem);
 
 typedef struct listNode_s{
 
-  DATA node_data;
+  void* node_data;
   struct listNode_s *next; 
 
 }listNode_t;
@@ -48,9 +50,8 @@ typedef struct list_s{
 
   listNode_p listhead;
   int size;
-  MUTEX_T* lock;
-  COND_T* cond;
-
+  
+  rwlock_t* rwlock;
 }list_t;
 
 /* create a pointer type for the LinkedList */
@@ -58,20 +59,39 @@ typedef list_t* list_p;
 
 /* some basic functions that help  */
 list_p ListInitialize(void);
-  /* note: this Terminate Function should only be called on empty lists */
+/* note: this Terminate Function should only be called on empty lists */
 void ListTerminate(list_p list);
+/* This termination function can be called on non-empty lists */
+void ListClearCB(list_p list, ListElemDestroyFunc_t cb);
 
-/* functions that return intergers */
+/* functions that return integers */
 int ListGetSize(list_p list);
-int ListAdd(list_p list, DATA data);
-int ListInsert(list_p list, DATA data, const int index);
+int ListAdd(list_p list, void* data);
+int ListAppend(list_p list, void* data);
+int ListInsert(list_p list, void* data, const int index);
+
+list_p ListCopy(list_p list, void*(*data_copy_callback)(const void* data));
 
 /* functions that will return pointers to the data */
-DATA ListGetHead(list_p list);
-DATA ListPop(list_p list);
-DATA ListSearch(list_p list, const int index);
-DATA ListDelete(list_p list, const int index);
-DATA ListSearchCB(list_p list, void* key, ListSearchFunc_t cb);
-DATA ListDeleteCB(list_p list, void* key, ListSearchFunc_t cb);
+void* ListGetHead(list_p list);
+void* ListPop(list_p list);
+void* ListSearch(list_p list, const int index);
+void* ListDelete(list_p list, const int index);
+void* ListSearchCB(list_p list, const void* key, ListSearchFunc_t cb);
+void* ListDeleteCB(list_p list, const void* key, ListSearchFunc_t cb);
+void  ListWait(list_p list);
+int   ListForEachCB(list_p list, ListElemGenericFunc_t cb);
+
+void  ListRDLock(list_p list);
+void  ListRDUnlock(list_p list);
+void  ListWRLock(list_p list);
+void  ListWRUnlock(list_p list);
+void  ListWRWait(list_p list); /* Call this function if you currently have a
+                                  write lock on the list but need to wait for
+                                  someone else to touch it. */
+void  ListRDWait(list_p list); /* Similar to above, except if you have a read
+                                  lock */
+void  ListRDtoWR(list_p list); /* Upgrade lock from reader to writer atomically */
+void  ListWRtoRD(list_p list); /* Downgrade lock from writer to reader atomically */
 
 #endif

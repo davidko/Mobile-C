@@ -57,6 +57,7 @@
 #include <mxml.h>
 #include "include/libmc.h"
 #include "include/agent.h"
+#include "include/dynstring.h"
 #include "include/mc_platform.h"
 #include "include/message.h"
 #include "include/mtp_http.h"
@@ -952,4 +953,9 @@ message_send_Thread( LPVOID arg )
   MSG_THREAD_EXIT();
 }
 
+int message_Print(message_t* message)
+{
+  printf("Connect id: %d Message id: %d\n", message->connect_id, message->message_id);
+  return 0;
+}
 #undef MSG_THREAD_EXIT

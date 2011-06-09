@@ -98,3 +98,10 @@ int agent_file_data_Destroy(agent_file_data_p agent_file_data)
   free(agent_file_data);
   return 0;
 }
+
+int agent_file_data_CmpName(const void* key, void* element)
+{
+  const char* name = key;
+  agent_file_data_p agent_file_data = element;
+  return strcmp(agent_file_data->name, name);
+}

@@ -65,4 +65,6 @@ interpreter_variable_data_Initialize(struct agent_s* agent, const char* varname)
 int
 interpreter_variable_data_Destroy( interpreter_variable_data_p agent_return_data );
 
+int
+interpreter_variable_data_CmpName(const char* name, interpreter_variable_data_t* data);
 #endif

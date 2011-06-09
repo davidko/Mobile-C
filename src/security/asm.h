@@ -5,8 +5,6 @@
 #define _ASM_H_
 
 #include "config.h"
-#include "../include/ap_queue_template.h"
-#include "../include/data_structures.h"
 #include "../mc_list/list.h"
 #include "asm_node.h"
 

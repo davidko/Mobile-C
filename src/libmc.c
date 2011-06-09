@@ -63,10 +63,10 @@
 #include "include/macros.h"
 #include "include/mc_platform.h"
 #include "include/message.h"
-#include "include/data_structures.h"
 #include "include/fipa_acl_envelope.h"
 #include "include/fipa_acl.h"
 #include "include/agent.h"
+#include "include/agent_file_data.h"
 #include "include/agent_task.h"
 #include "include/agent_lib.h"
 #ifndef HOST_NAME_MAX
@@ -94,7 +94,10 @@ MC_AclNew(void) {
 EXPORTMC int 
 MC_AclPost(MCAgent_t agent, struct fipa_acl_message_s* message)
 {
-  return agent_mailbox_Post(agent->mailbox, message);
+  ListWRLock(agent->mailbox);
+  ListAdd(agent->mailbox, message);
+  ListWRUnlock(agent->mailbox);
+  return 0;
 }
 
 EXPORTMC fipa_acl_message_t*
@@ -106,7 +109,11 @@ MC_AclReply(fipa_acl_message_t* acl_message)
 EXPORTMC fipa_acl_message_t*
 MC_AclRetrieve(MCAgent_t agent)
 {
-  return agent_mailbox_Retrieve(agent->mailbox);
+  fipa_acl_message_t* acl;
+  ListWRLock(agent->mailbox);
+  acl = (fipa_acl_message_t*)ListPop(agent->mailbox);
+  ListWRUnlock(agent->mailbox);
+  return acl;
 }
 
 EXPORTMC int
@@ -210,7 +217,16 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
 EXPORTMC fipa_acl_message_t* 
 MC_AclWaitRetrieve(MCAgent_t agent)
 {
-  return agent_mailbox_WaitRetrieve(agent->mailbox);
+  fipa_acl_message_t* acl;
+  ListWRLock(agent->mailbox);
+  /* Make sure there is at least one message */
+  acl = (fipa_acl_message_t*)ListPop(agent->mailbox);
+  while(acl == NULL) {
+    ListWRWait(agent->mailbox);
+    acl = (fipa_acl_message_t*)ListPop(agent->mailbox);
+  }
+  ListWRUnlock(agent->mailbox);
+  return acl;
 }
 
 /* ACL Helper Functions Here */
@@ -410,7 +426,9 @@ MC_AddAgent(MCAgency_t attr, MCAgent_t agent) /*{{{*/
 {
   agent->mc_platform = attr->mc_platform;
 
-  agent_queue_Add(attr->mc_platform->agent_queue, agent);
+  ListWRLock(attr->mc_platform->agent_queue);
+  ListAdd(attr->mc_platform->agent_queue, agent);
+  ListWRUnlock(attr->mc_platform->agent_queue);
 
   MUTEX_LOCK(attr->mc_platform->ams->runflag_lock);
   attr->mc_platform->ams->run = 1;
@@ -438,7 +456,9 @@ EXPORTMC int MC_AddStationaryAgent(
 	stationary_agent_info->agent->name = strdup(name);
 	stationary_agent_info->attr = agency;
 	stationary_agent_info->agency = agency;
-	agent_queue_Add(agency->mc_platform->agent_queue, stationary_agent_info->agent);
+  ListWRLock(agency->mc_platform->agent_queue);
+	ListAdd(agency->mc_platform->agent_queue, stationary_agent_info->agent);
+  ListWRUnlock(agency->mc_platform->agent_queue);
 #ifndef _WIN32
 	THREAD_CREATE(&stationary_agent_info->thread, (void*(*)(void*))agent_thread, stationary_agent_info);
 #else
@@ -595,9 +615,11 @@ EXPORTMC int MC_AgentAttachFile(
   free(afd->name);
   afd->name = strdup(name);
   cur_task = agent->datastate->task_progress;
-  agent_file_list_Add(
+  ListWRLock(agent->datastate->tasks[cur_task]->agent_file_list);
+  ListAdd(
     agent->datastate->tasks[cur_task]->agent_file_list,
     afd );
+  ListWRUnlock(agent->datastate->tasks[cur_task]->agent_file_list);
   return 0;
 }
 
@@ -613,18 +635,23 @@ EXPORTMC int MC_AgentListFiles(
   if(task_num >= agent->datastate->number_of_tasks) {
     return -1;
   }
-  size = agent_file_list_GetSize(
+  ListRDLock(agent->datastate->tasks[task_num]->agent_file_list);
+  size = ListGetSize(
       agent->datastate->tasks[task_num]->agent_file_list );
   *num_files = size;
   *names = (char**)malloc(sizeof(char*)*(size+1));
   for( i = 0; i < size; i++) {
-    afd = agent_file_list_SearchIndex(
+    afd = ListSearch(
         agent->datastate->tasks[task_num]->agent_file_list,
         i);
-    if(afd == NULL) { return -1; }
+    if(afd == NULL) { 
+      ListRDUnlock(agent->datastate->tasks[task_num]->agent_file_list);
+      return -1; 
+    }
     (*names)[i] = strdup(afd->name);
   }
   names[i] = NULL;
+  ListRDUnlock(agent->datastate->tasks[task_num]->agent_file_list);
   return 0;
 }
 
@@ -644,9 +671,12 @@ EXPORTMC int MC_AgentRetrieveFile(
     return -2;
   }
   /* Find the file */
-  agent_file_data = agent_file_list_Search(
+  ListRDLock( agent->datastate->tasks[task_num]->agent_file_list );
+  agent_file_data = ListSearchCB(
       agent->datastate->tasks[task_num]->agent_file_list,
-      name);
+      (const void*)name,
+      agent_file_data_CmpName);
+  ListRDUnlock( agent->datastate->tasks[task_num]->agent_file_list );
   if(agent_file_data == NULL) {
     return -3;
   }
@@ -822,9 +852,12 @@ EXPORTMC const void* MC_AgentVariableRetrieve(MCAgent_t agent, const char* var_n
     return NULL;
   }
 
-  interp_var = agent_variable_list_Search(
+  ListRDLock(agent->datastate->tasks[task_num]->agent_variable_list);
+  interp_var = ListSearchCB(
       agent->datastate->tasks[task_num]->agent_variable_list,
-      var_name );
+      var_name,
+      (ListSearchFunc_t)interpreter_variable_data_CmpName );
+  ListRDUnlock(agent->datastate->tasks[task_num]->agent_variable_list);
   if (interp_var == NULL) {
     return NULL;
   }
@@ -840,9 +873,12 @@ EXPORTMC int MC_AgentVariableRetrieveInfo(MCAgent_t agent, const char* var_name,
     return MC_ERR_NOT_FOUND;
   }
 
-  interp_var = agent_variable_list_Search(
+  ListRDLock(agent->datastate->tasks[task_num]->agent_variable_list);
+  interp_var = ListSearchCB(
       agent->datastate->tasks[task_num]->agent_variable_list,
-      var_name );
+      var_name,
+      (ListSearchFunc_t)interpreter_variable_data_CmpName );
+  ListRDUnlock(agent->datastate->tasks[task_num]->agent_variable_list);
   if (interp_var == NULL) {
     return MC_ERR_NOT_FOUND;
   }
@@ -876,9 +912,11 @@ EXPORTMC int MC_AgentVariableSave(MCAgent_t agent, const char* var_name)
 EXPORTMC int 
 MC_Barrier(MCAgency_t attr, int id) /*{{{*/
 {
-    barrier_queue_p list = attr->mc_platform->barrier_queue;
+    list_t* list = attr->mc_platform->barrier_queue;
     barrier_node_p node;
-    node = barrier_queue_Get(list, id);
+    ListRDLock(list);
+    node = ListSearchCB(list, &id, barrier_node_CmpID);
+    ListRDUnlock(list);
     if(node == NULL) {
         return MC_ERR_NOT_FOUND;
     }
@@ -904,19 +942,32 @@ MC_BarrierInit(MCAgency_t attr, int id, int num_procs) /*{{{*/
 {
     barrier_node_p node;
     /* First see if there already exists a barrier of the same ID. */
-    node = barrier_queue_Get(attr->mc_platform->barrier_queue, id);
+    ListRDLock(attr->mc_platform->barrier_queue);
+    node = ListSearchCB(attr->mc_platform->barrier_queue, &id, barrier_node_CmpID);
+    ListRDUnlock(attr->mc_platform->barrier_queue);
     if (node != NULL) {
       return MC_ERR;
     }
     node = barrier_node_Initialize(id, num_procs);
-    barrier_queue_Add(attr->mc_platform->barrier_queue, node);
+    ListWRLock(attr->mc_platform->barrier_queue);
+    ListAdd(attr->mc_platform->barrier_queue, node);
+    ListWRUnlock(attr->mc_platform->barrier_queue);
     return MC_SUCCESS;
 } /*}}}*/
 
 EXPORTMC int 
 MC_BarrierDelete(MCAgency_t attr, int id) /*{{{*/
 {
-  return barrier_queue_Delete(id, attr->mc_platform->barrier_queue);
+  barrier_node_t* node;
+  ListWRLock(attr->mc_platform->barrier_queue);
+  node = ListDeleteCB(attr->mc_platform->barrier_queue, &id, barrier_node_CmpID);
+  ListWRUnlock(attr->mc_platform->barrier_queue);
+  if(node) {
+    barrier_node_Destroy(node);
+    return 0;
+  } else {
+    return -1;
+  }
 } /*}}}*/
 
 EXPORTMC int
@@ -1242,7 +1293,9 @@ EXPORTMC int
 MC_CondBroadcast(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
-    condnode = syncListFind(id, attr->mc_platform->syncList);
+    ListRDLock(attr->mc_platform->syncList);
+    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
     }
@@ -1257,7 +1310,9 @@ EXPORTMC int
 MC_CondSignal(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
-    condnode = syncListFind(id, attr->mc_platform->syncList);
+    ListRDLock(attr->mc_platform->syncList);
+    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
     }
@@ -1272,7 +1327,9 @@ EXPORTMC int
 MC_CondWait(MCAgency_t attr, int id)  /*{{{*/
 {
     syncListNode_t *condnode;
-    condnode = syncListFind(id, attr->mc_platform->syncList);
+    ListRDLock(attr->mc_platform->syncList);
+    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
     }
@@ -1294,7 +1351,9 @@ EXPORTMC int
 MC_CondReset(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
-    condnode = syncListFind(id, attr->mc_platform->syncList);
+    ListRDLock(attr->mc_platform->syncList);
+    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
     }
@@ -1335,7 +1394,9 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
     MC_TerminateAgent(agent);
 
     /* Delete the agent from the list */
-    agent_queue_RemoveName(mc_platform->agent_queue, agentName);
+    ListWRLock(mc_platform->agent_queue);
+    ListDeleteCB(mc_platform->agent_queue, agentName, (ListSearchFunc_t)agent_CmpName);
+    ListWRUnlock(mc_platform->agent_queue);
     free(agentName);
 
     return MC_SUCCESS;
@@ -1344,6 +1405,7 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
 EXPORTMC int 
 MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
 {
+    MCAgent_t tmp;
     struct mc_platform_s* mc_platform;
     char* agentName;
     /* Error Checking */
@@ -1365,7 +1427,12 @@ MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
     MC_TerminateAgentWG(calling_agent, agent);
 
     /* Delete the agent from the list */
-    agent_queue_RemoveName(mc_platform->agent_queue, agentName);
+    ListWRLock(mc_platform->agent_queue);
+    tmp = ListDeleteCB(mc_platform->agent_queue, agentName, 
+        (ListSearchFunc_t) agent_CmpName);
+    if(tmp) agent_Destroy(tmp);
+    ListWRUnlock(mc_platform->agent_queue);
+
     free(agentName);
 
     return MC_SUCCESS;
@@ -1476,9 +1543,8 @@ MC_End(MCAgency_t agency) /*{{{*/
   } 
 
   /* Stop the connection queue */
-  MUTEX_LOCK(agency->mc_platform->connection_queue->lock);
-  COND_SIGNAL(agency->mc_platform->connection_queue->cond);
-  MUTEX_UNLOCK(agency->mc_platform->connection_queue->lock);
+  ListWRLock(agency->mc_platform->connection_queue);
+  ListWRUnlock(agency->mc_platform->connection_queue);
   if( GET_THREAD_MODE( agency->threads, MC_THREAD_ACC)) {
     THREAD_JOIN(agency->mc_platform->acc->thread);
   }
@@ -1492,17 +1558,15 @@ MC_End(MCAgency_t agency) /*{{{*/
   }
 
   /* Stop the message queue */
-  MUTEX_LOCK(agency->mc_platform->message_queue->lock);
-  COND_SIGNAL(agency->mc_platform->message_queue->cond);
-  MUTEX_UNLOCK(agency->mc_platform->message_queue->lock);
+  ListWRLock(agency->mc_platform->message_queue);
+  ListWRUnlock(agency->mc_platform->message_queue);
   if( GET_THREAD_MODE( agency->threads, MC_THREAD_ACC)) {
     THREAD_JOIN(agency->mc_platform->acc->message_handler_thread);
   }
 
   /* Stop the DF */
-  MUTEX_LOCK(agency->mc_platform->df->request_list->lock);
-  COND_SIGNAL(agency->mc_platform->df->request_list->cond);
-  MUTEX_UNLOCK(agency->mc_platform->df->request_list->lock);
+  ListWRLock(agency->mc_platform->df->request_list);
+  ListWRUnlock(agency->mc_platform->df->request_list);
   if( GET_THREAD_MODE( agency->threads, MC_THREAD_DF)) {
     THREAD_JOIN(agency->mc_platform->df->thread);
   }
@@ -1525,26 +1589,36 @@ EXPORTMC MCAgent_t
 MC_FindAgentByName( MCAgency_t attr, /*{{{*/
     const char *name) 
 {
+  MCAgent_t agent;
+  list_t* list;
   extern mc_platform_p g_mc_platform;
   if (attr == NULL) {
-    return agent_queue_SearchName(g_mc_platform->agent_queue, name);
+    list = g_mc_platform->agent_queue;
   } else {
-    return agent_queue_SearchName(attr->mc_platform->agent_queue,
-        name);
+    list = attr->mc_platform->agent_queue;
   }
+  ListRDLock(list);
+  agent = ListSearchCB(list, name, (ListSearchFunc_t)agent_CmpName);
+  ListRDUnlock(list);
+  return agent;
 } /*}}}*/
 
 EXPORTMC MCAgent_t
 MC_FindAgentByID( MCAgency_t attr, /*{{{*/
     int ID)
 {
+  MCAgent_t agent;
+  list_t* list;
   extern mc_platform_p g_mc_platform;
   if (attr == NULL) {
-    return agent_queue_Search(g_mc_platform->agent_queue, ID);
+    list = g_mc_platform->agent_queue;
   } else {
-    return agent_queue_Search(attr->mc_platform->agent_queue,
-        ID);
+    list = attr->mc_platform->agent_queue;
   }
+  ListRDLock(list);
+  agent = ListSearchCB(list, &ID, (ListSearchFunc_t)agent_CmpID);
+  ListRDUnlock(list);
+  return agent;
 } /*}}}*/
 
 EXPORTMC 
@@ -1707,19 +1781,14 @@ MC_GetAgentType(MCAgent_t agent) /*{{{*/
 EXPORTMC int
 MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int agent_status_flags)
 {
-  int halt;
   int index = 0;
   int i;
   MCAgent_t agent;
-  MUTEX_LOCK(attr->mc_platform->giant_lock);
-  halt = (attr->mc_platform->giant == 1) ? 1 : 0;
-  MUTEX_UNLOCK(attr->mc_platform->giant_lock);
   *num_agents = 0;
   int total_agents;
-  if (halt)
-    MC_HaltAgency(attr);
   /* Count the number of agents */
-  while ((agent = agent_queue_SearchIndex(attr->mc_platform->agent_queue, index)) != NULL) {
+  ListRDLock(attr->mc_platform->agent_queue);
+  while ((agent = ListSearch(attr->mc_platform->agent_queue, index)) != NULL) {
     if((1<<agent->agent_status) & agent_status_flags) {
       (*num_agents)++;
     }
@@ -1728,8 +1797,7 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
 
   if (*num_agents == 0) {
     *agents = NULL;
-    if(halt)
-      MC_ResumeAgency(attr);
+    ListRDUnlock(attr->mc_platform->agent_queue);
     return -1;
   }
   total_agents = index;
@@ -1738,7 +1806,7 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
   /* Assign the agents */
   i = 0;
   for(index = 0; index < total_agents; index++) {
-    agent = agent_queue_SearchIndex
+    agent = ListSearch 
         (
          attr->mc_platform->agent_queue,
          index
@@ -1749,29 +1817,21 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
       i++;
     }
   }
-  if(halt)
-    MC_ResumeAgency(attr);
+  ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 }
 
 EXPORTMC int 
 MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
 {
-  int halt;
   int index = 0;
-  MUTEX_LOCK(attr->mc_platform->giant_lock);
-  halt = (attr->mc_platform->giant == 1) ? 1 : 0;
-  MUTEX_UNLOCK(attr->mc_platform->giant_lock);
-  if (halt)
-    MC_HaltAgency(attr);
   /* Count the number of agents */
-  while (agent_queue_SearchIndex(attr->mc_platform->agent_queue, index) != NULL) {
-    index++;
-  }
-
+  ListRDLock(attr->mc_platform->agent_queue);
+  index = ListGetSize(attr->mc_platform->agent_queue);
   if (index == 0) {
     *agents = NULL;
     *num_agents = 0;
+    ListRDUnlock(attr->mc_platform->agent_queue);
     return -1;
   }
 
@@ -1779,14 +1839,13 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
   *num_agents = index;
   /* Assign the agents */
   for(index = 0; index < *num_agents; index++) {
-    (*agents)[index] = agent_queue_SearchIndex
+    (*agents)[index] = ListSearch
       (
        attr->mc_platform->agent_queue,
        index
       );
   }
-  if(halt)
-    MC_ResumeAgency(attr);
+  ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 } /*}}}*/
 
@@ -1794,7 +1853,9 @@ EXPORTMC int
 MC_GetNumAgents(MCAgency_t attr, int* num_agents)
 {
   int num;
-  num = agent_queue_GetSize(attr->mc_platform->agent_queue);
+  ListRDLock(attr->mc_platform->agent_queue);
+  num = ListGetSize(attr->mc_platform->agent_queue);
+  ListRDUnlock(attr->mc_platform->agent_queue);
   *num_agents = num;
   return 0;
 }
@@ -2015,11 +2076,13 @@ MC_LoadAgentFromFile(MCAgency_t attr, const char* filename)
     return 1;
   }
 
-  message_queue_Add
+  ListWRLock(attr->mc_platform->message_queue);
+  ListAdd
     (
      attr->mc_platform->message_queue,
      message
     );
+  ListWRUnlock(attr->mc_platform->message_queue);
   return 0;
 }
 
@@ -2049,7 +2112,9 @@ EXPORTMC int
 MC_MutexLock(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
-  syncnode = syncListFind(id, attr->mc_platform->syncList);
+  ListRDLock(attr->mc_platform->syncList);
+  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+  ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
   }
@@ -2061,7 +2126,9 @@ EXPORTMC int
 MC_MutexUnlock(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
-  syncnode = syncListFind(id, attr->mc_platform->syncList);
+  ListRDLock(attr->mc_platform->syncList);
+  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+  ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
   }
@@ -2181,10 +2248,10 @@ MC_RetrieveAgent(MCAgency_t attr) /*{{{*/
 {
   int i;
   MCAgent_t agent=NULL;
-  MUTEX_LOCK(attr->mc_platform->agent_queue->lock);
+  ListRDLock(attr->mc_platform->agent_queue);
   for (i = 0; i < attr->mc_platform->agent_queue->size; i++) {
     agent = (MCAgent_t)ListSearch(
-        attr->mc_platform->agent_queue->list, i);
+        attr->mc_platform->agent_queue, i);
     MUTEX_LOCK(agent->agent_status_lock);
     if (agent->agent_status == MC_AGENT_NEUTRAL) {
       MUTEX_UNLOCK(agent->agent_status_lock);
@@ -2192,19 +2259,17 @@ MC_RetrieveAgent(MCAgency_t attr) /*{{{*/
     }
     MUTEX_UNLOCK(agent->agent_status_lock);
   }
+  ListRDUnlock(attr->mc_platform->agent_queue);
   if (agent == NULL) {
-    MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
     return NULL;
   }
   MUTEX_LOCK(agent->agent_status_lock);
   if (agent->agent_status != MC_AGENT_NEUTRAL) {
     MUTEX_UNLOCK(agent->agent_status_lock);
-    MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
     return NULL;
   } else {
     MUTEX_UNLOCK(agent->agent_status_lock);
   }
-  MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
   return agent;
 }/*}}}*/
 
@@ -2289,7 +2354,10 @@ EXPORTMC int
 MC_SemaphorePost(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
-  syncnode = syncListFind(id, attr->mc_platform->syncList);
+  ListRDLock(attr->mc_platform->syncList);
+  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, 
+      (ListSearchFunc_t)syncListNode_CmpID);
+  ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
   }
@@ -2301,7 +2369,10 @@ EXPORTMC int
 MC_SemaphoreWait(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
-  syncnode = syncListFind(id, attr->mc_platform->syncList);
+  ListRDLock(attr->mc_platform->syncList);
+  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, 
+      (ListSearchFunc_t)syncListNode_CmpID);
+  ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
   }
@@ -2360,7 +2431,9 @@ MC_SendAgent(MCAgency_t attr, /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    agent_queue_Add( platform->agent_queue, agent);
+    ListWRLock(platform->agent_queue);
+    ListAdd( platform->agent_queue, agent);
+    ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2430,7 +2503,9 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    agent_queue_Add( platform->agent_queue, agent);
+    ListWRLock(platform->agent_queue);
+    ListAdd( platform->agent_queue, agent);
+    ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2447,7 +2522,7 @@ MC_SendAgentMigrationMessage(MCAgency_t attr, /*{{{*/
     const char *hostname,
     int port)
 {
-
+  int ret;
   message_p message;
   printf("\nThe function MC_SendAgentMigrationMessage() is deprecated.\n\
   Please use MC_SendAgent() instead.\n");
@@ -2467,11 +2542,14 @@ MC_SendAgentMigrationMessage(MCAgency_t attr, /*{{{*/
     message_Destroy(message);
     return MC_ERR;
   } else {
-    return message_queue_Add
+    ListWRLock(attr->mc_platform->message_queue);
+    ret = ListAdd
       (
        attr->mc_platform->message_queue,
        message
       );
+    ListWRUnlock(attr->mc_platform->message_queue);
+    return ret;
   }
 } /*}}}*/
 
@@ -2537,7 +2615,9 @@ MC_SendAgentMigrationMessageFile(MCAgency_t attr,  /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    agent_queue_Add( platform->agent_queue, agent);
+    ListWRLock(platform->agent_queue);
+    ListAdd( platform->agent_queue, agent);
+    ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2658,31 +2738,7 @@ MC_SteerControl(void) /*{{{*/
 EXPORTMC int 
 MC_SyncDelete(MCAgency_t attr, int id) /*{{{*/
 {
-  syncListNode_t *sync_node;
-  /* First, lock the entire list. */
-  MUTEX_LOCK(attr->mc_platform->syncList->giant_lock);
-
-  /* Find and lock the node */
-  sync_node = syncListFind(id, attr->mc_platform->syncList);
-  if (sync_node == NULL) {
-    MUTEX_UNLOCK(attr->mc_platform->syncList->giant_lock);
-    return MC_ERR_NOT_FOUND;
-  }
-  MUTEX_LOCK(sync_node->lock);
-
-  /* Remove it from the list so it may no longer be used */
-  if (syncListRemove(id, attr->mc_platform->syncList) == NULL) {
-    fprintf(stderr, "Fatal error. %s:%d\n",
-        __FILE__,
-        __LINE__ );
-    exit(0);
-  }
-
-  /* Now, unlock and destroy */
-  MUTEX_UNLOCK(sync_node->lock);
-  MUTEX_UNLOCK(attr->mc_platform->syncList->giant_lock);
-
-  return syncListNodeDestroy(sync_node);
+  return syncListDelete(id, attr->mc_platform->syncList);
 } /*}}}*/
 
 EXPORTMC int
@@ -2690,12 +2746,13 @@ MC_SyncInit(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *node;
   node = syncListNodeNew();
-  MUTEX_LOCK(attr->mc_platform->syncList->giant_lock);
   if (id == 0) {
     id = rand();
   }
+  ListWRLock(attr->mc_platform->syncList);
   while (
-      syncListFind(id, attr->mc_platform->syncList) != NULL
+      ListSearchCB(attr->mc_platform->syncList, &id, 
+        (ListSearchFunc_t)syncListNode_CmpID) != NULL
       ) 
   {
     id = rand();
@@ -2706,7 +2763,7 @@ MC_SyncInit(MCAgency_t attr, int id) /*{{{*/
       node,
       attr->mc_platform->syncList
       );
-  MUTEX_UNLOCK(attr->mc_platform->syncList->giant_lock);
+  ListWRUnlock(attr->mc_platform->syncList);
   return id;
 }/*}}}*/
 
@@ -2755,19 +2812,15 @@ EXPORTMC int
 MC_WaitAgent(MCAgency_t attr) /*{{{*/
 {
   int size;
-  MUTEX_LOCK(attr->mc_platform->agent_queue->lock);
+  ListRDLock(attr->mc_platform->agent_queue);
   while(1) {
-    size = attr->mc_platform->agent_queue->size;
-    COND_WAIT(
-        attr->mc_platform->agent_queue->cond,
-        attr->mc_platform->agent_queue->lock
-        );
-    if (size < attr->mc_platform->agent_queue->size) {
-      MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
+    size = ListGetSize(attr->mc_platform->agent_queue);
+    ListRDWait(attr->mc_platform->agent_queue);
+    if (size < ListGetSize(attr->mc_platform->agent_queue)) {
       break;
     } 
   }
-  MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
+  ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 } /*}}}*/
 
@@ -2777,11 +2830,11 @@ MC_WaitRetrieveAgent(MCAgency_t attr) /*{{{*/
   int index;
   MCAgent_t agent;
   MC_WaitSignal(attr, MC_RECV_AGENT);
-  MUTEX_LOCK(attr->mc_platform->agent_queue->lock);
-  index = attr->mc_platform->agent_queue->size-1;
+  ListRDLock(attr->mc_platform->agent_queue);
+  index = ListGetSize(attr->mc_platform->agent_queue)-1;
   agent = (MCAgent_t)ListSearch(
-      attr->mc_platform->agent_queue->list, index);
-  MUTEX_UNLOCK(attr->mc_platform->agent_queue->lock);
+      attr->mc_platform->agent_queue, index);
+  ListRDUnlock(attr->mc_platform->agent_queue);
   return agent;
 } /*}}}*/
 
@@ -4174,9 +4227,13 @@ MC_SaveData_chdl(void* varg)
   interp_var_data->data = malloc(size);
   memcpy(interp_var_data->data, data, size);
 
-  agent_variable_list_Add(
+  ListWRLock(
+      agent->datastate->tasks[progress]->agent_variable_list);
+  ListAdd(
       agent->datastate->tasks[progress]->agent_variable_list,
       interp_var_data );
+  ListWRUnlock(
+      agent->datastate->tasks[progress]->agent_variable_list);
 
   return 0;
 }

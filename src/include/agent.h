@@ -40,8 +40,6 @@
 #include "libmc.h"
 #include "message.h"
 #include "macros.h"
-#include "data_structures.h"
-#include "agent_mailbox.h"
 
 struct mc_platform_s;
 
@@ -89,7 +87,7 @@ struct agent_s {
   THREAD_T agent_thread;
 
   /* Agent Mailbox */
-  agent_mailbox_p mailbox;
+  list_t* mailbox; /* Holds fipa_acl_message_t* */
 
   /* Agent Flags */
   int agent_pipe_active;
@@ -147,4 +145,7 @@ DWORD WINAPI agent_RunChScriptThread(void * ChAgent);
 void*
 agent_ChScriptInitVar(ChInterp_t* interp);
 
+int agent_Print(agent_t* agent);
+int agent_CmpName(const void* key, void* element);
+int agent_CmpID(int* id, agent_t* agent);
 #endif 

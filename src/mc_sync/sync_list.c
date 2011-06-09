@@ -53,125 +53,53 @@ int syncListNodeDestroy(struct syncListNode_s *node) { /*{{{*/
     return 0;
 } /*}}}*/
 
-syncListNode_t *syncListFind(int id, struct syncList_s *list) { /*{{{*/
-    listNode_t *tmp;
-    RWLOCK_RDLOCK(list->lock);
-    tmp = (listNode_t*)list->list->listhead;
-    while (tmp != NULL) {
-        if (((syncListNode_t*)(tmp->node_data))->id == id) {
-            RWLOCK_RDUNLOCK(list->lock);
-            return  
-                ((syncListNode_t*)tmp->node_data);
-        }
-        tmp = tmp->next;
-    }
-    RWLOCK_RDUNLOCK(list->lock);
-    return NULL;
-} /* }}} */
-
-struct syncList_s* syncListInit(void) /*{{{*/
-{
-    struct syncList_s* newList;
-    newList = (struct syncList_s*)malloc(sizeof(struct syncList_s));
-    newList->lock = (RWLOCK_T*)malloc(sizeof(RWLOCK_T));
-    RWLOCK_INIT(newList->lock);
-
-    newList->giant_lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
-    MUTEX_INIT(newList->giant_lock);
-
-    newList->list = ListInitialize();
-    return newList;
-} /*}}}*/
-
-int syncListDestroy(struct syncList_s* list)
-{
-    int i;
-    syncListNode_t *tmp;
-    RWLOCK_WRLOCK(list->lock);
-    for(i = 0; i < list->list->size; i++) {
-        tmp = (syncListNode_t*)ListSearch(list->list, i);
-        ListDelete(list->list, i);
-        syncListNodeDestroy(tmp);
-        RWLOCK_WRUNLOCK(list->lock);
-    }
-    RWLOCK_WRUNLOCK(list->lock);
-    ListTerminate(list->list);
-    RWLOCK_DESTROY(list->lock);
-    free(list->lock);
-    MUTEX_DESTROY(list->giant_lock);
-    free(list->giant_lock);
-    free(list);
-    return 0;
-}
-
-int syncListAddNode(struct syncListNode_s *node, struct syncList_s *list) { /*{{{*/
+int syncListAddNode(struct syncListNode_s *node, list_t *list) { /*{{{*/
     /* Check to see if there are identical ID nums */
     listNode_t *tmp;
-    RWLOCK_WRLOCK(list->lock);
-    tmp = (listNode_t *)list->list->listhead;
-    while (tmp != NULL) {
-        if (((syncListNode_t*)(tmp->node_data))->id == node->id) {
-            fprintf(stderr, 
-                    "Warning: Identical COND ID's! %s:%d\n",
-                    __FILE__, __LINE__);
-            continue;
-        }
-        tmp = tmp->next;
+    ListWRLock(list);
+    tmp = ListSearchCB(list, &node->id, (ListSearchFunc_t)syncListNode_CmpID);
+    if(tmp) {
+      fprintf(stderr, 
+          "Warning: Identical COND ID's! %s:%d\n",
+          __FILE__, __LINE__);
     }
-    ListAdd( list->list, (DATA) node);
-    RWLOCK_WRUNLOCK(list->lock);
+    ListAdd( list, (void*) node);
+    ListWRUnlock(list);
     return 0;
 } /*}}}*/
 
-int syncListNew(int id, struct syncList_s *list) { /*{{{*/
+int syncListNew(int id, list_t *list) { /*{{{*/
     syncListNode_t *node;
     node = (syncListNode_t *)malloc(sizeof(syncListNode_t));
     syncListNodeInit(node);
+    node->id = id;
     syncListAddNode(
             node,
             list);
     return id;
 } /*}}}*/
 
-int syncListDelete(int id, struct syncList_s *list) { /*{{{*/
-    int i;
+int syncListDelete(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    RWLOCK_WRLOCK(list->lock);
-    for(i = 0; i < list->list->size; i++) {
-        tmp = (syncListNode_t*)ListSearch(list->list, i);
-        if(tmp->id == id) {
-            ListDelete(list->list, i);
-            syncListNodeDestroy(tmp);
-            RWLOCK_WRUNLOCK(list->lock);
-            return 0;
-        }
+    ListWRLock(list);
+    tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListWRUnlock(list);
+    if(tmp) {
+      syncListNodeDestroy(tmp);
+      return 0;
     }
-    RWLOCK_WRUNLOCK(list->lock);
     return MC_ERR_NOT_FOUND;
 }
         
-syncListNode_t* syncListRemove(int id, struct syncList_s *list) { /*{{{*/
-    int i;
+syncListNode_t* syncListRemove(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    RWLOCK_WRLOCK(list->lock);
-    for(i = 0; i < list->list->size; i++) {
-        tmp = (syncListNode_t*)ListSearch(list->list, i);
-        if (tmp == NULL) {
-            /* Not found */
-            RWLOCK_WRUNLOCK(list->lock);
-            return NULL;
-        }
-        if(tmp->id == id) {
-            if (ListDelete(list->list, i) == NULL) {
-                fprintf(stderr, "Fatal error. %s:%d\n",
-                        __FILE__,
-                        __LINE__ );
-                exit(1);
-            }
-            RWLOCK_WRUNLOCK(list->lock);
-            return tmp;
-        }
-    }
-    RWLOCK_WRUNLOCK(list->lock);
-    return NULL;
+    ListWRLock(list);
+    tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    ListWRUnlock(list);
+    return tmp;
+}
+
+int syncListNode_CmpID(int* key, syncListNode_t* node)
+{
+  return *key - node->id;
 }

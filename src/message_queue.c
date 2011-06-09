@@ -45,7 +45,6 @@
 #else
 #include <pthread.h>
 #endif
-#include "include/data_structures.h"
 #include "include/mc_platform.h"
 
 /**********************************************************************
@@ -56,7 +55,7 @@
  **********************************************************************/
 void message_queue_SendOutgoing(
     struct mc_platform_s* mc_platform,
-    message_queue_p mqueue
+    list_t* mqueue
     )
 {
     /* variables */
@@ -77,19 +76,19 @@ void message_queue_SendOutgoing(
        mc_platform->port
       );
 
-    MUTEX_LOCK(mqueue->lock);
-    while ((message = (message_p)ListSearch(mqueue->list, index))) {
-        MUTEX_UNLOCK(mqueue->lock);
+    ListRDLock(mqueue);
+    while ((message = (message_p)ListSearch(mqueue, index))) {
         if (strcmp(message->to_address, local_address)) {
             message_Send(mc_platform, message, mc_platform -> private_key);
-            message_queue_RemoveIndex(mqueue, index);
+            ListRDtoWR(mqueue);
+            ListDelete(mqueue, index);
+            ListWRtoRD(mqueue);
         } else {
             index++;
         }
-        MUTEX_LOCK(mqueue->lock); /* Lock again for eval of while statement */
     }
+    ListRDUnlock(mqueue);
 
-    MUTEX_UNLOCK(mqueue->lock);
     free(local_address);
     return ;
 }

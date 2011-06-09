@@ -83,99 +83,18 @@ barrier_node_Destroy(barrier_node_p node)
 
 /* List Funcs */
 
-  int
-barrier_queue_Add(barrier_queue_p list, barrier_node_p node)
+int barrier_node_CmpID (const void* key, void* element)
 {
-  /* Check for identical IDs and warn */
-  int err_code = MC_SUCCESS;
-  listNode_t *tmp;
-  RWLOCK_WRLOCK(list->lock);
-  tmp = (listNode_t*)list->list->listhead;
-  while(tmp != NULL) {
-    if (((barrier_node_p)(tmp->node_data))->id == node->id) {
-      fprintf(stderr,
-          "Warning: Barrier node id %d reregistered. %s:%d\n",
-          node->id, __FILE__, __LINE__ );
-      err_code = MC_WARN_DUPLICATE;
-      continue;
-    }
-    tmp = tmp->next;
+  int ret;
+  barrier_node_p e = (barrier_node_p)element;
+  int k = *(int*)key;
+  MUTEX_LOCK(e->lock);
+  if(k == e->id) {
+    ret = 0;
+  } else {
+    ret = 1;
   }
-  ListAdd(list->list, (DATA) node);
-  list->size++;
-  RWLOCK_WRUNLOCK(list->lock);
-  return err_code;
-}
-
-  int 
-barrier_queue_Delete(int id, barrier_queue_p list)
-{
-  int i;
-  barrier_node_p tmp;
-  RWLOCK_WRLOCK(list->lock);
-  for (i = 0; i < list->list->size; i++) {
-    tmp = (barrier_node_p)ListSearch(list->list, i);
-    if (tmp->id == id) {
-      ListDelete(list->list, i);
-      barrier_node_Destroy(tmp);
-      list->size--;
-      RWLOCK_WRUNLOCK(list->lock);
-      return MC_SUCCESS;
-    }
-  }
-  RWLOCK_WRUNLOCK(list->lock);
-  return MC_ERR_NOT_FOUND;
-}
-
-  int
-barrier_queue_Destroy(barrier_queue_p queue)
-{
-  barrier_node_p node;
-  while((node = barrier_queue_Pop(queue)) != NULL) {
-    barrier_node_Destroy(node);
-  }
-  ListTerminate(queue->list);
-  RWLOCK_DESTROY(queue->lock);
-  free(queue->lock);
-  free(queue);
-  return MC_SUCCESS;
-}
-
-  barrier_node_p
-barrier_queue_Get(barrier_queue_p list, int id)
-{
-  listNode_t* tmp;
-  RWLOCK_RDLOCK(list->lock);
-  tmp = (listNode_t*)list->list->listhead;
-  while (tmp != NULL) {
-    if (((barrier_node_p)(tmp->node_data))->id == id) {
-      RWLOCK_RDUNLOCK(list->lock);
-      return ((barrier_node_p)tmp->node_data);
-    }
-    tmp = tmp->next;
-  }
-  RWLOCK_RDUNLOCK(list->lock);
-  return NULL;
-}
-
-  barrier_queue_p
-barrier_queue_New(void)
-{
-  barrier_queue_p new_list;
-  new_list = (barrier_queue_p)malloc(sizeof(barrier_queue_t));
-  CHECK_NULL(new_list, return NULL;);
-  new_list->lock = (RWLOCK_T*)malloc(sizeof(RWLOCK_T));
-  CHECK_NULL(new_list->lock, return NULL;);
-  RWLOCK_INIT(new_list->lock);
-
-  new_list->list = ListInitialize();
-  return new_list;
-}
-
-  barrier_node_p
-barrier_queue_Pop(barrier_queue_p queue)
-{
-  barrier_node_p node = (barrier_node_p)ListPop(queue->list);
-  return node;
+  MUTEX_UNLOCK(e->lock);
+  return ret;
 }
 

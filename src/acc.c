@@ -61,8 +61,8 @@
 
 #include <stdlib.h>
 #include "include/acc.h"
+#include "include/agent.h"
 #include "include/connection.h"
-#include "include/data_structures.h"
 #include "include/macros.h"
 #include "include/mc_error.h"
 #include "include/mc_platform.h"
@@ -131,17 +131,17 @@ acc_MessageHandlerThread(LPVOID arg)
 
   while(1) 
   {
-    MUTEX_LOCK(mc_platform->message_queue->lock);
+    ListWRLock(mc_platform->message_queue);
+    message = ListPop(mc_platform->message_queue);
     MUTEX_LOCK(mc_platform->quit_lock);
-    while(mc_platform->message_queue->size == 0 && !mc_platform->quit) {
+    if(message == NULL && !mc_platform->quit) {
       MUTEX_UNLOCK(mc_platform->quit_lock);
-      COND_WAIT(
-         mc_platform->message_queue->cond,
-         mc_platform->message_queue->lock );
-      MUTEX_LOCK(mc_platform->quit_lock);
-    }
-    if (mc_platform->message_queue->size == 0 && mc_platform->quit)
+      ListWRWait(mc_platform->message_queue);
+      continue;
+    } else
+    if (message == NULL && mc_platform->quit)
     {
+      ListWRUnlock(mc_platform->message_queue);
 			MUTEX_LOCK(&mc_platform->acc->msg_thread_lock);
 			while(mc_platform->acc->num_msg_threads > 0) {
 				COND_WAIT(
@@ -151,13 +151,12 @@ acc_MessageHandlerThread(LPVOID arg)
 			}
 			MUTEX_UNLOCK(&mc_platform->acc->msg_thread_lock);
       MUTEX_UNLOCK(mc_platform->quit_lock);
-      MUTEX_UNLOCK(mc_platform->message_queue->lock);
       THREAD_EXIT();
     }
-
     MUTEX_UNLOCK(mc_platform->quit_lock);
-    MUTEX_UNLOCK(mc_platform->message_queue->lock);
-    message = message_queue_Pop(mc_platform->message_queue);
+    ListWRUnlock(mc_platform->message_queue);
+
+    /* Message should not be NULL here */
     if (message == NULL) {
       printf("POP ERROR\n");
       continue;
@@ -188,9 +187,10 @@ acc_MessageHandlerThread(LPVOID arg)
           if (agent != NULL) {
             /* We need to make sure there are no agent-name collisions. */
             i = 1;
-            if(agent_queue_SearchName(mc_platform->agent_queue, agent->name)) {
+            ListWRLock(mc_platform->agent_queue);
+            if(ListSearchCB(mc_platform->agent_queue, agent->name, agent_CmpName)) {
               origname = agent->name;
-              while(agent_queue_SearchName(mc_platform->agent_queue, agent->name)) {
+              while(ListSearchCB(mc_platform->agent_queue, agent->name, agent_CmpName)) {
                 /* An agent with a matching name was found! For now, let us just
                  * rename the agent. */
                 tmpstr = (char*)malloc(sizeof(char) * strlen(origname) + 7);
@@ -203,9 +203,10 @@ acc_MessageHandlerThread(LPVOID arg)
               free(origname);
             }
             mobile_agent_counter++;
-            agent_queue_Add(
+            ListAdd(
                 mc_platform->agent_queue,
                 agent);
+            ListWRUnlock(mc_platform->agent_queue);
           } else {
 						fprintf(stderr, "agent_Initialize() failed. %s:%d\n", __FILE__, __LINE__);
 					}
@@ -246,9 +247,11 @@ acc_MessageHandlerThread(LPVOID arg)
             MUTEX_UNLOCK(agent->agent_status_lock);
             MUTEX_UNLOCK(agent->lock);
             mobile_agent_counter++;
-            agent_queue_Add(
+            ListWRLock(mc_platform->agent_queue);
+            ListAdd(
                 mc_platform->agent_queue,
                 agent);
+            ListWRUnlock(mc_platform->agent_queue);
           }
           message_Destroy(message);
           /* Send MC_Signal */
@@ -325,23 +328,22 @@ acc_Thread( LPVOID arg )
    * them into messages, and add the messages to the appropriate queue. */
   while(1) {
     connection = NULL;
-    MUTEX_LOCK(mc_platform->connection_queue->lock);
     MUTEX_LOCK(mc_platform->quit_lock);
+    ListRDLock(mc_platform->connection_queue);
     while (
-			(mc_platform->connection_queue->size == 0 ) && !mc_platform->quit) {
+			(ListGetSize(mc_platform->connection_queue) == 0) && !mc_platform->quit) {
       MUTEX_UNLOCK(mc_platform->quit_lock);
-      COND_WAIT(
-          mc_platform->connection_queue->cond,
-          mc_platform->connection_queue->lock
-          );
+      ListRDWait(mc_platform->connection_queue);
       MUTEX_LOCK(mc_platform->quit_lock);
     }
     if 
       (
-       mc_platform->connection_queue->size == 0 &&
+       ListGetSize(mc_platform->connection_queue) == 0 &&
        mc_platform->quit 
       )
       {
+        ListRDUnlock(mc_platform->connection_queue);
+        /* Wait for all connection threads to finish */
 				MUTEX_LOCK(&mc_platform->acc->conn_thread_lock);
 				while(mc_platform->acc->num_conn_threads > 0) {
 					COND_WAIT(
@@ -351,11 +353,9 @@ acc_Thread( LPVOID arg )
 				}
 				MUTEX_UNLOCK(&mc_platform->acc->conn_thread_lock);
         MUTEX_UNLOCK(mc_platform->quit_lock);
-        MUTEX_UNLOCK(mc_platform->connection_queue->lock);
         THREAD_EXIT();
       }
     MUTEX_UNLOCK(mc_platform->quit_lock);
-    MUTEX_UNLOCK(mc_platform->connection_queue->lock);
     /* Send MC Signal */
     MUTEX_LOCK(mc_platform->MC_signal_lock);
     mc_platform->MC_signal = MC_RECV_CONNECTION;
@@ -373,7 +373,9 @@ acc_Thread( LPVOID arg )
     MUTEX_UNLOCK(mc_platform->giant_lock);
 
     /* Continue with normal operation */
-    connection = connection_queue_Pop(mc_platform->connection_queue);
+    ListRDtoWR(mc_platform->connection_queue);
+    connection = ListPop(mc_platform->connection_queue);
+    ListWRUnlock(mc_platform->connection_queue);
 		connection_thread_arg = (connection_thread_arg_t*)malloc(sizeof(connection_thread_arg_t));
 		connection_thread_arg->mc_platform = mc_platform;
 		connection_thread_arg->connection = connection;
@@ -492,10 +494,12 @@ acc_connection_Thread( LPVOID arg )
 					 * each receiving agent's mailbox. */
 					for(i = 0; i < fipa_envelope->num_params; i++) {
 						char* portstr;
+            ListRDLock(mc_platform->agent_queue);
 						for(j = 0; j < fipa_envelope->params[i]->to->num; j++) {
-							agent = agent_queue_SearchName(
+							agent = ListSearchCB(
 									mc_platform->agent_queue,
-									fipa_envelope->params[i]->to->fipa_agent_identifiers[j]->name
+									fipa_envelope->params[i]->to->fipa_agent_identifiers[j]->name,
+                  agent_CmpName
 									);
 							if (agent != NULL) {
                 // we do the following incase we have
@@ -525,12 +529,16 @@ acc_connection_Thread( LPVOID arg )
 									fipa_acl_message_Destroy(fipa_message);
 									fipa_acl_envelope_Destroy(fipa_envelope);
 									mtp_http_Destroy(mtp_http);
+                  ListRDUnlock(mc_platform->agent_queue);
 									CONNECT_THREAD_EXIT();
 								}
-								agent_mailbox_Post( agent->mailbox, fipa_message);
+                ListWRLock(agent->mailbox);
+								ListAdd( agent->mailbox, fipa_message);
+                ListWRUnlock(agent->mailbox);
 								fipa_message_string_Destroy(fipa_message_string);
 							}
 						}
+            ListRDUnlock(mc_platform->agent_queue);
 					}
 					fipa_acl_envelope_Destroy(fipa_envelope);
 					mtp_http_Destroy(mtp_http);
@@ -560,7 +568,9 @@ acc_connection_Thread( LPVOID arg )
 		case AGENT_UPDATE:
 		case RETURN_MSG:
 		case FIPA_ACL:
-			message_queue_Add(mc_platform->message_queue, message);
+      ListWRLock(mc_platform->message_queue);
+			ListAdd(mc_platform->message_queue, message);
+      ListWRUnlock(mc_platform->message_queue);
 			break;
 		default:
 			fprintf(stderr, "Unknown message type:%d. Rejecting message.%s:%d\n",
@@ -896,7 +906,9 @@ listen_Thread( LPVOID arg )
 #endif /* NEW_SECURITY */
 
         /* add the connection to list and increment the number of connections */
-        connection_queue_Add(mc_platform->connection_queue, connection);
+        ListWRLock(mc_platform->connection_queue);
+        ListAdd(mc_platform->connection_queue, connection);
+        ListWRUnlock(mc_platform->connection_queue);
 #ifdef NEW_SECURITY
       }else{ 
         printf("Unable to authenticate %s \n", peer_name);

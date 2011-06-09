@@ -60,4 +60,5 @@ agent_file_data_SaveToFile(const char* filename, agent_file_data_p afd);
 
 int agent_file_data_Destroy(agent_file_data_p agent_file_data);
 
+int agent_file_data_CmpName(const void* key, void* element);
 #endif

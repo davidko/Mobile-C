@@ -251,3 +251,10 @@ interpreter_variable_data_Copy(interpreter_variable_data_p src)
 
   return tmp;
 }
+
+int 
+interpreter_variable_data_CmpName(const char* name, interpreter_variable_data_t* data)
+{
+  return strcmp(name, data->name); 
+}
+

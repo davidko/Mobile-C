@@ -42,6 +42,7 @@
 #else
 #include "winconfig.h"
 #endif
+#include "include/agent_file_data.h"
 #include "include/interpreter_variable_data.h"
 #include "include/message.h"
 #include "include/xml_parser.h"
@@ -594,9 +595,11 @@ agent_xml_parse__data(agent_p agent, xml_parser_p xml_parser, int index)
     interp_variable = agent->datastate->tasks[index]->agent_return_data;
   } else {
     interp_variable = interpreter_variable_data_New();
-    agent_variable_list_Add(
+    ListWRLock(agent->datastate->tasks[index]->agent_variable_list);
+    ListAdd(
         agent->datastate->tasks[index]->agent_variable_list,
         interp_variable );
+    ListWRUnlock(agent->datastate->tasks[index]->agent_variable_list);
   }
 
 
@@ -727,9 +730,11 @@ agent_xml_parse__file(agent_p agent, xml_parser_p xml_parser, int index)
   }
   afd = agent_file_data_NewWithData(name, text);
   free(text);
-  agent_file_list_Add(
+  ListWRLock(agent->datastate->tasks[index]->agent_file_list);
+  ListAdd(
       agent->datastate->tasks[index]->agent_file_list,
       afd);
+  ListWRUnlock(agent->datastate->tasks[index]->agent_file_list);
   return MC_SUCCESS;
 }
 

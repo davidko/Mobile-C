@@ -6,13 +6,11 @@ libmc_la_SOURCES = acc.c \
 									 agent_file_data.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
-									 agent_mailbox.c \
 									 agent_task.c \
 									 ams.c \
 									 barrier.c \
 									 cmd_prompt.c \
 									 connection.c \
-									 data_structures.c \
 									 df.c \
 									 dynstring.c \
 									 fipa_acl.c \
@@ -23,6 +21,7 @@ libmc_la_SOURCES = acc.c \
 									 message.c \
 									 message_queue.c \
 									 mtp_http.c \
+									 rwlock.c \
 									 xml_compose.c \
 									 xml_helper.c \
 									 xml_parser.c \
@@ -41,14 +40,11 @@ stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h
 noinst_HEADERS = include/ams.h \
 								 include/agent_datastate.h \
-								 include/agent_mailbox.h \
 								 include/agent_task.h \
-								 include/ap_queue_template.h \
 								 include/barrier.h \
 								 include/cmd_prompt.h \
 								 include/commands.h \
 								 include/commands.x.h \
-								 include/data_structures.h \
 								 include/df.h \
 								 include/df_request.x.h \
 								 include/fipa_acl_envelope.h \
@@ -59,6 +55,7 @@ noinst_HEADERS = include/ams.h \
 								 include/mc_platform.h \
 								 include/mc_rwlock.h \
 								 include/mtp_http.h \
+								 include/rwlock.h \
 								 include/xml_compose.h \
 								 include/xml_helper.h \
 								 include/xml_parser.h \
