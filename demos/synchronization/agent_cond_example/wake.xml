@@ -20,9 +20,13 @@
 int main()
 {
     int cond_id;
+    int err;
     cond_id = SYNC_ID;
     printf("This is the wake agent.\n");
-    mc_CondSignal(cond_id);
+    err = mc_CondSignal(cond_id);
+    if(err) {
+      printf("Error signalling condition variable!\n");
+    }
 
     return 0;
 }

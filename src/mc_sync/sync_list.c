@@ -56,7 +56,6 @@ int syncListNodeDestroy(struct syncListNode_s *node) { /*{{{*/
 int syncListAddNode(struct syncListNode_s *node, list_t *list) { /*{{{*/
     /* Check to see if there are identical ID nums */
     listNode_t *tmp;
-    ListWRLock(list);
     tmp = ListSearchCB(list, &node->id, (ListSearchFunc_t)syncListNode_CmpID);
     if(tmp) {
       fprintf(stderr, 
@@ -64,7 +63,6 @@ int syncListAddNode(struct syncListNode_s *node, list_t *list) { /*{{{*/
           __FILE__, __LINE__);
     }
     ListAdd( list, (void*) node);
-    ListWRUnlock(list);
     return 0;
 } /*}}}*/
 
@@ -81,9 +79,7 @@ int syncListNew(int id, list_t *list) { /*{{{*/
 
 int syncListDelete(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    ListWRLock(list);
     tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
-    ListWRUnlock(list);
     if(tmp) {
       syncListNodeDestroy(tmp);
       return 0;
@@ -93,9 +89,7 @@ int syncListDelete(int id, list_t *list) { /*{{{*/
         
 syncListNode_t* syncListRemove(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    ListWRLock(list);
     tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
-    ListWRUnlock(list);
     return tmp;
 }
 
