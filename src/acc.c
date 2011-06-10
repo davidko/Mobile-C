@@ -132,7 +132,7 @@ acc_MessageHandlerThread(LPVOID arg)
   ListWRLock(mc_platform->message_queue);
   while(1) 
   {
-    message = ListPop(mc_platform->message_queue);
+    message = (message_t*)ListPop(mc_platform->message_queue);
     MUTEX_LOCK(mc_platform->quit_lock);
     if(message == NULL && !mc_platform->quit) {
       MUTEX_UNLOCK(mc_platform->quit_lock);
@@ -375,7 +375,7 @@ acc_Thread( LPVOID arg )
 
     /* Continue with normal operation */
     ListRDtoWR(mc_platform->connection_queue);
-    connection = ListPop(mc_platform->connection_queue);
+    connection = (connection_t*)ListPop(mc_platform->connection_queue);
     ListWRUnlock(mc_platform->connection_queue);
 		connection_thread_arg = (connection_thread_arg_t*)malloc(sizeof(connection_thread_arg_t));
 		connection_thread_arg->mc_platform = mc_platform;
@@ -497,7 +497,7 @@ acc_connection_Thread( LPVOID arg )
 						char* portstr;
             ListRDLock(mc_platform->agent_queue);
 						for(j = 0; j < fipa_envelope->params[i]->to->num; j++) {
-							agent = ListSearchCB(
+							agent = (agent_t*)ListSearchCB(
 									mc_platform->agent_queue,
 									fipa_envelope->params[i]->to->fipa_agent_identifiers[j]->name,
                   agent_CmpName

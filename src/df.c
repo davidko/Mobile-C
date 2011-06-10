@@ -136,7 +136,7 @@ df_ProcessRequest(
   ListWRLock(global->df->request_list);
   if ( 
       (
-       request = ListPop( global->df->request_list ) 
+       request = (df_request_list_node_t*)ListPop( global->df->request_list ) 
       ) == NULL
      )
   {

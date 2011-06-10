@@ -641,7 +641,7 @@ EXPORTMC int MC_AgentListFiles(
   *num_files = size;
   *names = (char**)malloc(sizeof(char*)*(size+1));
   for( i = 0; i < size; i++) {
-    afd = ListSearch(
+    afd = (agent_file_data_t*)ListSearch(
         agent->datastate->tasks[task_num]->agent_file_list,
         i);
     if(afd == NULL) { 
@@ -672,7 +672,7 @@ EXPORTMC int MC_AgentRetrieveFile(
   }
   /* Find the file */
   ListRDLock( agent->datastate->tasks[task_num]->agent_file_list );
-  agent_file_data = ListSearchCB(
+  agent_file_data = (agent_file_data_t*)ListSearchCB(
       agent->datastate->tasks[task_num]->agent_file_list,
       (const void*)name,
       agent_file_data_CmpName);
@@ -853,7 +853,7 @@ EXPORTMC const void* MC_AgentVariableRetrieve(MCAgent_t agent, const char* var_n
   }
 
   ListRDLock(agent->datastate->tasks[task_num]->agent_variable_list);
-  interp_var = ListSearchCB(
+  interp_var = (interpreter_variable_data_t*)ListSearchCB(
       agent->datastate->tasks[task_num]->agent_variable_list,
       var_name,
       (ListSearchFunc_t)interpreter_variable_data_CmpName );
@@ -874,7 +874,7 @@ EXPORTMC int MC_AgentVariableRetrieveInfo(MCAgent_t agent, const char* var_name,
   }
 
   ListRDLock(agent->datastate->tasks[task_num]->agent_variable_list);
-  interp_var = ListSearchCB(
+  interp_var = (interpreter_variable_data_t*)ListSearchCB(
       agent->datastate->tasks[task_num]->agent_variable_list,
       var_name,
       (ListSearchFunc_t)interpreter_variable_data_CmpName );
@@ -915,7 +915,7 @@ MC_Barrier(MCAgency_t attr, int id) /*{{{*/
     list_t* list = attr->mc_platform->barrier_queue;
     barrier_node_p node;
     ListRDLock(list);
-    node = ListSearchCB(list, &id, barrier_node_CmpID);
+    node = (barrier_node_t*)ListSearchCB(list, &id, barrier_node_CmpID);
     ListRDUnlock(list);
     if(node == NULL) {
         return MC_ERR_NOT_FOUND;
@@ -943,7 +943,10 @@ MC_BarrierInit(MCAgency_t attr, int id, int num_procs) /*{{{*/
     barrier_node_p node;
     /* First see if there already exists a barrier of the same ID. */
     ListRDLock(attr->mc_platform->barrier_queue);
-    node = ListSearchCB(attr->mc_platform->barrier_queue, &id, barrier_node_CmpID);
+    node = (barrier_node_t*)ListSearchCB(
+        attr->mc_platform->barrier_queue, 
+        &id, 
+        barrier_node_CmpID);
     ListRDUnlock(attr->mc_platform->barrier_queue);
     if (node != NULL) {
       return MC_ERR;
@@ -960,7 +963,10 @@ MC_BarrierDelete(MCAgency_t attr, int id) /*{{{*/
 {
   barrier_node_t* node;
   ListWRLock(attr->mc_platform->barrier_queue);
-  node = ListDeleteCB(attr->mc_platform->barrier_queue, &id, barrier_node_CmpID);
+  node = (barrier_node_t*)ListDeleteCB(
+      attr->mc_platform->barrier_queue, 
+      &id, 
+      barrier_node_CmpID);
   ListWRUnlock(attr->mc_platform->barrier_queue);
   if(node) {
     barrier_node_Destroy(node);
@@ -1294,7 +1300,10 @@ MC_CondBroadcast(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
     ListRDLock(attr->mc_platform->syncList);
-    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    condnode = (syncListNode_t*)ListSearchCB(
+        attr->mc_platform->syncList, 
+        &id, 
+        (ListSearchFunc_t)syncListNode_CmpID);
     ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
@@ -1311,7 +1320,10 @@ MC_CondSignal(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
     ListRDLock(attr->mc_platform->syncList);
-    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    condnode = (syncListNode_t*)ListSearchCB(
+        attr->mc_platform->syncList, 
+        &id, 
+        (ListSearchFunc_t)syncListNode_CmpID);
     ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
@@ -1328,7 +1340,10 @@ MC_CondWait(MCAgency_t attr, int id)  /*{{{*/
 {
     syncListNode_t *condnode;
     ListRDLock(attr->mc_platform->syncList);
-    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    condnode = (syncListNode_t*)ListSearchCB(
+        attr->mc_platform->syncList, 
+        &id, 
+        (ListSearchFunc_t)syncListNode_CmpID);
     ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
@@ -1352,7 +1367,10 @@ MC_CondReset(MCAgency_t attr, int id) /*{{{*/
 {
     syncListNode_t *condnode;
     ListRDLock(attr->mc_platform->syncList);
-    condnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    condnode = (syncListNode_t*)ListSearchCB(
+        attr->mc_platform->syncList, 
+        &id, 
+        (ListSearchFunc_t)syncListNode_CmpID);
     ListRDUnlock(attr->mc_platform->syncList);
     if (condnode == NULL) {
         return MC_ERR_NOT_FOUND;
@@ -1428,7 +1446,7 @@ MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
 
     /* Delete the agent from the list */
     ListWRLock(mc_platform->agent_queue);
-    tmp = ListDeleteCB(mc_platform->agent_queue, agentName, 
+    tmp = (agent_t*)ListDeleteCB(mc_platform->agent_queue, agentName, 
         (ListSearchFunc_t) agent_CmpName);
     if(tmp) agent_Destroy(tmp);
     ListWRUnlock(mc_platform->agent_queue);
@@ -1598,7 +1616,8 @@ MC_FindAgentByName( MCAgency_t attr, /*{{{*/
     list = attr->mc_platform->agent_queue;
   }
   ListRDLock(list);
-  agent = ListSearchCB(list, name, (ListSearchFunc_t)agent_CmpName);
+  agent = (agent_t*)ListSearchCB(
+      list, name, (ListSearchFunc_t)agent_CmpName);
   ListRDUnlock(list);
   return agent;
 } /*}}}*/
@@ -1616,7 +1635,8 @@ MC_FindAgentByID( MCAgency_t attr, /*{{{*/
     list = attr->mc_platform->agent_queue;
   }
   ListRDLock(list);
-  agent = ListSearchCB(list, &ID, (ListSearchFunc_t)agent_CmpID);
+  agent = (agent_t*)ListSearchCB(
+      list, &ID, (ListSearchFunc_t)agent_CmpID);
   ListRDUnlock(list);
   return agent;
 } /*}}}*/
@@ -1788,7 +1808,7 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
   int total_agents;
   /* Count the number of agents */
   ListRDLock(attr->mc_platform->agent_queue);
-  while ((agent = ListSearch(attr->mc_platform->agent_queue, index)) != NULL) {
+  while ((agent = (agent_t*)ListSearch(attr->mc_platform->agent_queue, index)) != NULL) {
     if((1<<agent->agent_status) & agent_status_flags) {
       (*num_agents)++;
     }
@@ -1806,7 +1826,7 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
   /* Assign the agents */
   i = 0;
   for(index = 0; index < total_agents; index++) {
-    agent = ListSearch 
+    agent = (agent_t*)ListSearch 
         (
          attr->mc_platform->agent_queue,
          index
@@ -1839,7 +1859,7 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
   *num_agents = index;
   /* Assign the agents */
   for(index = 0; index < *num_agents; index++) {
-    (*agents)[index] = ListSearch
+    (*agents)[index] = (agent_t*)ListSearch
       (
        attr->mc_platform->agent_queue,
        index
@@ -2113,7 +2133,10 @@ MC_MutexLock(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
   ListRDLock(attr->mc_platform->syncList);
-  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+  syncnode = (syncListNode_t*)ListSearchCB(
+      attr->mc_platform->syncList, 
+      &id, 
+      (ListSearchFunc_t)syncListNode_CmpID);
   ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
@@ -2127,7 +2150,10 @@ MC_MutexUnlock(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
   ListRDLock(attr->mc_platform->syncList);
-  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, (ListSearchFunc_t)syncListNode_CmpID);
+  syncnode = (syncListNode_t*)ListSearchCB(
+      attr->mc_platform->syncList, 
+      &id, 
+      (ListSearchFunc_t)syncListNode_CmpID);
   ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
     return 1;
@@ -2355,7 +2381,9 @@ MC_SemaphorePost(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
   ListRDLock(attr->mc_platform->syncList);
-  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, 
+  syncnode = (syncListNode_t*)ListSearchCB(
+      attr->mc_platform->syncList, 
+      &id, 
       (ListSearchFunc_t)syncListNode_CmpID);
   ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {
@@ -2370,7 +2398,9 @@ MC_SemaphoreWait(MCAgency_t attr, int id) /*{{{*/
 {
   syncListNode_t *syncnode;
   ListRDLock(attr->mc_platform->syncList);
-  syncnode = ListSearchCB(attr->mc_platform->syncList, &id, 
+  syncnode = (syncListNode_t*)ListSearchCB(
+      attr->mc_platform->syncList, 
+      &id, 
       (ListSearchFunc_t)syncListNode_CmpID);
   ListRDUnlock(attr->mc_platform->syncList);
   if (syncnode == NULL) {

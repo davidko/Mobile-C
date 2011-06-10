@@ -421,7 +421,7 @@ agent_xml_compose__task(agent_p agent, int index)
   while
     (
      ( 
-      tmp_interp_var = ListPop(
+      tmp_interp_var = (interpreter_variable_data_t*)ListPop(
         agent->datastate->tasks[index]->agent_variable_list )
      ) != NULL 
     )
@@ -449,7 +449,7 @@ agent_xml_compose__task(agent_p agent, int index)
   while
     (
      ( 
-      agent_file_data = ListPop(
+      agent_file_data = (agent_file_data_t*)ListPop(
         agent->datastate->tasks[index]->agent_file_list )
      ) != NULL 
     )

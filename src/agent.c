@@ -124,7 +124,7 @@ int agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_nam
   
   /* Make sure that the variable is not already in the agent's list already. */
   ListWRLock(agent->datastate->tasks[task_num]->agent_variable_list);
-  tmp = ListDeleteCB(
+  tmp = (interpreter_variable_data_t*)ListDeleteCB(
       agent->datastate->tasks[task_num]->agent_variable_list, 
       var_name,
       (ListSearchFunc_t)interpreter_variable_data_CmpName);
@@ -1365,8 +1365,8 @@ int agent_Print(agent_t* agent) {
 
 int agent_CmpName(const void* key, void* element)
 {
-  const char* name = key;
-  agent_t* agent = element;
+  const char* name = (const char*)key;
+  agent_t* agent = (agent_t*)element;
   int ret;
   MUTEX_LOCK(agent->lock);
   ret = strcmp(name, agent->name);

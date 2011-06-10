@@ -55,8 +55,11 @@ int syncListNodeDestroy(struct syncListNode_s *node) { /*{{{*/
 
 int syncListAddNode(struct syncListNode_s *node, list_t *list) { /*{{{*/
     /* Check to see if there are identical ID nums */
-    listNode_t *tmp;
-    tmp = ListSearchCB(list, &node->id, (ListSearchFunc_t)syncListNode_CmpID);
+    syncListNode_t *tmp;
+    tmp = (syncListNode_t*)ListSearchCB(
+        list, 
+        &node->id, 
+        (ListSearchFunc_t)syncListNode_CmpID);
     if(tmp) {
       fprintf(stderr, 
           "Warning: Identical COND ID's! %s:%d\n",
@@ -79,7 +82,8 @@ int syncListNew(int id, list_t *list) { /*{{{*/
 
 int syncListDelete(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    tmp = (syncListNode_t*)ListDeleteCB(
+        list, &id, (ListSearchFunc_t)syncListNode_CmpID);
     if(tmp) {
       syncListNodeDestroy(tmp);
       return 0;
@@ -89,7 +93,8 @@ int syncListDelete(int id, list_t *list) { /*{{{*/
         
 syncListNode_t* syncListRemove(int id, list_t *list) { /*{{{*/
     syncListNode_t *tmp;
-    tmp = ListDeleteCB(list, &id, (ListSearchFunc_t)syncListNode_CmpID);
+    tmp = (syncListNode_t*)ListDeleteCB(
+        list, &id, (ListSearchFunc_t)syncListNode_CmpID);
     return tmp;
 }
 
