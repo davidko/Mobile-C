@@ -131,4 +131,6 @@ mc_platform_Destroy(mc_platform_p mc_platform);
 
 ChInterp_t* interpreter_queue_CreateRetrieve( 
     list_t *queue , ChOptions_t* interp_options);
+
+list_t* mc_platform_GetQueue(mc_platform_p platform, enum MC_QueueIndex_e index);
 #endif 

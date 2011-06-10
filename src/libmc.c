@@ -2179,6 +2179,54 @@ MC_PrintAgentCode(MCAgent_t agent) /*{{{*/
 } /*}}}*/
 
 EXPORTMC int 
+MC_QueueRDLock(MCAgency_t agency, enum MC_QueueIndex_e queue)
+{
+  list_t* list;
+  list = mc_platform_GetQueue(agency->mc_platform, queue);
+  if(list == NULL) {
+    return -1;
+  }
+  ListRDLock(list);
+  return 0;
+}
+
+EXPORTMC int 
+MC_QueueRDUnlock(MCAgency_t agency, enum MC_QueueIndex_e queue)
+{
+  list_t* list;
+  list = mc_platform_GetQueue(agency->mc_platform, queue);
+  if(list == NULL) {
+    return -1;
+  }
+  ListRDUnlock(list);
+  return 0;
+}
+
+EXPORTMC int 
+MC_QueueWRLock(MCAgency_t agency, enum MC_QueueIndex_e queue)
+{
+  list_t* list;
+  list = mc_platform_GetQueue(agency->mc_platform, queue);
+  if(list == NULL) {
+    return -1;
+  }
+  ListWRLock(list);
+  return 0;
+}
+
+EXPORTMC int 
+MC_QueueWRUnlock(MCAgency_t agency, enum MC_QueueIndex_e queue)
+{
+  list_t* list;
+  list = mc_platform_GetQueue(agency->mc_platform, queue);
+  if(list == NULL) {
+    return -1;
+  }
+  ListWRUnlock(list);
+  return 0;
+}
+
+EXPORTMC int 
 MC_RegisterService( /*{{{*/
     MCAgency_t agency,
     MCAgent_t agent,

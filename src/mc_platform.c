@@ -362,3 +362,20 @@ ChInterp_t* interpreter_queue_CreateRetrieve( list_t *queue , ChOptions_t* inter
 	return interp;
 }
 
+list_t* mc_platform_GetQueue(mc_platform_p platform, enum MC_QueueIndex_e index)
+{
+  switch(index) {
+    case MC_QUEUE_MESSAGE:
+      return platform->message_queue;
+    case MC_QUEUE_AGENT:
+      return platform->agent_queue;
+    case MC_QUEUE_CONNECTION:
+      return platform->connection_queue;
+    case MC_QUEUE_SYNC:
+      return platform->syncList;
+    case MC_QUEUE_BARRIER:
+      return platform->barrier_queue;
+    default:
+      return NULL;
+  }
+}
