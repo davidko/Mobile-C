@@ -67,6 +67,8 @@ struct mc_platform_s{
   list_t* message_queue;
   list_t* agent_queue;
   list_t* connection_queue;
+  int agent_processing; /* This flag is set if the user calles the
+                           MC_AgentProcessingBegin() function */
 
   df_p df;
   ams_p ams;

@@ -131,6 +131,7 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
   mc_platform->interpreter_queue = ListInitialize();
   mc_platform->initInterps = agency->initInterps;
 
+  mc_platform->agent_processing = 0;
   //printf("Mobile-C:  Initializing %d interpreters\n", mc_platform->initInterps);
   /* Fill the interpreter queue with interpreters, initialized and ready to go. */
   for(i = 0; i < mc_platform->initInterps; i++) {

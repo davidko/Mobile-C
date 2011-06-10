@@ -574,6 +574,16 @@ EXPORTMC int MC_AgentListFiles(
     int* num_files /*OUT*/);
 
 /**
+ * \brief           Begin a series of agent functions
+ *
+ * \param agency    A handle to a running agency
+ *
+ * \return          returns 0 on success, -1 on failure.
+ */
+EXPORTMC int MC_AgentProcessingBegin(MCAgency_t attr);
+EXPORTMC int MC_AgentProcessingEnd(MCAgency_t attr);
+
+/**
  * \brief           Saves an agent's attached file to the filesystem
  * \param name      The name of the agent's stored file
  * \param save_path The location to save the file (including the filename)

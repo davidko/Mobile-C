@@ -67,10 +67,11 @@ other threads will be able to attain read or write locks until the
 locking thread has unlocked the write-lock.
 
 These functions are useful for suspending certain queues, such as the agent queue,
-to make sure they are not modified while user-space algorithms are running. For
-instance, if the user wants to retrieve the number of agents currently residing on the
-system, and then perform an action on each agent, the user should first place lock the queue
-to ensure that no agents are added or deleted from the queue during the middle of operations.
+to make sure they are not modified while user-space algorithms are running. If
+you need to lock the agent queue for processing with functions such as
+\texttt{MC\_GetNumAgents(), MC\_GetAllAgents()}, or similar functions, please
+use the \texttt{MC\_AgentProcessingBegin()} and \texttt{MC\_AgentProcessingEnd()} 
+functions instead.
 
 Note that any queue that is locked by the user should also be unlocked by the user with 
 the corresponding functions, or the agency will cease to function normally. 
@@ -84,8 +85,9 @@ processed.
 \item The agent queue: Locking the agent queue will prevent Mobile-C from
 adding or removing agents. For new agents, agent and message processing is
 still executed up until the last step where the agent is to be added to the
-queue. This might be useful if you are processing agents in an agency and must
-ensure that no agents are added or deleted during processing.
+queue. If you intend to lock this queue to call functions such as 
+\texttt{MC\_GetAllAgents}, please use the \texttt{MC\_AgentProcessingBegin()}
+function instead.
 \item The connection queue: Locking this will effectively prevent Mobile-C from
 processing new connections.
 \item The sync queue: Locking this queue for writing will cause all Mobile-C

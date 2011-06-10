@@ -426,9 +426,11 @@ MC_AddAgent(MCAgency_t attr, MCAgent_t agent) /*{{{*/
 {
   agent->mc_platform = attr->mc_platform;
 
-  ListWRLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListWRLock(attr->mc_platform->agent_queue);
   ListAdd(attr->mc_platform->agent_queue, agent);
-  ListWRUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListWRUnlock(attr->mc_platform->agent_queue);
 
   MUTEX_LOCK(attr->mc_platform->ams->runflag_lock);
   attr->mc_platform->ams->run = 1;
@@ -456,9 +458,11 @@ EXPORTMC int MC_AddStationaryAgent(
 	stationary_agent_info->agent->name = strdup(name);
 	stationary_agent_info->attr = agency;
 	stationary_agent_info->agency = agency;
-  ListWRLock(agency->mc_platform->agent_queue);
+  if(!agency->mc_platform->agent_processing)
+    ListWRLock(agency->mc_platform->agent_queue);
 	ListAdd(agency->mc_platform->agent_queue, stationary_agent_info->agent);
-  ListWRUnlock(agency->mc_platform->agent_queue);
+  if(!agency->mc_platform->agent_processing)
+    ListWRUnlock(agency->mc_platform->agent_queue);
 #ifndef _WIN32
 	THREAD_CREATE(&stationary_agent_info->thread, (void*(*)(void*))agent_thread, stationary_agent_info);
 #else
@@ -652,6 +656,22 @@ EXPORTMC int MC_AgentListFiles(
   }
   names[i] = NULL;
   ListRDUnlock(agent->datastate->tasks[task_num]->agent_file_list);
+  return 0;
+}
+
+EXPORTMC int
+MC_AgentProcessingBegin(MCAgency_t attr)
+{
+  ListWRLock(attr->mc_platform->agent_queue);
+  attr->mc_platform->agent_processing = 1;
+  return 0;
+}
+
+EXPORTMC int
+MC_AgentProcessingEnd(MCAgency_t attr)
+{
+  attr->mc_platform->agent_processing = 0;
+  ListWRUnlock(attr->mc_platform->agent_queue);
   return 0;
 }
 
@@ -1412,9 +1432,11 @@ MC_DeleteAgent(MCAgent_t agent) /*{{{*/
     MC_TerminateAgent(agent);
 
     /* Delete the agent from the list */
-    ListWRLock(mc_platform->agent_queue);
+    if(!mc_platform->agent_processing)
+      ListWRLock(mc_platform->agent_queue);
     ListDeleteCB(mc_platform->agent_queue, agentName, (ListSearchFunc_t)agent_CmpName);
-    ListWRUnlock(mc_platform->agent_queue);
+    if(!mc_platform->agent_processing)
+      ListWRUnlock(mc_platform->agent_queue);
     free(agentName);
 
     return MC_SUCCESS;
@@ -1445,11 +1467,13 @@ MC_DeleteAgentWG(MCAgent_t calling_agent, MCAgent_t agent) /*{{{*/
     MC_TerminateAgentWG(calling_agent, agent);
 
     /* Delete the agent from the list */
-    ListWRLock(mc_platform->agent_queue);
+    if(!mc_platform->agent_processing)
+      ListWRLock(mc_platform->agent_queue);
     tmp = (agent_t*)ListDeleteCB(mc_platform->agent_queue, agentName, 
         (ListSearchFunc_t) agent_CmpName);
     if(tmp) agent_Destroy(tmp);
-    ListWRUnlock(mc_platform->agent_queue);
+    if(!mc_platform->agent_processing)
+      ListWRUnlock(mc_platform->agent_queue);
 
     free(agentName);
 
@@ -1615,10 +1639,12 @@ MC_FindAgentByName( MCAgency_t attr, /*{{{*/
   } else {
     list = attr->mc_platform->agent_queue;
   }
-  ListRDLock(list);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(list);
   agent = (agent_t*)ListSearchCB(
       list, name, (ListSearchFunc_t)agent_CmpName);
-  ListRDUnlock(list);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(list);
   return agent;
 } /*}}}*/
 
@@ -1634,10 +1660,12 @@ MC_FindAgentByID( MCAgency_t attr, /*{{{*/
   } else {
     list = attr->mc_platform->agent_queue;
   }
-  ListRDLock(list);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(list);
   agent = (agent_t*)ListSearchCB(
       list, &ID, (ListSearchFunc_t)agent_CmpID);
-  ListRDUnlock(list);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(list);
   return agent;
 } /*}}}*/
 
@@ -1807,7 +1835,8 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
   *num_agents = 0;
   int total_agents;
   /* Count the number of agents */
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   while ((agent = (agent_t*)ListSearch(attr->mc_platform->agent_queue, index)) != NULL) {
     if((1<<agent->agent_status) & agent_status_flags) {
       (*num_agents)++;
@@ -1817,7 +1846,8 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
 
   if (*num_agents == 0) {
     *agents = NULL;
-    ListRDUnlock(attr->mc_platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListRDUnlock(attr->mc_platform->agent_queue);
     return -1;
   }
   total_agents = index;
@@ -1837,7 +1867,8 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
       i++;
     }
   }
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 }
 
@@ -1846,12 +1877,14 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
 {
   int index = 0;
   /* Count the number of agents */
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   index = ListGetSize(attr->mc_platform->agent_queue);
   if (index == 0) {
     *agents = NULL;
     *num_agents = 0;
-    ListRDUnlock(attr->mc_platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListRDUnlock(attr->mc_platform->agent_queue);
     return -1;
   }
 
@@ -1865,7 +1898,8 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents) /*{{{*/
        index
       );
   }
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 } /*}}}*/
 
@@ -1873,9 +1907,11 @@ EXPORTMC int
 MC_GetNumAgents(MCAgency_t attr, int* num_agents)
 {
   int num;
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   num = ListGetSize(attr->mc_platform->agent_queue);
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   *num_agents = num;
   return 0;
 }
@@ -2322,7 +2358,8 @@ MC_RetrieveAgent(MCAgency_t attr) /*{{{*/
 {
   int i;
   MCAgent_t agent=NULL;
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   for (i = 0; i < attr->mc_platform->agent_queue->size; i++) {
     agent = (MCAgent_t)ListSearch(
         attr->mc_platform->agent_queue, i);
@@ -2333,7 +2370,8 @@ MC_RetrieveAgent(MCAgency_t attr) /*{{{*/
     }
     MUTEX_UNLOCK(agent->agent_status_lock);
   }
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   if (agent == NULL) {
     return NULL;
   }
@@ -2509,9 +2547,11 @@ MC_SendAgent(MCAgency_t attr, /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    ListWRLock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRLock(platform->agent_queue);
     ListAdd( platform->agent_queue, agent);
-    ListWRUnlock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2581,9 +2621,11 @@ MC_SendAgentFile(MCAgency_t attr,  /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    ListWRLock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRLock(platform->agent_queue);
     ListAdd( platform->agent_queue, agent);
-    ListWRUnlock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2693,9 +2735,11 @@ MC_SendAgentMigrationMessageFile(MCAgency_t attr,  /*{{{*/
     agent->agent_status = MC_WAIT_MESSGSEND;
     COND_BROADCAST(agent->agent_status_cond);
     MUTEX_UNLOCK(agent->agent_status_lock);
-    ListWRLock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRLock(platform->agent_queue);
     ListAdd( platform->agent_queue, agent);
-    ListWRUnlock(platform->agent_queue);
+    if(!attr->mc_platform->agent_processing)
+      ListWRUnlock(platform->agent_queue);
     /* Set the ams to run */
     MUTEX_LOCK(platform->ams->runflag_lock);
     platform->ams->run = 1;
@@ -2890,7 +2934,8 @@ EXPORTMC int
 MC_WaitAgent(MCAgency_t attr) /*{{{*/
 {
   int size;
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   while(1) {
     size = ListGetSize(attr->mc_platform->agent_queue);
     ListRDWait(attr->mc_platform->agent_queue);
@@ -2898,7 +2943,8 @@ MC_WaitAgent(MCAgency_t attr) /*{{{*/
       break;
     } 
   }
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   return 0;
 } /*}}}*/
 
@@ -2908,11 +2954,13 @@ MC_WaitRetrieveAgent(MCAgency_t attr) /*{{{*/
   int index;
   MCAgent_t agent;
   MC_WaitSignal(attr, MC_RECV_AGENT);
-  ListRDLock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDLock(attr->mc_platform->agent_queue);
   index = ListGetSize(attr->mc_platform->agent_queue)-1;
   agent = (MCAgent_t)ListSearch(
       attr->mc_platform->agent_queue, index);
-  ListRDUnlock(attr->mc_platform->agent_queue);
+  if(!attr->mc_platform->agent_processing)
+    ListRDUnlock(attr->mc_platform->agent_queue);
   return agent;
 } /*}}}*/
 
