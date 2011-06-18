@@ -107,6 +107,17 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.1.4, June 17, 2011
+*)  Modified internal linked list structure to be simpler, more responsive, and
+    more stable.
+*)  Fixed some bugs related to deletion of agents
+*)  Added Mobile-C queue locking functions. These functions may be used to
+    ensure that agents residing in a queue remain there as long as the queue is
+    locked.
+*)  Added a convenience function called MC_AgentProcessingBegin() and
+    MC_AgentProcessingEnd(), which should be called before and after user-space
+    agent processing functions.
+
 Version MobileC v2.1.3, April 20, 2011
 *)  Added missing makefile for Windows
 *)  Fixed some Windows syntax errors
