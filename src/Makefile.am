@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = gnu
-SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2
+SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2/src
 lib_LTLIBRARIES = libmc.la
 libmc_la_SOURCES = acc.c \
 									 agent.c \

@@ -126,6 +126,7 @@ AC_CONFIG_FILES([Makefile
                  src/Makefile
                  src/mc_list/Makefile
                  src/mc_sync/Makefile
+                 src/libb64-1.2/src/Makefile
                  src/security/xyssl-0.9/library/Makefile
                  bin/Makefile
                 demos/communication_with_other_FIPA_compliant_agents/mc_to_jade_example/Makefile
