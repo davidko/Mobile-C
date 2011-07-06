@@ -27,7 +27,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"../include/macros.h"
-#include"../include/rwlock.h"
+#include"rwlock.h"
 
 /* The following function pointer typedef is the list search callback function.
  * The function should take 2 arguments and compare them, returns 0 for a

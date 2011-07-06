@@ -22,7 +22,7 @@
 /* Filename: list.c */
 
 #include "list.h"
-#include "../include/rwlock.h"
+#include "rwlock.h"
 #include <stdio.h>
 #include <stdlib.h>
 

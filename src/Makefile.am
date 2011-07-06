@@ -21,7 +21,6 @@ libmc_la_SOURCES = acc.c \
 									 message.c \
 									 message_queue.c \
 									 mtp_http.c \
-									 rwlock.c \
 									 xml_compose.c \
 									 xml_helper.c \
 									 xml_parser.c \
@@ -55,7 +54,6 @@ noinst_HEADERS = include/ams.h \
 								 include/mc_platform.h \
 								 include/mc_rwlock.h \
 								 include/mtp_http.h \
-								 include/rwlock.h \
 								 include/xml_compose.h \
 								 include/xml_helper.h \
 								 include/xml_parser.h \

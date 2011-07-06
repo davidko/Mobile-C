@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/rwlock.h"
+#include "rwlock.h"
 
 int rwlock_wrlock(rwlock_t* rwlock)
 {

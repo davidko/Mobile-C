@@ -78,7 +78,7 @@ am_libmc_la_OBJECTS = acc.lo agent.lo agent_file_data.lo \
 	agent_return_data.lo agent_datastate.lo agent_task.lo ams.lo \
 	barrier.lo cmd_prompt.lo connection.lo df.lo dynstring.lo \
 	fipa_acl.lo fipa_envelope.lo libmc.lo mc_platform.lo \
-	mc_rwlock.lo message.lo message_queue.lo mtp_http.lo rwlock.lo \
+	mc_rwlock.lo message.lo message_queue.lo mtp_http.lo \
 	xml_compose.lo xml_helper.lo xml_parser.lo asm.lo asm_node.lo \
 	asm_message_parser.lo asm_message_composer.lo mc_dh.lo \
 	interface.lo
@@ -288,7 +288,6 @@ libmc_la_SOURCES = acc.c \
 									 message.c \
 									 message_queue.c \
 									 mtp_http.c \
-									 rwlock.c \
 									 xml_compose.c \
 									 xml_helper.c \
 									 xml_parser.c \
@@ -321,7 +320,6 @@ noinst_HEADERS = include/ams.h \
 								 include/mc_platform.h \
 								 include/mc_rwlock.h \
 								 include/mtp_http.h \
-								 include/rwlock.h \
 								 include/xml_compose.h \
 								 include/xml_helper.h \
 								 include/xml_parser.h \
@@ -432,7 +430,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/message.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/message_queue.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mtp_http.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rwlock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_compose.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_helper.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_parser.Plo@am__quote@

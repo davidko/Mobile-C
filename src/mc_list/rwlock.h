@@ -1,7 +1,7 @@
 #ifndef _RWLOCK_H_
 #define _RWLOCK_H_
 
-#include "macros.h"
+#include "../include/macros.h"
 
 typedef struct rwlock_s
 {
