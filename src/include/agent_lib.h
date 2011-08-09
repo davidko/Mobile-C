@@ -99,6 +99,9 @@ EXPORTCH int
 MC_AgentAttachFile_chdl(void *varg);
 
 EXPORTCH int
+MC_AgentDataShare_Add_chdl(void *varg);
+
+EXPORTCH int
 MC_AgentListFiles_chdl(void *varg);
 
 EXPORTCH int

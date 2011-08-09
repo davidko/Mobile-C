@@ -58,6 +58,7 @@
 
 #include <b64/cdecode.h>
 
+#include "include/agent_share_data.h"
 #include "include/libmc.h"
 #include "include/mc_error.h"
 #include "include/macros.h"
@@ -926,6 +927,38 @@ EXPORTMC int MC_AgentVariableSave(MCAgent_t agent, const char* var_name)
   }
   task->num_saved_variables++;
 
+  return 0;
+}
+
+EXPORTMC int MC_AgentDataShare_Add(MCAgent_t agent, const char* name, const void* data, size_t size)
+{
+  /* Create a new instance of the data structure */
+  agent_share_data_t* sharedata;
+  sharedata = agent_share_data_New();
+  sharedata->size = size;
+  sharedata->name = strdup(name);
+  sharedata->data = (void*)malloc(size);
+  memcpy(sharedata->data, data, size);
+
+  /* Add it to the queue */
+  ListAdd(agent->agent_share_data_queue, sharedata);
+  return 0;
+}
+
+EXPORTMC int MC_AgentDataShare_Retrieve(MCAgent_t agent, const char* name, void** data, size_t* size)
+{
+  agent_share_data_t* sharedata;
+  sharedata = ListSearchCB(
+      agent->agent_share_data_queue, 
+      name, 
+      (ListSearchFunc_t)agent_share_data_CmpName);
+  if(sharedata == NULL) {
+    *data = NULL;
+    *size = 0;
+    return -1;
+  }
+  *data = malloc(sharedata->size);
+  memcpy(*data, sharedata->data, sharedata->size);
   return 0;
 }
 
@@ -3373,6 +3406,30 @@ MC_AgentAddTask_chdl(void *varg) /*{{{*/
   Ch_VaEnd(interp, ap);
   return retval;
 } /*}}}*/
+
+/* MC_AgentDataShare_Add */
+EXPORTCH int
+MC_AgentDataShare_Add_chdl(void *varg)
+{
+  int retval;
+  MCAgent_t agent;
+  const char* name;
+  const void* data;
+  size_t size;
+
+  ChInterp_t interp;
+  ChVaList_t ap;
+  Ch_VaStart(interp, ap, varg);
+
+  agent = Ch_VaArg(interp, ap, MCAgent_t);
+  name = Ch_VaArg(interp, ap, const char*);
+  data = Ch_VaArg(interp, ap, void*);
+  size = Ch_VaArg(interp, ap, size_t);
+
+  retval = MC_AgentDataShare_Add(agent, name, data, size);
+  Ch_VaEnd(interp, ap);
+  return retval;
+}
 
 /* MC_AgentAttachFile */
 EXPORTCH int

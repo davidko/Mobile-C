@@ -43,6 +43,7 @@
 
 #include "include/libmc.h"
 #include "include/agent.h"
+#include "include/agent_share_data.h"
 #include "include/mc_platform.h"
 #include "include/message.h"
 #include "include/agent_lib.h"
@@ -200,6 +201,10 @@ agent_Copy(const agent_p agent)
 	/* Mailbox */
 	cp_agent->mailbox = ListInitialize();
 
+  cp_agent->agent_share_data_queue = ListCopy(
+      agent->agent_share_data_queue, 
+      (ListElemCopyFunc_t)agent_share_data_Copy);
+
   return cp_agent;
 }
 
@@ -229,6 +234,8 @@ agent_New(void)
   COND_INIT(agent->agent_status_cond);
 
   agent->mailbox = ListInitialize();
+
+  agent->agent_share_data_queue = ListInitialize();
 
   return agent;
 }
@@ -280,6 +287,9 @@ agent_NewBinary( struct mc_platform_s *mc_platform)
 
   /* Set up an empty mailbox */
   agent->mailbox = ListInitialize();
+
+  /* Set up data share */
+  agent->agent_share_data_queue = ListInitialize();
 
   /* In the future we will compare the current tasks server name to 
      the one on the server, presently this is not implemented */
@@ -364,6 +374,9 @@ agent_Initialize(
 
   /* Set up an empty mailbox */
   agent->mailbox = ListInitialize();
+
+  /* Set up agent share */
+  agent->agent_share_data_queue = ListInitialize();
 
   /* parse the xml */
   agent->datastate = agent_datastate_New();
@@ -499,10 +512,16 @@ agent_Destroy(agent_p agent)
   free(agent->lock);
   agent_datastate_Destroy(agent->datastate);
   free(agent->run_lock);
+  /* Delete agent mailbox */
   ListWRLock(agent->mailbox);
   ListClearCB(agent->mailbox, (ListElemDestroyFunc_t)fipa_acl_message_Destroy);
   ListWRUnlock(agent->mailbox);
   ListTerminate(agent->mailbox);
+  /* Delete agent shared data */
+  ListWRLock(agent->agent_share_data_queue);
+  ListClearCB(agent->agent_share_data_queue, (ListElemDestroyFunc_t)agent_share_data_Destroy);
+  ListWRUnlock(agent->agent_share_data_queue);
+  ListTerminate(agent->agent_share_data_queue);
   /* deallocate the agent */
   free(agent);
   agent = NULL;
@@ -760,6 +779,11 @@ agent_ChScriptInitVar(ChInterp_t* interp)
       *interp,
       "int mc_AgentAttachFile(void* agent, const char* name, const char* filepath);",
       (ChFuncdl_t)MC_AgentAttachFile_chdl
+      );
+  Ch_DeclareFunc(
+      *interp,
+      "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned int size);",
+      (ChFuncdl_t)MC_AgentDataShare_Add_chdl
       );
   Ch_DeclareFunc(
       *interp,

@@ -613,6 +613,9 @@ int MC_AgentAddTaskFromFile(
     const char* server,
     int persistent);
 
+EXPORTMC int MC_AgentDataShare_Add(MCAgent_t agent, const char* name, const void* data, size_t size);
+EXPORTMC int MC_AgentDataShare_Retrieve(MCAgent_t agent, const char* name, void** data, size_t* size);
+
 /**
  * \brief           Get the host Mobile-C agency handle from a
  *                  "stationary_agent_info_t" data structure.

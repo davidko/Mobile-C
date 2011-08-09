@@ -102,6 +102,8 @@ struct agent_s {
   MUTEX_T* agent_status_lock;
   COND_T*  agent_status_cond;
 
+  list_t* agent_share_data_queue;
+
 	int binary; /* Indicates whether or not this is a binary space agent */
 };
 #ifndef AGENT_T

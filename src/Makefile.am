@@ -7,6 +7,7 @@ libmc_la_SOURCES = acc.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
 									 agent_task.c \
+									 agent_share_data.c \
 									 ams.c \
 									 barrier.c \
 									 cmd_prompt.c \
@@ -39,6 +40,7 @@ stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h
 noinst_HEADERS = include/ams.h \
 								 include/agent_datastate.h \
+								 include/agent_share_data.h \
 								 include/agent_task.h \
 								 include/barrier.h \
 								 include/cmd_prompt.h \

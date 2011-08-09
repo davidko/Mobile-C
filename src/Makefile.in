@@ -75,13 +75,13 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libmc_la_DEPENDENCIES = mc_sync/libmc_sync.la mc_list/libmc_list.la \
 	security/xyssl-0.9/library/libxyssl.la
 am_libmc_la_OBJECTS = acc.lo agent.lo agent_file_data.lo \
-	agent_return_data.lo agent_datastate.lo agent_task.lo ams.lo \
-	barrier.lo cmd_prompt.lo connection.lo df.lo dynstring.lo \
-	fipa_acl.lo fipa_envelope.lo libmc.lo mc_platform.lo \
-	mc_rwlock.lo message.lo message_queue.lo mtp_http.lo \
-	xml_compose.lo xml_helper.lo xml_parser.lo asm.lo asm_node.lo \
-	asm_message_parser.lo asm_message_composer.lo mc_dh.lo \
-	interface.lo
+	agent_return_data.lo agent_datastate.lo agent_task.lo \
+	agent_share_data.lo ams.lo barrier.lo cmd_prompt.lo \
+	connection.lo df.lo dynstring.lo fipa_acl.lo fipa_envelope.lo \
+	libmc.lo mc_platform.lo mc_rwlock.lo message.lo \
+	message_queue.lo mtp_http.lo xml_compose.lo xml_helper.lo \
+	xml_parser.lo asm.lo asm_node.lo asm_message_parser.lo \
+	asm_message_composer.lo mc_dh.lo interface.lo
 libmc_la_OBJECTS = $(am_libmc_la_OBJECTS)
 libmc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(libmc_la_LDFLAGS) \
@@ -274,6 +274,7 @@ libmc_la_SOURCES = acc.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
 									 agent_task.c \
+									 agent_share_data.c \
 									 ams.c \
 									 barrier.c \
 									 cmd_prompt.c \
@@ -305,6 +306,7 @@ stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h
 noinst_HEADERS = include/ams.h \
 								 include/agent_datastate.h \
+								 include/agent_share_data.h \
 								 include/agent_task.h \
 								 include/barrier.h \
 								 include/cmd_prompt.h \
@@ -409,6 +411,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_datastate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_file_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_return_data.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_share_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agent_task.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ams.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asm.Plo@am__quote@
