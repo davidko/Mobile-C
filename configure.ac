@@ -2,16 +2,16 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([MobileC], 2.1.3, [dko@ucdavis.edu])
+AC_INIT([MobileC], 2.1.4, [dko@ucdavis.edu])
 AC_CONFIG_SRCDIR([src/libmc.c])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([MobileC], 2.1.3)
+AM_INIT_AUTOMAKE([MobileC], 2.1.4)
 AM_PROG_LIBTOOL
 AC_CONFIG_MACRO_DIR([m4])
 
 MC_VER_MAJ=2
 MC_VER_MIN=1
-MC_VER_REV=3
+MC_VER_REV=4
 
 # Set up configure options
 AC_ARG_ENABLE(security, 
@@ -126,6 +126,7 @@ AC_CONFIG_FILES([Makefile
                  src/Makefile
                  src/mc_list/Makefile
                  src/mc_sync/Makefile
+                 src/libb64-1.2/src/Makefile
                  src/security/xyssl-0.9/library/Makefile
                  bin/Makefile
                 demos/communication_with_other_FIPA_compliant_agents/mc_to_jade_example/Makefile

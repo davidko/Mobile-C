@@ -1483,7 +1483,7 @@ int send_AES_en_MA(int sockfd, int *my_nonce ,char *outfile, char *pubkey) /*{{{
 		return -1;
 	}
 	
-    if (numbytes = send(sockfd , ciphertext, 135, 0) == -1){	
+    if ((numbytes = send(sockfd , ciphertext, 135, 0)) == -1){	
 		printf("Error while sending size of encryptee message to receiver \n");
 		return -1;
 	}
@@ -1495,7 +1495,7 @@ int send_AES_en_MA(int sockfd, int *my_nonce ,char *outfile, char *pubkey) /*{{{
 #endif	
 
 	// sending encrypted message
-	if ( numbytes = send(sockfd , MA_buffer, (int)stbuf.st_size, 0) == -1 ) {	
+	if ( (numbytes = send(sockfd , MA_buffer, (int)stbuf.st_size, 0)) == -1 ) {	
 	//if (numbytes = send(sockfd , "University of California, Davis", 35, 0) == -1){
         perror("send");
 #ifdef COM

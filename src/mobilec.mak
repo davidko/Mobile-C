@@ -13,13 +13,11 @@ OBJS= acc.obj \
 									 agent_return_data.obj \
 									 agent_datastate.obj \
 									 agent_file_data.obj \
-									 agent_mailbox.obj \
 									 agent_task.obj \
 									 ams.obj \
 									 barrier.obj \
 									 cmd_prompt.obj \
 									 connection.obj \
-									 data_structures.obj \
 									 df.obj \
 									 dynstring.obj \
 									 fipa_acl.obj \
@@ -30,6 +28,7 @@ OBJS= acc.obj \
 									 message.obj \
 									 message_queue.obj \
 									 mtp_http.obj \
+									 rwlock.obj \
 									 xml_compose.obj \
 									 xml_helper.obj \
 									 xml_parser.obj \
@@ -53,8 +52,6 @@ agent_datastate.obj:agent_datastate.c
 	$(CC) agent_datastate.c $(CFLAGS) 
 agent_file_data.obj:agent_file_data.c
 	$(CC) agent_file_data.c $(CFLAGS)
-agent_mailbox.obj:agent_mailbox.c 
-	$(CC) agent_mailbox.c $(CFLAGS) 
 agent_task.obj:agent_task.c 
 	$(CC) agent_task.c $(CFLAGS) 
 ams.obj:ams.c 
@@ -65,8 +62,6 @@ cmd_prompt.obj:cmd_prompt.c
 	$(CC) cmd_prompt.c $(CFLAGS) 
 connection.obj:connection.c 
 	$(CC) connection.c $(CFLAGS) 
-data_structures.obj:data_structures.c 
-	$(CC) data_structures.c $(CFLAGS) 
 df.obj:df.c 
 	$(CC) df.c $(CFLAGS) 
 dynstring.obj:dynstring.c 
@@ -87,6 +82,8 @@ message_queue.obj:message_queue.c
 	$(CC) message_queue.c $(CFLAGS) 
 mtp_http.obj:mtp_http.c 
 	$(CC) mtp_http.c $(CFLAGS) 
+rwlock.obj:rwlock.c 
+	$(CC) rwlock.c $(CFLAGS) 
 xml_compose.obj:xml_compose.c 
 	$(CC) xml_compose.c $(CFLAGS) 
 xml_helper.obj:xml_helper.c 

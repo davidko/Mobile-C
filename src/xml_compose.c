@@ -417,10 +417,11 @@ agent_xml_compose__task(agent_p agent, int index)
   }
 
   /* Now, add all the variables that the agent wants to save */
+  ListWRLock( agent->datastate->tasks[index]->agent_variable_list );
   while
     (
      ( 
-      tmp_interp_var = agent_variable_list_Pop(
+      tmp_interp_var = (interpreter_variable_data_t*)ListPop(
         agent->datastate->tasks[index]->agent_variable_list )
      ) != NULL 
     )
@@ -432,6 +433,7 @@ agent_xml_compose__task(agent_p agent, int index)
     free(tmp_interp_var);
     if(tmp_node == NULL) {
       fprintf(stderr, "Compose error. %s:%d\n", __FILE__, __LINE__);
+      ListWRUnlock( agent->datastate->tasks[index]->agent_variable_list );
       return NULL;
     }
     mxmlAdd(
@@ -440,12 +442,14 @@ agent_xml_compose__task(agent_p agent, int index)
         NULL,
         tmp_node );
   }
+  ListWRUnlock( agent->datastate->tasks[index]->agent_variable_list );
 
+  ListWRLock( agent->datastate->tasks[index]->agent_file_list );
   /* Now add all the files the agent has with it */
   while
     (
      ( 
-      agent_file_data = agent_file_list_Pop(
+      agent_file_data = (agent_file_data_t*)ListPop(
         agent->datastate->tasks[index]->agent_file_list )
      ) != NULL 
     )
@@ -457,6 +461,7 @@ agent_xml_compose__task(agent_p agent, int index)
     agent_file_data_Destroy(agent_file_data);
     if(tmp_node == NULL) {
       fprintf(stderr, "Compose error. %s:%d\n", __FILE__, __LINE__);
+      ListWRUnlock( agent->datastate->tasks[index]->agent_file_list );
       return NULL;
     }
     mxmlAdd(
@@ -465,7 +470,7 @@ agent_xml_compose__task(agent_p agent, int index)
         NULL,
         tmp_node);
   }
-
+  ListWRUnlock( agent->datastate->tasks[index]->agent_file_list );
   return node;
 }
 

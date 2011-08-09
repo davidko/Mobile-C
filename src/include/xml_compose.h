@@ -35,6 +35,7 @@
 #ifndef _XML_COMPOSE_H_
 #define _XML_COMPOSE_H_
 #include "agent.h"
+#include "agent_file_data.h"
 
 mxml_node_t*
 agent_xml_compose(agent_p agent);

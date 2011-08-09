@@ -1,18 +1,17 @@
 AUTOMAKE_OPTIONS = gnu
-SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2
+SUBDIRS = mc_sync mc_list mxml-2.2.2 security/xyssl-0.9/library libb64-1.2/src
 lib_LTLIBRARIES = libmc.la
 libmc_la_SOURCES = acc.c \
 									 agent.c \
 									 agent_file_data.c \
 									 agent_return_data.c \
 									 agent_datastate.c \
-									 agent_mailbox.c \
 									 agent_task.c \
+									 agent_share_data.c \
 									 ams.c \
 									 barrier.c \
 									 cmd_prompt.c \
 									 connection.c \
-									 data_structures.c \
 									 df.c \
 									 dynstring.c \
 									 fipa_acl.c \
@@ -41,14 +40,12 @@ stuffdir = $(includedir)
 dist_stuff_HEADERS = include/libmc.h include/fipa_acl.h include/dynstring.h
 noinst_HEADERS = include/ams.h \
 								 include/agent_datastate.h \
-								 include/agent_mailbox.h \
+								 include/agent_share_data.h \
 								 include/agent_task.h \
-								 include/ap_queue_template.h \
 								 include/barrier.h \
 								 include/cmd_prompt.h \
 								 include/commands.h \
 								 include/commands.x.h \
-								 include/data_structures.h \
 								 include/df.h \
 								 include/df_request.x.h \
 								 include/fipa_acl_envelope.h \

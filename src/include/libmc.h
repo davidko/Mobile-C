@@ -189,6 +189,17 @@ enum MC_ThreadIndex_e{
     MC_THREAD_AGENT,  /*!< Agent threads */
     MC_THREAD_ALL };
 
+/**
+ * \brief     MobileC data queue indices
+ */
+enum MC_QueueIndex_e{
+    MC_QUEUE_MESSAGE,
+    MC_QUEUE_AGENT,
+    MC_QUEUE_CONNECTION,
+    MC_QUEUE_SYNC,
+    MC_QUEUE_BARRIER,
+    MC_QUEUE_NUM
+};
 
 /**
  * \brief     Available commands for MC_Steer
@@ -561,6 +572,16 @@ EXPORTMC int MC_AgentListFiles(
     int task_num,
     char*** names, /*OUT*/
     int* num_files /*OUT*/);
+
+/**
+ * \brief           Begin a series of agent functions
+ *
+ * \param agency    A handle to a running agency
+ *
+ * \return          returns 0 on success, -1 on failure.
+ */
+EXPORTMC int MC_AgentProcessingBegin(MCAgency_t attr);
+EXPORTMC int MC_AgentProcessingEnd(MCAgency_t attr);
 
 /**
  * \brief           Saves an agent's attached file to the filesystem
@@ -1559,6 +1580,26 @@ EXPORTMC extern int MC_SetThreadsAllOff(MCAgencyOptions_t* options);
  * \return          0 on success, error_code_t on failure
  */
 EXPORTMC extern int MC_PrintAgentCode(MCAgent_t agent);
+
+/**
+ * \brief           Lock an agency queue for reading. Prevents other threads from writing.
+ */
+EXPORTMC extern int MC_QueueRDLock(MCAgency_t agency, enum MC_QueueIndex_e queue);
+
+/**
+ * \brief           Unlock an agency queue that was previously locked for reading. 
+ */
+EXPORTMC extern int MC_QueueRDUnlock(MCAgency_t agency, enum MC_QueueIndex_e queue);
+
+/**
+ * \brief           Lock an agency queue for writing. Prevents other threads from reading and writing.
+ */
+EXPORTMC extern int MC_QueueWRLock(MCAgency_t agency, enum MC_QueueIndex_e queue);
+
+/**
+ * \brief           Unlock an agency queue that was previously locked for writing. 
+ */
+EXPORTMC extern int MC_QueueWRUnlock(MCAgency_t agency, enum MC_QueueIndex_e queue);
 
 /**
  * \brief           Retrieves an agent's Ch code

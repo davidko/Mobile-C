@@ -66,20 +66,5 @@ barrier_node_Destroy(barrier_node_p node);
 
 /* List Funcs */
 
-int 
-barrier_queue_Add(barrier_queue_p list, barrier_node_p node);
-
-int 
-barrier_queue_Delete(int id, barrier_queue_p list);
-
-int barrier_queue_Destroy(barrier_queue_p queue);
-
-barrier_node_p
-barrier_queue_Get(barrier_queue_p list, int id);
-
-barrier_queue_p 
-barrier_queue_New(void);
-
-barrier_node_p
-barrier_queue_Pop(barrier_queue_p queue);
+int barrier_node_CmpID (const void* key, void* element);
 #endif

@@ -34,8 +34,8 @@
 
 #ifndef _AGENT_TASK_H_
 #define _AGENT_TASK_H_
+#include "../mc_list/list.h"
 #include "interpreter_variable_data.h"
-#include "data_structures.h"
 
 typedef struct agent_task_s{
  
@@ -50,11 +50,11 @@ typedef struct agent_task_s{
 
   /* data elements */
   interpreter_variable_data_t* agent_return_data;
-  struct agent_variable_list_s* agent_variable_list;
+  list_t* agent_variable_list; /* holds interpreter_variable_data_t* */
   char** saved_variables;
   int num_saved_variables;
 
-  struct agent_file_list_s* agent_file_list;
+  list_t* agent_file_list; /* holds agent_file_data_t* */
 
 } agent_task_t;
 

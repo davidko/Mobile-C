@@ -50,15 +50,11 @@
 df_Add(struct df_s* df, struct df_node_s* node)
 {
   int err;
-
-  SIGNAL(
-      df->cond,
-      df->lock,
-
-      err = ListAdd(df->service_list, (void*) node);
-      if (err == MC_SUCCESS) 
-      df->num_entries++;
-      );
+  ListWRLock(df->service_list);
+  err = ListAdd(df->service_list, (void*) node);
+  if (err == MC_SUCCESS) 
+    df->num_entries++;
+  ListWRUnlock(df->service_list);
   return err;
 }
 
@@ -67,15 +63,11 @@ df_AddRequest(struct df_s* df, struct df_request_list_node_s* node)
 {
   int err;
 
-  SIGNAL(
-      df->request_list->cond,
-      df->request_list->lock,
-
-      err = ListAdd(
-        df->request_list->request_list,
-        (void*)node );
-      df->request_list->size++;
-      );
+  ListWRLock(df->request_list);
+  err = ListAdd(
+      df->request_list,
+      (void*)node );
+  ListWRUnlock(df->request_list);
   return err;
 }
 
@@ -84,9 +76,11 @@ df_Destroy(df_p df)
 {
   df_node_p df_node;
   MUTEX_LOCK(df->lock);
+  ListWRLock(df->service_list);
   while ( (df_node = (df_node_p)ListPop(df->service_list)) != NULL) {
     df_node_Destroy(df_node);
   }
+  ListWRUnlock(df->service_list);
   ListTerminate(df->service_list);
   df_request_list_Destroy(df->request_list);
   MUTEX_DESTROY(df->lock);
@@ -119,7 +113,7 @@ df_Initialize(mc_platform_p mc_platform)
   df->service_list = ListInitialize();
 
   /* Initialize the Request List */
-  df->request_list = df_request_list_New();
+  df->request_list = ListInitialize();
 
   df->num_entries = 0;
   df->waiting = 0;
@@ -139,15 +133,18 @@ df_ProcessRequest(
   int handler_code;
   enum df_request_list_index_e request_code;
   df_request_list_node_t *request;
+  ListWRLock(global->df->request_list);
   if ( 
       (
-       request = df_request_list_Pop( global->df->request_list ) 
+       request = (df_request_list_node_t*)ListPop( global->df->request_list ) 
       ) == NULL
      )
   {
+    ListWRUnlock(global->df->request_list);
     printf("Empty.\n");
     return MC_ERR_EMPTY;
   }
+  ListWRUnlock(global->df->request_list);
 
   /* Process the request, call the correct handler */
 #define REQUEST(name, string, description) \
@@ -320,69 +317,26 @@ df_request_list_node_New(void)
 
 /* df_request_list functions */
   int
-df_request_list_Destroy(df_request_list_p df_request_list)
+df_request_list_Destroy(list_t* df_request_list)
 {
   df_request_list_node_p node;
+  ListWRLock(df_request_list);
   while 
     ( 
      (
       node = 
       (df_request_list_node_p)ListPop
       (
-       df_request_list->request_list
+       df_request_list
       )
      ) != NULL
     )
     {
       df_request_list_node_Destroy(node);
     }
-  ListTerminate(df_request_list->request_list);
-  MUTEX_DESTROY(df_request_list->lock);
-  free(df_request_list->lock);
-  COND_DESTROY(df_request_list->cond);
-  free(df_request_list->cond);
-  free(df_request_list);
+  ListWRUnlock(df_request_list);
+  ListTerminate(df_request_list);
   return MC_SUCCESS;
-}
-
-  df_request_list_p 
-df_request_list_New(void)
-{
-  df_request_list_p new_list;
-  new_list = (df_request_list_p)malloc(sizeof(df_request_list_t));
-  CHECK_NULL(new_list, return NULL;);
-
-  /* Initialize sync */
-  new_list->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
-  CHECK_NULL(new_list->lock, return NULL;);
-  new_list->cond = (COND_T*)malloc(sizeof(COND_T));
-  CHECK_NULL(new_list->cond, return NULL;);
-
-  MUTEX_INIT(new_list->lock);
-  COND_INIT(new_list->cond);
-
-  new_list->size=0;
-
-  new_list->request_list = ListInitialize();
-  if (new_list->request_list == NULL) {
-    return NULL;
-  } else
-    return new_list;
-}
-
-  df_request_list_node_p 
-df_request_list_Pop(df_request_list_p requests)
-{
-  df_request_list_node_t *node;
-  MUTEX_LOCK( requests->lock );
-  if (requests->size <= 0) {
-    MUTEX_UNLOCK( requests->lock );
-    return NULL;
-  }
-  node = (df_request_list_node_t*)ListPop(requests->request_list);
-  requests->size--;
-  MUTEX_UNLOCK( requests->lock );
-  return node;
 }
 
 /*df_request_search functions */
@@ -437,7 +391,7 @@ DWORD WINAPI df_Thread( LPVOID arg )
   int err_code;
   mc_platform_p global = (mc_platform_p)arg;
   while(1) {
-    MUTEX_LOCK(global->df->request_list->lock);
+    ListRDLock(global->df->request_list);
     MUTEX_LOCK(global->quit_lock);
     while 
       (
@@ -452,11 +406,7 @@ DWORD WINAPI df_Thread( LPVOID arg )
         COND_BROADCAST(global->df->waiting_cond);
         MUTEX_UNLOCK(global->df->waiting_lock);
         /* Wait for activity */
-        COND_WAIT
-          (
-           global->df->request_list->cond,
-           global->df->request_list->lock
-          );
+        ListRDWait(global->df->request_list);
         MUTEX_LOCK(global->quit_lock);
       }
     /* Set waiting flag off */
@@ -469,11 +419,11 @@ DWORD WINAPI df_Thread( LPVOID arg )
        global->df->request_list->size == 0 && global->quit
       ) {
         MUTEX_UNLOCK(global->quit_lock);
-        MUTEX_UNLOCK(global->df->request_list->lock);
+        ListRDUnlock(global->df->request_list);
         THREAD_EXIT();
       }
     MUTEX_UNLOCK(global->quit_lock);
-    MUTEX_UNLOCK(global->df->request_list->lock);
+    ListRDUnlock(global->df->request_list);
     if ( 
         (err_code = df_ProcessRequest(
                                       global
@@ -487,9 +437,6 @@ DWORD WINAPI df_Thread( LPVOID arg )
   }
   return 0;
 }
-
-
-
 
 /* Request Handlers */
 

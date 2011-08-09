@@ -1,0 +1,56 @@
+\rhead{\bf MC\_AgentProcessingBegin()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_AgentProcessingBegin()\index{MC\_AgentProcessingBegin()}}\\
+{\LARGE \bf MC\_AgentProcessingEnd()\index{MC\_AgentProcessingEnd()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_AgentProcessingBegin()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_AgentProcessingBegin}({\bf MCAgency\_t} $agency$);\\
+{\bf int MC\_AgentProcessingEnd}({\bf MCAgency\_t} $agency$);\\
+
+\noindent
+{\bf Purpose}\\
+These functions ensure that the agents in an agency are not added or deleted
+during the execution of a block of code.\\
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle associated with a running agency. 
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+These functions are used to ensure that the agents on an agency do not change.
+These functions should be used if the user wishes to inspect the on-board
+agents using functions such as \texttt{MC\_GetNumAgents}, or any other
+functions that deal with agents, in a serial manner. For instance, if the user
+first wishes to call \texttt{MC\_GetNumAgents()}, and then loop through each
+agent to perform an action, they should encapsulate that block of code with
+calls to \texttt{MC\_AgentProcessingBegin()} and
+\texttt{MC\_AgentProcessingEnd()}, to ensure that no new agents are added or
+deleted during the execution of the for loop.\\
+
+\noindent
+{\bf Example}\\
+\noindent
+{\footnotesize\verbatiminput{../demos/miscellaneous/mc_get_agents_example/client.c}}
+
+\noindent
+{\bf See Also}\\
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

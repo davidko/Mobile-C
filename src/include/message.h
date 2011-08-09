@@ -178,4 +178,5 @@ message_send_Thread(LPVOID arg);
 
 int 
 http_to_hostport(const char* http_str, char** host, int* port, char** target);
+int message_Print(message_t* message);
 #endif

@@ -22,28 +22,15 @@ typedef struct syncListNode_s {
 }syncListNode_t;
 typedef syncListNode_t* syncListNode_p;
 
-/* CondList */
-typedef struct syncList_s {
-    RWLOCK_T *lock; /* Protects the list */
-    MUTEX_T *giant_lock; /* Higher level lock: used to protect series
-                            of list operations */
-    list_p list;
-    int size;
-}syncList_t;
-typedef syncList_t* syncList_p;
-
 int syncListNodeInit(struct syncListNode_s *node);
 int syncListNodeDestroy(struct syncListNode_s *node);
-syncListNode_t *syncListFind(int id, struct syncList_s *list);
 struct syncListNode_s* syncListNodeNew(void);
 
-int syncListDelete(int id, struct syncList_s *list);
-syncListNode_t* syncListRemove(int id, struct syncList_s *list);
-struct syncList_s* syncListInit(void);
-int syncListDestroy(struct syncList_s* list);
-int syncListAddNode(struct syncListNode_s *node, struct syncList_s *list);
-int syncListNew(int id, struct syncList_s *list);
-syncListNode_t* syncListGet(int id, struct syncList_s *list);
+int syncListDelete(int id, list_t *list);
+syncListNode_t* syncListRemove(int id, list_t *list);
+int syncListAddNode(struct syncListNode_s *node, list_t *list);
+int syncListNew(int id, list_t *list);
+syncListNode_t* syncListGet(int id, list_t *list);
 
-
+int syncListNode_CmpID(int* key, syncListNode_t* node);
 #endif

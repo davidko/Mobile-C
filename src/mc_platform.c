@@ -121,16 +121,17 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
   mc_platform->port = agency->portno;
   mc_platform->interp_options = ch_options;
 
-  mc_platform->message_queue     = message_queue_New();
-  mc_platform->agent_queue       = agent_queue_New();
-  mc_platform->connection_queue  = connection_queue_New();
+  mc_platform->message_queue     = ListInitialize();
+  mc_platform->agent_queue       = ListInitialize();
+  mc_platform->connection_queue  = ListInitialize();
   
-  mc_platform->syncList          = syncListInit();
-  mc_platform->barrier_queue     = barrier_queue_New();
+  mc_platform->syncList          = ListInitialize();
+  mc_platform->barrier_queue     = ListInitialize();
 
-  mc_platform->interpreter_queue = interpreter_queue_New();
+  mc_platform->interpreter_queue = ListInitialize();
   mc_platform->initInterps = agency->initInterps;
 
+  mc_platform->agent_processing = 0;
   //printf("Mobile-C:  Initializing %d interpreters\n", mc_platform->initInterps);
   /* Fill the interpreter queue with interpreters, initialized and ready to go. */
   for(i = 0; i < mc_platform->initInterps; i++) {
@@ -151,9 +152,9 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
     // Initialize all of the global variables
     agent_ChScriptInitVar(interp);
 
-    interpreter_queue_Add(
-      mc_platform->interpreter_queue,
-      (struct AP_GENERIC_s*)interp );
+    ListWRLock(mc_platform->interpreter_queue);
+    ListAdd(mc_platform->interpreter_queue, (void*)interp);
+    ListWRUnlock(mc_platform->interpreter_queue);
   }
 
   /* Allocate sync variables */
@@ -261,11 +262,20 @@ mc_platform_Destroy(mc_platform_p platform)
 #endif
   ChInterp_t* interp;
 
-  message_queue_Destroy(platform->message_queue);
+  ListWRLock(platform->message_queue);
+  ListClearCB(platform->message_queue, (ListElemDestroyFunc_t)message_Destroy);
+  ListWRUnlock(platform->message_queue);
+  ListTerminate(platform->message_queue);
 
-  agent_queue_Destroy(platform->agent_queue);
+  ListWRLock(platform->agent_queue);
+  ListClearCB(platform->agent_queue, (ListElemDestroyFunc_t)agent_Destroy);
+  ListWRUnlock(platform->agent_queue);
+  ListTerminate(platform->agent_queue);
 
-  connection_queue_Destroy(platform->connection_queue);
+  ListWRLock(platform->connection_queue);
+  ListClearCB(platform->connection_queue, (ListElemDestroyFunc_t)connection_Destroy);
+  ListWRUnlock(platform->connection_queue);
+  ListTerminate(platform->connection_queue);
 
   df_Destroy(platform->df);
 
@@ -276,17 +286,26 @@ mc_platform_Destroy(mc_platform_p platform)
   cmd_prompt_Destroy(platform->cmd_prompt);
 
   /* FIXME: Destroy syncList and barrierList here */
-  syncListDestroy(platform->syncList);
-  barrier_queue_Destroy(platform->barrier_queue);
+  ListWRLock(platform->syncList);
+  ListClearCB(platform->syncList, (ListElemDestroyFunc_t)syncListNodeDestroy);
+  ListWRUnlock(platform->syncList);
+  ListTerminate(platform->syncList);
+
+  ListWRLock(platform->barrier_queue);
+  ListClearCB(platform->barrier_queue, (ListElemDestroyFunc_t)barrier_node_Destroy);
+  ListWRUnlock(platform->barrier_queue);
+  ListTerminate(platform->barrier_queue);
 
   free(platform->hostname);
 
   /* End each of the allocated Ch Interpreters */
-  while((interp = (ChInterp_t*)interpreter_queue_Pop(platform->interpreter_queue))) {
+  ListWRLock(platform->interpreter_queue);
+  while((interp = (ChInterp_t*)ListPop(platform->interpreter_queue))) {
     Ch_End(*interp);
     free(interp);
   }
-  interpreter_queue_Destroy(platform->interpreter_queue);
+  ListWRUnlock(platform->interpreter_queue);
+  ListTerminate(platform->interpreter_queue);
 
   COND_DESTROY(platform->MC_signal_cond);
   free(platform->MC_signal_cond);
@@ -324,5 +343,40 @@ mc_platform_Destroy(mc_platform_p platform)
   return MC_SUCCESS;
 }
 
-  
+ChInterp_t* interpreter_queue_CreateRetrieve( list_t *queue , ChOptions_t* interp_options) {
+	/* This function retrieves an interpreter from the list if there are any
+		on the queue. Otherwise, it creates a new one and returns it. */
+	ChInterp_t* interp;
+  ListWRLock(queue);
+	interp = (ChInterp_t*) ListPop(queue);
+	if (interp == NULL) {
+		interp = (ChInterp_t*)malloc(sizeof(ChInterp_t));
+		if( Ch_Initialize(interp, interp_options) != CH_OK) {
+      /* Could not initialize another interpreter */
+      interp = NULL;
+    } else {
+    /* Initialize the agent intepreter variables */
+      agent_ChScriptInitVar(interp);
+    }
+	}
+  ListWRUnlock(queue);
+	return interp;
+}
 
+list_t* mc_platform_GetQueue(mc_platform_p platform, enum MC_QueueIndex_e index)
+{
+  switch(index) {
+    case MC_QUEUE_MESSAGE:
+      return platform->message_queue;
+    case MC_QUEUE_AGENT:
+      return platform->agent_queue;
+    case MC_QUEUE_CONNECTION:
+      return platform->connection_queue;
+    case MC_QUEUE_SYNC:
+      return platform->syncList;
+    case MC_QUEUE_BARRIER:
+      return platform->barrier_queue;
+    default:
+      return NULL;
+  }
+}

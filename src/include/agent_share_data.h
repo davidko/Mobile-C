@@ -15,4 +15,5 @@ agent_share_data_p agent_share_data_Copy(agent_share_data_p agent_share_data);
 
 int agent_share_data_Destroy(agent_share_data_p agent_share_data);
 
+int agent_share_data_CmpName(const char* key, agent_share_data_t* asd);
 #endif

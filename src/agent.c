@@ -43,11 +43,13 @@
 
 #include "include/libmc.h"
 #include "include/agent.h"
+#include "include/agent_share_data.h"
 #include "include/mc_platform.h"
 #include "include/message.h"
 #include "include/agent_lib.h"
 #include "include/interpreter_variable_data.h"
 #include "include/xml_parser.h"
+#include "include/fipa_acl.h"
 
 int agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_name)
 {
@@ -56,6 +58,7 @@ int agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_nam
   int data_type_size;
   int progress;
   interpreter_variable_data_t *agent_variable_data;
+  interpreter_variable_data_t *tmp;
   agent_variable_data = (interpreter_variable_data_t*)malloc(sizeof(interpreter_variable_data_t));
   agent_variable_data->name = strdup(var_name);
 
@@ -121,12 +124,16 @@ int agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_nam
   agent_variable_data->size = size*data_type_size;
   
   /* Make sure that the variable is not already in the agent's list already. */
-  agent_variable_list_Remove(
+  ListWRLock(agent->datastate->tasks[task_num]->agent_variable_list);
+  tmp = (interpreter_variable_data_t*)ListDeleteCB(
       agent->datastate->tasks[task_num]->agent_variable_list, 
-      var_name);
-  agent_variable_list_Add(
+      var_name,
+      (ListSearchFunc_t)interpreter_variable_data_CmpName);
+  if(tmp) interpreter_variable_data_Destroy(tmp);
+  ListAdd(
       agent->datastate->tasks[task_num]->agent_variable_list, 
       agent_variable_data);
+  ListWRUnlock(agent->datastate->tasks[task_num]->agent_variable_list);
   return 0;
 }
 
@@ -192,9 +199,11 @@ agent_Copy(const agent_p agent)
   COND_INIT(cp_agent->agent_status_cond);
 
 	/* Mailbox */
-	cp_agent->mailbox = agent_mailbox_New();
+	cp_agent->mailbox = ListInitialize();
 
-  cp_agent->agent_share_data_queue = agent_share_data_queue_Copy(agent->agent_share_data_queue);
+  cp_agent->agent_share_data_queue = ListCopy(
+      agent->agent_share_data_queue, 
+      (ListElemCopyFunc_t)agent_share_data_Copy);
 
   return cp_agent;
 }
@@ -224,9 +233,9 @@ agent_New(void)
   COND_NEW(agent->agent_status_cond);
   COND_INIT(agent->agent_status_cond);
 
-  agent->mailbox = agent_mailbox_New();
+  agent->mailbox = ListInitialize();
 
-  agent->agent_share_data_queue = agent_share_data_queue_New();
+  agent->agent_share_data_queue = ListInitialize();
 
   return agent;
 }
@@ -277,10 +286,10 @@ agent_NewBinary( struct mc_platform_s *mc_platform)
   agent->agent_thread_id = 0;
 
   /* Set up an empty mailbox */
-  agent->mailbox = agent_mailbox_New();
+  agent->mailbox = ListInitialize();
 
   /* Set up data share */
-  agent->agent_share_data_queue = agent_share_data_queue_New();
+  agent->agent_share_data_queue = ListInitialize();
 
   /* In the future we will compare the current tasks server name to 
      the one on the server, presently this is not implemented */
@@ -364,10 +373,10 @@ agent_Initialize(
   agent->agent_thread_id = 0;
 
   /* Set up an empty mailbox */
-  agent->mailbox = agent_mailbox_New();
+  agent->mailbox = ListInitialize();
 
   /* Set up agent share */
-  agent->agent_share_data_queue = agent_share_data_queue_New();
+  agent->agent_share_data_queue = ListInitialize();
 
   /* parse the xml */
   agent->datastate = agent_datastate_New();
@@ -481,13 +490,14 @@ agent_Destroy(agent_p agent)
     free(agent->agent_address);
   }
   /* Terminate the agent datastate memory */
-  MUTEX_DESTROY(agent->lock);
   MUTEX_LOCK(agent->agent_status_lock);
   if (agent->agent_status == MC_AGENT_NEUTRAL) {
     MUTEX_UNLOCK(agent->agent_status_lock);
     if ((agent->agent_interp) != NULL) {
       Ch_Reset(*agent->agent_interp);
-			interpreter_queue_Add(agent->mc_platform->interpreter_queue, (struct AP_GENERIC_s*)agent->agent_interp);
+      ListWRLock(agent->mc_platform->interpreter_queue);
+			ListAdd(agent->mc_platform->interpreter_queue, agent->agent_interp);
+      ListWRUnlock(agent->mc_platform->interpreter_queue);
     }
   } else {
     MUTEX_UNLOCK(agent->agent_status_lock);
@@ -497,12 +507,21 @@ agent_Destroy(agent_p agent)
   COND_DESTROY(agent->agent_status_cond);
   free(agent->agent_status_cond);
 
-
+  MUTEX_UNLOCK(agent->lock);
+  MUTEX_DESTROY(agent->lock);
   free(agent->lock);
   agent_datastate_Destroy(agent->datastate);
   free(agent->run_lock);
-  agent_mailbox_Destroy(agent->mailbox);
-  agent_share_data_queue_Destroy(agent->agent_share_data_queue);
+  /* Delete agent mailbox */
+  ListWRLock(agent->mailbox);
+  ListClearCB(agent->mailbox, (ListElemDestroyFunc_t)fipa_acl_message_Destroy);
+  ListWRUnlock(agent->mailbox);
+  ListTerminate(agent->mailbox);
+  /* Delete agent shared data */
+  ListWRLock(agent->agent_share_data_queue);
+  ListClearCB(agent->agent_share_data_queue, (ListElemDestroyFunc_t)agent_share_data_Destroy);
+  ListWRUnlock(agent->agent_share_data_queue);
+  ListTerminate(agent->agent_share_data_queue);
   /* deallocate the agent */
   free(agent);
   agent = NULL;
@@ -1069,7 +1088,6 @@ agent_RunChScriptThread(void* ChAgent)
   void *result;
   int progress;
   int callbackErrCode;
-  interpreter_variable_data_t* temp_interp_data;
   int persistent = 0;
 
   /* set up the agent object */
@@ -1248,26 +1266,24 @@ agent_RunChScriptThread(void* ChAgent)
 
   /* This is where we want to save all of the agent variables that the agent
    * wishes to keep for its trip. */
-  while (
-	  (
-      temp_interp_data = 
-      agent_variable_list_Pop(agent->datastate->tasks[progress]->agent_variable_list)
-    )
-	) 
-  {
-	interpreter_variable_data_Destroy(temp_interp_data);
-  }
+  /* First, empty the list */
+  ListClearCB(
+      agent->datastate->tasks[progress]->agent_variable_list,
+      (ListElemDestroyFunc_t) interpreter_variable_data_Destroy);
+
   for(i = 0; i < agent->datastate->tasks[progress]->num_saved_variables; i++) {
 	/*agent_variable_list_Remove(
         agent->datastate->tasks[progress]->agent_variable_list,
 	agent->datastate->tasks[progress]->saved_variables[i]
 	); */ /* FIXME: Why doesn't this work? */
-    agent_variable_list_Add(
+    ListWRLock(agent->datastate->tasks[progress]->agent_variable_list);
+    ListAdd(
         agent->datastate->tasks[progress]->agent_variable_list,
         interpreter_variable_data_Initialize(
           agent,
           agent->datastate->tasks[progress]->saved_variables[i] )
         );
+    ListWRUnlock(agent->datastate->tasks[progress]->agent_variable_list);
   }
 
   /* Apply progress modifier */
@@ -1292,7 +1308,9 @@ agent_RunChScriptThread(void* ChAgent)
     if ((((MCAgent_t)ChAgent)->agent_interp) != NULL) {
       /* Reset the interpreter and put it back into the queue */
       Ch_Reset(*agent->agent_interp);
-      interpreter_queue_Add(mc_platform->interpreter_queue, (struct AP_GENERIC_s*)agent->agent_interp);
+      ListWRLock(mc_platform->interpreter_queue);
+      ListAdd(mc_platform->interpreter_queue, agent->agent_interp);
+      ListWRUnlock(mc_platform->interpreter_queue);
     }
 
     /* Perform some housekeeping regarding agent status */
@@ -1358,3 +1376,34 @@ agent_RunChScriptThread(void* ChAgent)
   return 0;
 #endif
 }
+
+int agent_Print(agent_t* agent) {
+    MUTEX_LOCK(agent->agent_status_lock);
+    printf("Agent id: %lu, Connect id: %lu, status: %u\n",
+        agent->id,
+        agent->connect_id,
+        agent->agent_status);
+    MUTEX_UNLOCK(agent->agent_status_lock);
+    return 0;
+}
+
+int agent_CmpName(const void* key, void* element)
+{
+  const char* name = (const char*)key;
+  agent_t* agent = (agent_t*)element;
+  int ret;
+  MUTEX_LOCK(agent->lock);
+  ret = strcmp(name, agent->name);
+  MUTEX_UNLOCK(agent->lock);
+  return ret;
+}
+
+int agent_CmpID(int* id, agent_t* agent) 
+{
+  int ret;
+  MUTEX_LOCK(agent->lock);
+  ret = *id - agent->id;
+  MUTEX_UNLOCK(agent->lock);
+  return ret;
+}
+

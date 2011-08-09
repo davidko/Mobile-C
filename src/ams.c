@@ -39,7 +39,6 @@
 
 #include "include/ams.h"
 #include "include/agent.h"
-#include "include/data_structures.h"
 #include "include/mc_platform.h"
 
   int
@@ -87,34 +86,21 @@ ams_Initialize(mc_platform_p mc_platform)
   void 
 ams_Print(ams_p ams)
 {
-  int i;
-  MCAgent_t agent;
-  agent_queue_p alist;
+  list_t* alist;
 
   alist = ams->mc_platform->agent_queue;
 
-  MUTEX_LOCK(alist->lock);
-
-  if(alist->size == 0) 
+  ListRDLock(alist);
+  if(ListGetSize(alist) == 0) 
   {
-    MUTEX_UNLOCK(alist->lock);
     return;
   }
 
   /* find all agents and print their relvent information to the screen  */
   printf("%d total agents on board.\n", alist->size);
-  for(i=0; i<alist->size; i++)
-  {
-    agent = (MCAgent_t)ListSearch(alist->list, i);
-    MUTEX_LOCK(agent->agent_status_lock);
-    printf("Agent id: %lu, Connect id: %lu, status: %u\n",
-        agent->id,
-        agent->connect_id,
-        agent->agent_status);
-    MUTEX_UNLOCK(agent->agent_status_lock);
-  }
+  ListForEachCB(alist, (ListElemGenericFunc_t)agent_Print);
+  ListRDUnlock(alist);
 
-  MUTEX_UNLOCK(alist->lock);
   return;
 }
 
@@ -124,7 +110,7 @@ ams_ManageAgentList(ams_p ams)
   /*variables */
   MCAgent_t current_agent;
   int index = 0;
-  agent_queue_p alist;
+  list_t* alist;
   mc_platform_p global;
   message_p message;
 
@@ -133,13 +119,12 @@ ams_ManageAgentList(ams_p ams)
 
   /* looks through the agent list and performs action on agent 
      depending upon the status that the agent displays */
-  MUTEX_LOCK(alist->lock);
+  ListRDLock(alist);
   for(index=0; index<alist->size; index++)
   {
-    if((current_agent = (MCAgent_t)ListSearch(alist->list, index)))
+    if((current_agent = (MCAgent_t)ListSearch(alist, index)))
     {
 			if(current_agent->binary) {continue;} /* Do not deal with binary agents */
-      MUTEX_UNLOCK(alist->lock);
       MUTEX_LOCK(current_agent->lock);
       current_agent->orphan = 0;
       MUTEX_LOCK(global->quit_lock);
@@ -174,7 +159,6 @@ ams_ManageAgentList(ams_p ams)
           current_agent->agent_status = MC_WAIT_FINISHED;
           COND_BROADCAST(current_agent->agent_status_cond);
           MUTEX_UNLOCK(current_agent->agent_status_lock);
-          MUTEX_UNLOCK(current_agent->lock);
           MUTEX_LOCK(ams->runflag_lock);
           ams->run = 1;
           MUTEX_UNLOCK(ams->runflag_lock);
@@ -200,10 +184,12 @@ ams_ManageAgentList(ams_p ams)
                 sizeof(char) * (strlen(current_agent->name) + 10)
                 );
             strcat(current_agent->name, "_SENDING");
-            message_queue_Add(
+            ListWRLock(ams->mc_platform->message_queue);
+            ListAdd(
                 ams->mc_platform->message_queue,
                 message
                 );
+            ListWRUnlock(ams->mc_platform->message_queue);
           }
           break;
         case MC_AGENT_NEUTRAL :
@@ -213,7 +199,9 @@ ams_ManageAgentList(ams_p ams)
         case MC_WAIT_FINISHED :
           MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
-          agent_queue_RemoveIndex(alist, index);
+          ListRDtoWR(alist);
+          ListDelete(alist, index);
+          ListWRtoRD(alist);
           // Change index = 0 to index-- to fix the problem where agents 
           // remain in an agency when they should be removed from the agency.
           // Yu-Cheng Chou July 28, 2009
@@ -229,12 +217,9 @@ ams_ManageAgentList(ams_p ams)
           MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
       }
-    } else {
-      MUTEX_UNLOCK( alist->lock );
-    }
-    MUTEX_LOCK( alist->lock );
+    } 
   }
-  MUTEX_UNLOCK( alist->lock );
+  ListRDUnlock(alist);
   return 0 ;
 }
 

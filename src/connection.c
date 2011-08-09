@@ -89,3 +89,8 @@ connection_p connection_Copy(connection_p connection)
   return tmp;
 }
 
+int connection_Print(connection_p connection)
+{
+  printf("Connection %d: %s\n", connection->connect_id, connection->remote_hostname);
+  return 0;
+}

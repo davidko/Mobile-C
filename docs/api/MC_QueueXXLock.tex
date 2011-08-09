@@ -1,0 +1,107 @@
+\rhead{\bf MC\_QueueXXLock()}
+\noindent
+\vspace{5pt}
+\rule{6.5in}{0.015in}
+\noindent
+{\LARGE \bf MC\_QueueRDLock()\index{MC\_QueueRDLock()}}\\
+{\LARGE \bf MC\_QueueWRLock()\index{MC\_QueueWRLock()}}\\
+{\LARGE \bf MC\_QueueRDUnlock()\index{MC\_QueueRDUnlock()}}\\
+{\LARGE \bf MC\_QueueWRUnlock()\index{MC\_QueueWRUnlock()}}\\
+\phantomsection
+\addcontentsline{toc}{section}{MC\_QueueXXLock()}
+
+\noindent
+{\bf Synopsis}\\
+{\bf \#include $<$libmc.h$>$}\\
+{\bf int MC\_QueueXXLock}({\bf MCAgency\_t} $agency$, {\bf MC\_QueueIndex\_e} $queue$);\\
+
+\noindent
+{\bf Purpose}\\
+These functions lock a Mobile-C data queue for reading or writing.
+
+\noindent
+{\bf Return Value}\\
+The function returns 0 on success and non-zero otherwise.\\
+
+\noindent
+{\bf Parameters}
+\vspace{-0.1in}
+\begin{description}
+\item               
+\begin{tabular}{p{10 mm}p{145 mm}}
+$agency$ & A handle associated with a running agency. \\
+$queue$ & An enumerated value specifying which queue to lock or unlock.
+\end{tabular}
+\end{description}
+
+\noindent
+{\bf Description}\\
+This function locks a queue for reading and writing. The enumerated values
+for the queue are:
+
+
+\begin{tabular}{p{50 mm}p{110 mm}}
+\hline
+Macro & Description \\
+\hline
+{\texttt enum MC\_QueueIndex\_e} & \\
+\hline
+\texttt{MC\_QUEUE\_MESSAGE} \index{MC\_QUEUE\_MESSAGE} & The message queue. \\
+\texttt{MC\_QUEUE\_AGENT} \index{MC\_QUEUE\_AGENT} & The message queue. \\
+\texttt{MC\_QUEUE\_CONNECTION} \index{MC\_QUEUE\_CONNECTION} & The connection queue. \\
+\texttt{MC\_QUEUE\_SYNC} \index{MC\_QUEUE\_SYNC} & The synchronization object queue. \\
+\texttt{MC\_QUEUE\_BARRIER} \index{MC\_QUEUE\_BARRIER} & The barrier object queue. 
+\end{tabular}
+
+The \texttt{MC\_QueueRDLock()} function locks a queue for reading. If a queue
+is locked for reading, other threads are still able to read from the queue, but
+no thread will be able to lock the queue for writing. If a read lock is
+requested on a queue that is currently write-locked, the function will block
+until the write-lock is lifted.
+
+The \texttt{MC\_QueueWRLock()} function locks a queue for writing. If other
+threads currently have read or write locks on the queue, this function 
+will block until all other readers and writers have released their locks.
+At this point the function will attain a write lock on the queue, and no
+other threads will be able to attain read or write locks until the 
+locking thread has unlocked the write-lock.
+
+These functions are useful for suspending certain queues, such as the agent queue,
+to make sure they are not modified while user-space algorithms are running. If
+you need to lock the agent queue for processing with functions such as
+\texttt{MC\_GetNumAgents(), MC\_GetAllAgents()}, or similar functions, please
+use the \texttt{MC\_AgentProcessingBegin()} and \texttt{MC\_AgentProcessingEnd()} 
+functions instead.
+
+Note that any queue that is locked by the user should also be unlocked by the user with 
+the corresponding functions, or the agency will cease to function normally. 
+
+Following is a brief summary of the effects of locking each queue.
+\begin{itemize}
+\item The message queue: Locking the message queue will prevent Mobile-C from
+processing new messages. Connections will still be accepted, but agent
+migration message, FIPA-ACL messages, and other types of messages will not be
+processed.
+\item The agent queue: Locking the agent queue will prevent Mobile-C from
+adding or removing agents. For new agents, agent and message processing is
+still executed up until the last step where the agent is to be added to the
+queue. If you intend to lock this queue to call functions such as 
+\texttt{MC\_GetAllAgents}, please use the \texttt{MC\_AgentProcessingBegin()}
+function instead.
+\item The connection queue: Locking this will effectively prevent Mobile-C from
+processing new connections.
+\item The sync queue: Locking this queue for writing will cause all Mobile-C
+synchronization functions, such as \texttt{MC\_MutexLock}, to block until the
+queue is unlocked. Locking this queue for reading will prevent new
+synchronization nodes from being created.
+\item The barrier queue: Locking this queue will have similar effects as
+locking the sync queue, except for Mobile-C barriers.
+\end{itemize}
+\noindent
+{\bf Example}\\
+\noindent
+%{\footnotesize\verbatiminput{../demos/getting_started/hello_world/server.c}}
+
+\noindent
+
+%\CPlot::\DataThreeD(), \CPlot::\DataFile(), \CPlot::\Plotting(), \plotxy().\\

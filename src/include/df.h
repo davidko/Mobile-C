@@ -68,14 +68,6 @@ STRUCT(df_request_list_node,
     int data_size;
     )
 
-STRUCT( df_request_list,
-
-    MUTEX_T *lock;
-    COND_T *cond;
-    int size;
-    list_p request_list;
-    )
-
 STRUCT( df_search_results,
 
     char **agent_names;
@@ -108,7 +100,7 @@ STRUCT( df,
     MUTEX_T *lock;
     COND_T *cond;
     list_p service_list;
-    df_request_list_p request_list;
+    list_p request_list;
     
     int num_entries;
     int waiting; /* Flag indicating if thread is waiting for activity */
@@ -167,13 +159,7 @@ df_request_list_node_New(void);
 
 /* df_request_list functions */
 int
-df_request_list_Destroy(df_request_list_p df_request_list);
-
-df_request_list_p 
-df_request_list_New(void);
-
-df_request_list_node_p
-df_request_list_Pop(df_request_list_p requests);
+df_request_list_Destroy(list_t* df_request_list);
 
 /* df_request_search functions */
 

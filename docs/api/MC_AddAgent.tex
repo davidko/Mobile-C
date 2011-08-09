@@ -34,7 +34,11 @@ $agent$ & An initialized mobile agent.
 
 \noindent
 {\bf Description}\\
-This function adds a mobile agent to an already running agency.\\
+This function adds a mobile agent to an already running agency.
+
+Please note, please lock the agent queue with function
+\texttt{MC\_QueueWRLock(agency, MC\_QUEUE\_AGENT);} prior
+to calling the \texttt{MC\_AddAgent()} function.
 
 \noindent
 {\bf Example}\\

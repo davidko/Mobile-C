@@ -46,6 +46,7 @@
 #include <string.h>
 #include "include/cmd_prompt.h"
 #include "include/commands.h"
+#include "include/agent.h"
 #include "config.h"
 
 #ifdef HAVE_LIBREADLINE
@@ -393,25 +394,33 @@ int handler_SEND(void *arg, mc_platform_p global) /*{{{*/
     
 int handler_PRINT_CONNECTLIST(void *arg, mc_platform_p global) /*{{{*/
 {
-    connection_queue_Print(global->connection_queue);
+    ListRDLock(global->connection_queue);
+    ListForEachCB(global->connection_queue, (ListElemGenericFunc_t)connection_Print);
+    ListRDUnlock(global->connection_queue);
     return 0;
 } /*}}}*/
 
 int handler_PRINTLIST_MESSAGE(void *arg, mc_platform_p global) /*{{{*/
 {
-    message_queue_Print(global->message_queue);
+    ListRDLock(global->message_queue);
+    ListForEachCB(global->message_queue, (ListElemGenericFunc_t)message_Print);
+    ListRDUnlock(global->message_queue);
     return 0;
 } /*}}}*/
 
 int handler_PRINTLIST_AGENTS(void *arg, mc_platform_p global) /*{{{*/
 {
-    agent_queue_Print(global->agent_queue);
+    ListRDLock(global->agent_queue);
+    ListForEachCB(global->agent_queue, (ListElemGenericFunc_t)agent_Print);
+    ListRDUnlock(global->agent_queue);
     return 0;
 } /*}}}*/
 
 int handler_FLUSH_AGENTS(void *arg, mc_platform_p global) /*{{{*/
 {
-    agent_queue_Flush(global->agent_queue);
+    ListWRLock(global->agent_queue);
+    ListClearCB(global->agent_queue, (ListElemDestroyFunc_t) agent_Destroy);
+    ListWRUnlock(global->agent_queue);
     return 0;
 } /*}}}*/
 

@@ -40,10 +40,10 @@
 #include "cmd_prompt.h"
 #include "config.h"
 #include "connection.h"
-#include "data_structures.h"
 #include "df.h"
 #include "libmc.h"
 #include "../mc_sync/sync_list.h"
+#include "../mc_list/list.h"
 #include "../security/asm.h"
 
 struct mc_platform_s{
@@ -60,13 +60,15 @@ struct mc_platform_s{
   int initInterps;
 
   /* These are the standard agency data structs. */
-  message_queue_p asm_message_queue;
+  list_t* asm_message_queue; /* holds message_t data type */
 #ifdef MC_SECURITY
-  asm_queue_p asm_queue; /* Holds encryption info for each remote hoste */
+  list_t* asm_queue; /* Holds encryption info for each remote hoste */
 #endif
-  message_queue_p message_queue;
-  agent_queue_p agent_queue;
-  connection_queue_p connection_queue;
+  list_t* message_queue;
+  list_t* agent_queue;
+  list_t* connection_queue;
+  int agent_processing; /* This flag is set if the user calles the
+                           MC_AgentProcessingBegin() function */
 
   df_p df;
   ams_p ams;
@@ -76,8 +78,8 @@ struct mc_platform_s{
   mc_asm_p security_manager;
 #endif
 
-  syncList_p syncList;
-  barrier_queue_p barrier_queue;
+  list_t* syncList;
+  list_t* barrier_queue;
 
   listen_thread_arg_p listen_thread_arg;
   listen_thread_arg_p client_thread_arg;
@@ -115,7 +117,7 @@ struct mc_platform_s{
   MCAgency_t agency; /* A pointer to the platform's agency structure */
 
 	/* Need a linked list of Ch interpreters. */
-	interpreter_queue_p interpreter_queue;
+	list_t* interpreter_queue;
 
   /* Are we using bluetooth? */
   int bluetooth;
@@ -128,4 +130,9 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options);
 
 int 
 mc_platform_Destroy(mc_platform_p mc_platform);
+
+ChInterp_t* interpreter_queue_CreateRetrieve( 
+    list_t *queue , ChOptions_t* interp_options);
+
+list_t* mc_platform_GetQueue(mc_platform_p platform, enum MC_QueueIndex_e index);
 #endif 

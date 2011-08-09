@@ -74,6 +74,7 @@ connection_Destroy(connection_p connection);
 
 connection_p 
 connection_Copy(connection_p connection);
+int connection_Print(connection_p connection);
 
 void connection_Close(connection_p connection);
 void connection_SetHosts(connection_p connection, char* remote_host, char *local_host);

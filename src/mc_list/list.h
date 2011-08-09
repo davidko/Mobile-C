@@ -26,12 +26,20 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include"../include/macros.h"
+#include"rwlock.h"
 
-#define DATA void*
+/* The following function pointer typedef is the list search callback function.
+ * The function should take 2 arguments and compare them, returns 0 for a
+ * match, non-zero for a non-match. */
+typedef int (*ListSearchFunc_t) (const void* key, void* element);
+typedef void* (*ListElemCopyFunc_t) (const void* src);
+typedef int (*ListElemDestroyFunc_t) (void* elem);
+typedef int (*ListElemGenericFunc_t) (void* elem);
 
 typedef struct listNode_s{
 
-  DATA node_data;
+  void* node_data;
   struct listNode_s *next; 
 
 }listNode_t;
@@ -42,7 +50,8 @@ typedef struct list_s{
 
   listNode_p listhead;
   int size;
-
+  
+  rwlock_t* rwlock;
 }list_t;
 
 /* create a pointer type for the LinkedList */
@@ -50,150 +59,39 @@ typedef list_t* list_p;
 
 /* some basic functions that help  */
 list_p ListInitialize(void);
-  /* note: this Terminate Function should only be called on empty lists */
+/* note: this Terminate Function should only be called on empty lists */
 void ListTerminate(list_p list);
+/* This termination function can be called on non-empty lists */
+void ListClearCB(list_p list, ListElemDestroyFunc_t cb);
 
-/* functions that return intergers */
+/* functions that return integers */
 int ListGetSize(list_p list);
-int ListAdd(list_p list, DATA data);
-int ListInsert(list_p list, DATA data, const int index);
+int ListAdd(list_p list, void* data);
+int ListAppend(list_p list, void* data);
+int ListInsert(list_p list, void* data, const int index);
+
+list_p ListCopy(list_p list, void*(*data_copy_callback)(const void* data));
 
 /* functions that will return pointers to the data */
-DATA ListGetHead(list_p list);
-DATA ListPop(list_p list);
-DATA ListSearch(list_p list, const int index);
-DATA ListDelete(list_p list, const int index);
+void* ListGetHead(list_p list);
+void* ListPop(list_p list);
+void* ListSearch(list_p list, const int index);
+void* ListDelete(list_p list, const int index);
+void* ListSearchCB(list_p list, const void* key, ListSearchFunc_t cb);
+void* ListDeleteCB(list_p list, const void* key, ListSearchFunc_t cb);
+void  ListWait(list_p list);
+int   ListForEachCB(list_p list, ListElemGenericFunc_t cb);
 
-
-#define QUEUE_TEMPLATE( name, node_type, search_type, search_var_name ) \
-typedef struct name##_s name \
-{ \
-  int size; \
-  list_p list; \
-  MUTEX_T* lock; \
-  COND_T* cond; \
-} name##_t; \
-  \
-typedef name##_t* name##_p; \
-  \
-name##_p name##Initialize( void ); \
-void name##Destroy( name##_p name ); \
-int name##Add( name##_p name, node_type ); \
-name##_p name##Pop( name##_p name ); \
-name##_p name##Search( name##_p name, search_type key ); \
-int name##Remove(name##_p name, search_type key ); \
-name##_p name##SearchIndex( name##_p name, int index ); \
-int name##RemoveIndex(name##_p name, int index); \
-  \
-name##_p name##Initialize( void ) \
-{ \
-  name##_p temp; \
-  temp = (name##_p)malloc(sizeof(name##_t)); \
-  temp->size = 0; \
-  temp->list = ListInitialize(); \
-  \
-  temp->lock = (MUTEX_T*)malloc(sizeof(MUTEX_T)); \
-  temp->cond = (COND_T*)malloc(sizeof(COND_T)); \
-  return temp; \
-} \
-  \
-int name##Destroy( name##_p name ) \
-{ \
-  ListTerminate(name->list); \
-  MUTEX_DESTROY(name->lock); \
-  COND_DESTROY(name->cond); \
-  free(name->lock); \
-  free(name->cond); \
-  return 0; \
-} \
-  \
-int name##Add( name##_p name, node_type* node ) \
-{ \
-  MUTEX_LOCK(name->lock); \
-  ListAdd(name->list, node); \
-  name->size++; \
-  COND_SIGNAL(name->cond); \
-  MUTEX_UNLOCK(name->lock); \
-  return 0; \
-} \
-  \
-node_type* name##Pop( name##_p name ) \
-{ \
-  node_type *ret; \
-  MUTEX_LOCK(name->lock); \
-  ret = ListPop(name->list); \
-  name->size--; \
-  COND_SIGNAL(name->cond); \
-  MUTEX_UNLOCK(name->lock); \
-  return ret; \
-} \
-  \
-node_type* name##Search( name##_p name, search_type value ) \
-{ \
-  listNode_t* parsenode; \
-  node_type* node; \
-  node = NULL; \
-  \
-  MUTEX_LOCK(name->lock); \
-  if (name->list->listhead == NULL) { \
-    MUTEX_UNLOCK(name->lock); \
-    return NULL; \
-  } \
-  for( \
-      parsenode = (listNode_t*)name->list->listhead; \
-      parsenode->next != NULL; \
-      parsenode = (listNode_t*)parsenode->next \
-     ) \
-  { \
-    node = (node_type*)parsenode->node_data; \
-    if (node->search_var_name == value ) \
-      break; \
-  } \
-  MUTEX_UNLOCK(name->lock); \
-  return node; \
-} \
-  \
-int name##Remove( name##_p name, search_type key ) \
-{ \
-  listNode_t* parsenode; \
-  node_type* node; \
-  node = NULL; \
-  \
-  MUTEX_LOCK(name->lock); \
-  if (name->list->listhead == NULL) { \
-    MUTEX_UNLOCK(name->lock); \
-    return MC_ERR_NOT_FOUND; \
-  } \
-  for( \
-      parsenode = (listNode_t*)name->list->listhead; \
-      parsenode->next != NULL; \
-      parsenode = (listNode_t*)parsenode->next \
-     ) \
-  { \
-    node = (node_type*)parsenode->node_data; \
-    if (node->search_var_name == key) \
-      break; \
-  } \
-  MUTEX_UNLOCK(name->lock); \
-} \
-  \
-name##_p name##SearchIndex( name##_p name, int index ) \
-{ \
-  node_type* node; \
-  MUTEX_LOCK(name->lock); \
-  node = (node_type*)ListSearch(name->list, index); \
-  MUTEX_UNLOCK(name->lock); \
-  return node; \
-} \
-  \
-int name##RemoveIndex( name##_p name, int index ) \
-{ \
-  node_type* node; \
-  MUTEX_LOCK(name->lock); \
-  node = ListDelete(name->list, index); \
-  node_type##Destroy(node); \
-  MUTEX_UNLOCK(name->lock); \
-  return 0; \
-} 
+void  ListRDLock(list_p list);
+void  ListRDUnlock(list_p list);
+void  ListWRLock(list_p list);
+void  ListWRUnlock(list_p list);
+void  ListWRWait(list_p list); /* Call this function if you currently have a
+                                  write lock on the list but need to wait for
+                                  someone else to touch it. */
+void  ListRDWait(list_p list); /* Similar to above, except if you have a read
+                                  lock */
+void  ListRDtoWR(list_p list); /* Upgrade lock from reader to writer atomically */
+void  ListWRtoRD(list_p list); /* Downgrade lock from writer to reader atomically */
 
 #endif

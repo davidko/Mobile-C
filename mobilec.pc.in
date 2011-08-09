@@ -7,6 +7,6 @@ includedir=@includedir@
 
 Name: Mobile-C
 Description:
-Version: 2.1.3
+Version: 2.1.4
 Libs: -L${libdir} -lmc -lmc_list -lmc_sync -lmxml -lpthread
 Cflags: -I${includedir}

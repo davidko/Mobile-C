@@ -41,8 +41,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "include/agent_file_data.h"
 #include "include/agent_task.h"
 #include "include/mc_error.h"
+#include "mc_list/list.h"
 
 agent_task_p
 agent_task_New(void)
@@ -54,12 +56,12 @@ agent_task_New(void)
   } else {
     memset(task, 0, sizeof(agent_task_t)); 
   }
-  task->agent_variable_list = agent_variable_list_New();
+  task->agent_variable_list = ListInitialize();
 
   task->saved_variables = NULL;
   task->num_saved_variables = 0;
 
-  task->agent_file_list = agent_file_list_New();
+  task->agent_file_list = ListInitialize();
 
   return task;
 }
@@ -107,7 +109,8 @@ agent_task_Copy(agent_task_p task)
 	}
 
 	/* Copy the agent variable list */
-	cp_task->agent_variable_list = agent_variable_list_New();
+	cp_task->agent_variable_list = ListInitialize();
+  ListWRLock(task->agent_variable_list);
 	for(i = 0; i < task->agent_variable_list->size; i++) {
 		interp_data = (interpreter_variable_data_t*)ListSearch(
 				(list_p)task->agent_variable_list,
@@ -119,6 +122,7 @@ agent_task_Copy(agent_task_p task)
 				interp_data
 				);
 	}
+  ListWRUnlock(task->agent_variable_list);
 
 	cp_task->saved_variables = (char**)malloc(sizeof(char*) * (task->num_saved_variables+1));
 	for(i = 0; i < task->num_saved_variables; i++) {
@@ -127,7 +131,10 @@ agent_task_Copy(agent_task_p task)
 	cp_task->saved_variables[i] = NULL;
 	cp_task->num_saved_variables = task->num_saved_variables;
 
-  cp_task->agent_file_list = agent_file_list_Copy(task->agent_file_list);
+  ListRDLock(task->agent_file_list);
+  cp_task->agent_file_list = 
+      ListCopy(task->agent_file_list, (ListElemCopyFunc_t)agent_file_data_Copy);
+  ListRDUnlock(task->agent_file_list);
 
 	return cp_task;
 }
@@ -149,7 +156,11 @@ agent_task_Destroy( agent_task_p agent_task )
     free(agent_task->code_id);
   }
 
-  agent_variable_list_Destroy(agent_task->agent_variable_list);
+  ListWRLock(agent_task->agent_variable_list);
+  ListClearCB(agent_task->agent_variable_list, 
+      (ListElemDestroyFunc_t)interpreter_variable_data_Destroy);
+  ListTerminate(agent_task->agent_variable_list);
+  ListWRUnlock(agent_task->agent_variable_list);
 
   if(agent_task->saved_variables != NULL) {
     for(i = 0; agent_task->saved_variables[i] != NULL; i++) {
@@ -160,7 +171,11 @@ agent_task_Destroy( agent_task_p agent_task )
 
   interpreter_variable_data_Destroy(agent_task->agent_return_data);
 
-  agent_file_list_Destroy(agent_task->agent_file_list);
+  ListWRLock(agent_task->agent_file_list);
+  ListClearCB(agent_task->agent_file_list, 
+      (ListElemDestroyFunc_t)agent_file_data_Destroy);
+  ListTerminate(agent_task->agent_file_list);
+  ListWRUnlock(agent_task->agent_file_list);
 
   free(agent_task);
 

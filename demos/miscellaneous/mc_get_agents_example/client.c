@@ -35,6 +35,9 @@ int main()
 
   /* Try getting all of the active agents */
   printf("Getting active agents...\n");
+
+  /* First lock the agent queue so agents stick around while we print them */
+  MC_AgentProcessingBegin(agency);
   MC_GetAgents(agency, &agents, &num_agents, (1<<MC_AGENT_ACTIVE));
   for(i = 0; i < num_agents; i++) {
     printf("Agent name: %s\n", MC_GetAgentName(agents[i]));
@@ -47,6 +50,8 @@ int main()
   for(i = 0; i < num_agents; i++) {
     printf("Agent name: %s\n", MC_GetAgentName(agents[i]));
   }
+  /* Agent processing done */
+  MC_AgentProcessingEnd(agency);
   
   MC_End(agency);
   exit(0);
