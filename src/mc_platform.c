@@ -97,14 +97,7 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
 	  strcpy(hostname, "localhost");
   }
   localhost = gethostbyname(hostname); /* FIXME */
-  if(localhost == NULL) {
-#ifdef _WIN32
-	  printf("Fatal Error: %d  %s:%d\n", WSAGetLastError(), __FILE__, __LINE__);
-#else
-	  fprintf(stderr, "Fatal Error %s:%d\n", __FILE__, __LINE__);
-#endif
-	  //exit(0);
-  }
+
   mc_platform->hostname = (char*)malloc(sizeof(char)*DEFAULT_HOSTNAME_LENGTH);
   CHECK_NULL(mc_platform->hostname, agency->last_error = MC_ERR_MEMORY;return NULL);
 
