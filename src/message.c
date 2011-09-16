@@ -526,11 +526,6 @@ auth_rece_send_msg(int sockfd, char *hostname, char *message, char *privkey, cha
     printf("Client: %s 's Public key not found in know host file\n", hostname);
     if( remove(infile) ) printf("message.c : remove error 4");
     if( remove(outfile) ) printf("message.c : remove error 5");
-#ifndef _WIN32
-    //close(sockfd);
-#else
-    //closesocket(sockfd);
-#endif
   }else{
     if ((ret=initiate_migration_process(sockfd, &nonce, peer_pubkey, privatekey, aes_key)) != 1){
       if (ret == -1)
@@ -798,23 +793,23 @@ message_send_Thread( LPVOID arg )
       } 
   }
 
-#ifndef _WIN32
-  if (mc_platform->bluetooth) {
-#if HAVE_LIBBLUETOOTH
-    errnum = connect(skt, (struct sockaddr *)&btsktin, sizeof(btsktin));
-#endif
-  } else {
-    errnum = connect(skt, myaddrinfo->ai_addr, sizeof(struct sockaddr));
-  }
-#else
-  if (mc_platform->bluetooth) {
-#if HAVE_LIBBLUETOOTH
-    errnum = connect(skt, (struct sockaddr *) &btsktin, sizeof(btsktin));
-#endif
-  } else {
-    errnum = connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));
-  }
-#endif
+#ifndef _WIN32         /* *********************************************************/
+  if (mc_platform->bluetooth) {                                                 /**/
+#if HAVE_LIBBLUETOOTH  /* ****************************************************/ /**/
+    errnum = connect(skt, (struct sockaddr *)&btsktin, sizeof(btsktin));   /**/ /**/
+#endif                 /* ****************************************************/ /**/
+  } else {                                                                      /**/
+    errnum = connect(skt, myaddrinfo->ai_addr, sizeof(struct sockaddr));        /**/
+  }                                                                             /**/
+#else                  /* *********************************************************/
+  if (mc_platform->bluetooth) {                                                 /**/
+#if HAVE_LIBBLUETOOTH  /* ***************************************************/  /**/
+    errnum = connect(skt, (struct sockaddr *) &btsktin, sizeof(btsktin)); /**/  /**/
+#endif                 /* ***************************************************/  /**/
+  } else {                                                                      /**/
+    errnum = connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));           /**/
+  }                                                                             /**/
+#endif                 /* ********************************************************/
   num_tries = 0;
   while(
 		(num_tries < max_num_tries) && (errnum < 0)
@@ -859,22 +854,22 @@ message_send_Thread( LPVOID arg )
   if( ret == 1  ){
     printf("Successfull Authenticate and but send of MA is failed \n");
 #ifndef _WIN32
-    if(close(skt) < 0) {
+    if(closeSocket(skt) < 0) {
 			SOCKET_ERROR();
 		}
 #else
-    closesocket(skt);
+    closeSocket(skt);
 #endif
     free(buf);
 		fprintf(stderr, "Security Error. %s:%d\n", __FILE__, __LINE__);
     MSG_THREAD_EXIT();
   }else if(ret != 2){
 #ifndef _WIN32
-    if(close(skt) < 0) {
+    if(closeSocket(skt) < 0) {
 			SOCKET_ERROR();
 		}
 #else
-    closesocket(skt);
+    closeSocket(skt);
 #endif
     free(buf);
 		fprintf(stderr, "Security Error. %s:%d\n", __FILE__, __LINE__);
@@ -904,7 +899,7 @@ message_send_Thread( LPVOID arg )
 						(struct sockaddr *) 0,
 						(socklen_t *) 0);
 */
-				n = recv(skt, (void*)buffer, (size_t) sizeof(char)*SOCKET_INPUT_SIZE, MSG_WAITALL);
+				n = recv(skt, (void*)buffer, (size_t) sizeof(char)*SOCKET_INPUT_SIZE, 0);
 #else
 				n = recvfrom(skt,
 						buffer,
@@ -941,11 +936,11 @@ message_send_Thread( LPVOID arg )
     }
 
 #ifndef _WIN32
-  if(close(skt) <0) {
+  if(closeSocket(skt) <0) {
 		SOCKET_ERROR();
 	}
 #else
-  closesocket(skt);
+  closeSocket(skt);
 #endif
   free(buf);
   free(buffer);

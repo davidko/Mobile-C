@@ -85,5 +85,6 @@ int connection_SendtoConnection(connection_p connection, char * send_buffer);
 int connection_RecvFromConnection(connection_p connection,
     struct mc_platform_s *global);
 
+int closeSocket(int sockfd);
 
 #endif

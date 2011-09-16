@@ -300,9 +300,9 @@ mtp_http_InitializeFromConnection
 						SOCKET_ERROR();
 					}
 #ifdef _WIN32
-					closesocket(connection->clientfd);
+					closeSocket(connection->clientfd);
 #else
-					if(close(connection->clientfd) < 0) {
+					if(closeSocket(connection->clientfd) < 0) {
 						SOCKET_ERROR();
 					}
 #endif
@@ -318,9 +318,9 @@ mtp_http_InitializeFromConnection
 						SOCKET_ERROR();
 					}
 #ifdef _WIN32
-					closesocket(connection->clientfd);
+					closeSocket(connection->clientfd);
 #else
-					if(close(connection->clientfd) < 0) {
+					if(closeSocket(connection->clientfd) < 0) {
 						SOCKET_ERROR();
 					}
 #endif

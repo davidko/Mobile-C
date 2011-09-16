@@ -919,9 +919,9 @@ listen_Thread( LPVOID arg )
   }
 
 #ifndef _WIN32
-  if(close(sockfd) != 0) 
+  if(closeSocket(sockfd) != 0) 
 #else
-  if(closesocket(sockfd) != 0) 
+  if(closeSocket(sockfd) != 0) 
 #endif
   {
     fprintf(stderr, "Socket close failed: %d\n", errno);

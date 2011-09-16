@@ -1594,7 +1594,7 @@ MC_End(MCAgency_t agency) /*{{{*/
   skt = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   connect(skt, res->ai_addr, res->ai_addrlen);
   send(skt, "\0", 1, 0);
-  close(skt);
+  closeSocket(skt);
   freeaddrinfo(res);
 
   sleep(1);
@@ -1607,7 +1607,7 @@ MC_End(MCAgency_t agency) /*{{{*/
   sktin.sin_addr.s_addr = inet_addr("localhost");
   connect(skt, (struct sockaddr *) &sktin, sizeof(sktin));
   send(skt, "\0", 1, 0);
-  closesocket(skt);
+  closeSocket(skt);
 
   Sleep(1000);
 #endif

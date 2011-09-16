@@ -55,7 +55,7 @@ connection_Destroy(connection_p connection)
   /*if(close(connection->clientfd) <0) 
 		SOCKET_ERROR(); */
 #else
-  closesocket(connection->clientfd);
+  closeSocket(connection->clientfd);
 #endif
 
   if(connection->remote_hostname != NULL) {
@@ -93,4 +93,26 @@ int connection_Print(connection_p connection)
 {
   printf("Connection %d: %s\n", connection->connect_id, connection->remote_hostname);
   return 0;
+}
+
+int closeSocket(int sockfd)
+{
+#ifndef _WIN32
+  /* Do this in a multi-part way; first, send FIN by disallowing writes. Then,
+   * read all the data. Then, close the socket for real. */
+  char *buf[80];
+  shutdown(sockfd, 1); /* Disallow sends */
+
+  /* wait for remote side to close connection */
+  while(recv(sockfd, buf, 80, 0) > 0);
+  close(sockfd);
+  return 0;
+#else
+  char *buf[80];
+
+  /* wait for remote side to close connection */
+  while(recvFrom(sockfd, buf, (size_t)80, 0, (struct sockaddr*) 0, 0) > 0);
+  closesocket(sockfd);
+  return 0;
+#endif
 }
