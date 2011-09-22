@@ -864,6 +864,8 @@ listen_Thread( LPVOID arg )
         break;
       }
 
+
+#ifdef NEW_SECURITY
       /* Acquire host name of connected   */
 #ifndef _WIN32
       getnameinfo((const struct sockaddr*)&peer_addr, sizeof(peer_addr),
@@ -880,8 +882,6 @@ listen_Thread( LPVOID arg )
 
 #endif
       //printf("peer_name = %s \n", peer_name);
-
-#ifdef NEW_SECURITY
       /* Authentication Process for Received Connection  */
       ret = auth_conn_rece_key(connectionsockfd, peer_name, &nonce, aes_key, mc_platform->private_key, mc_platform->agency->known_host_filename);
       if( ret == 2 || ret == 1){
