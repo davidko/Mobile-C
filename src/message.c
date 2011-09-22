@@ -901,12 +901,15 @@ message_send_Thread( LPVOID arg )
 */
 				n = recv(skt, (void*)buffer, (size_t) sizeof(char)*SOCKET_INPUT_SIZE, 0);
 #else
+/*
 				n = recvfrom(skt,
 						buffer,
 						(size_t) sizeof(char)*SOCKET_INPUT_SIZE,
 						0,
 						(struct sockaddr *) 0,
 						0);
+						*/
+				n = recv( skt, (char*)buffer, sizeof(char)*SOCKET_INPUT_SIZE, 0);
 #endif
 				if (n<0) {
 					/* There was an error receiving the response. */

@@ -110,6 +110,8 @@ int closeSocket(int sockfd)
 #else
   char buf[80];
 
+  shutdown(sockfd, 1); /* Disallow sends */
+
   /* wait for remote side to close connection */
   while(recvfrom(sockfd, buf, (size_t)80, 0, (struct sockaddr*) 0, 0) > 0);
   closesocket(sockfd);
