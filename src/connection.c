@@ -108,10 +108,10 @@ int closeSocket(int sockfd)
   close(sockfd);
   return 0;
 #else
-  char *buf[80];
+  char buf[80];
 
   /* wait for remote side to close connection */
-  while(recvFrom(sockfd, buf, (size_t)80, 0, (struct sockaddr*) 0, 0) > 0);
+  while(recvfrom(sockfd, buf, (size_t)80, 0, (struct sockaddr*) 0, 0) > 0);
   closesocket(sockfd);
   return 0;
 #endif

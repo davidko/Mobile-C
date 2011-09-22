@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "include/agent_share_data.h"
 
 agent_share_data_p agent_share_data_New()

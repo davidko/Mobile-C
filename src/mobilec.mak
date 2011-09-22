@@ -11,6 +11,7 @@ LIBS=mc_list.lib mc_sync.lib wsock32.lib mxml.lib embedch.lib libb64.lib
 OBJS= acc.obj \
 									 agent.obj \
 									 agent_return_data.obj \
+									 agent_share_data.obj \
 									 agent_datastate.obj \
 									 agent_file_data.obj \
 									 agent_task.obj \
@@ -28,7 +29,6 @@ OBJS= acc.obj \
 									 message.obj \
 									 message_queue.obj \
 									 mtp_http.obj \
-									 rwlock.obj \
 									 xml_compose.obj \
 									 xml_helper.obj \
 									 xml_parser.obj \
@@ -48,6 +48,8 @@ agent.obj:agent.c
 	$(CC) agent.c $(CFLAGS) 
 agent_return_data.obj:agent_return_data.c 
 	$(CC) agent_return_data.c $(CFLAGS) 
+agent_share_data.obj:agent_share_data.c 
+	$(CC) agent_share_data.c $(CFLAGS) 
 agent_datastate.obj:agent_datastate.c 
 	$(CC) agent_datastate.c $(CFLAGS) 
 agent_file_data.obj:agent_file_data.c
@@ -82,8 +84,6 @@ message_queue.obj:message_queue.c
 	$(CC) message_queue.c $(CFLAGS) 
 mtp_http.obj:mtp_http.c 
 	$(CC) mtp_http.c $(CFLAGS) 
-rwlock.obj:rwlock.c 
-	$(CC) rwlock.c $(CFLAGS) 
 xml_compose.obj:xml_compose.c 
 	$(CC) xml_compose.c $(CFLAGS) 
 xml_helper.obj:xml_helper.c 

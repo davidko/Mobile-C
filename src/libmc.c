@@ -948,7 +948,7 @@ EXPORTMC int MC_AgentDataShare_Add(MCAgent_t agent, const char* name, const void
 EXPORTMC int MC_AgentDataShare_Retrieve(MCAgent_t agent, const char* name, void** data, size_t* size)
 {
   agent_share_data_t* sharedata;
-  sharedata = ListSearchCB(
+  sharedata = (agent_share_data_t*)ListSearchCB(
       agent->agent_share_data_queue, 
       name, 
       (ListSearchFunc_t)agent_share_data_CmpName);
