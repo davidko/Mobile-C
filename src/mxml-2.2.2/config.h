@@ -1,20 +1,17 @@
-/* config.h.  Generated from config.h.in by configure.  */
 /*
- * "$Id: config.h.in,v 1.1 2007/05/23 20:43:27 david_ko Exp $"
+ * "$Id: config.h.in 408 2010-09-19 05:26:46Z mike $"
  *
  * Configuration file for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2005 by Michael Sweet.
+ * Copyright 2003-2010 by Michael R Sweet.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2, or (at your option) any later version.
+ * These coded instructions, statements, and computer programs are the
+ * property of Michael R Sweet and are protected by Federal copyright
+ * law.  Distribution and use rights are outlined in the file "COPYING"
+ * which should have been included with this file.  If this file is
+ * missing or damaged, see the license at:
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *     http://www.minixml.org/
  */
 
 /*
@@ -32,21 +29,43 @@
  * Version number...
  */
 
-#define MXML_VERSION "Mini-XML v2.2.2"
+#define MXML_VERSION	"2.7"
 
 
 /*
- * Do we have the vsnprintf() function?
+ * Inline function support...
  */
 
-#define HAVE_VSNPRINTF 1
+#define inline
+
+
+/*
+ * Long long support...
+ */
+
+#define HAVE_LONG_LONG
+
+
+/*
+ * Do we have the snprintf() and vsnprintf() functions?
+ */
+
+#define HAVE_SNPRINTF
+#define HAVE_VSNPRINTF
 
 
 /*
  * Do we have the strXXX() functions?
  */
 
-#define HAVE_STRDUP 1
+#define HAVE_STRDUP
+
+
+/*
+ * Do we have threading support?
+ */
+
+#define HAVE_PTHREAD_H
 
 
 /*
@@ -54,17 +73,23 @@
  */
 
 #  ifndef HAVE_STRDUP
-extern char	*mxml_strdup(const char *);
-#    define strdup mxml_strdup
+extern char	*_mxml_strdup(const char *);
+#    define strdup _mxml_strdup
 #  endif /* !HAVE_STRDUP */
 
-extern char	*mxml_strdupf(const char *, va_list);
+extern char	*_mxml_strdupf(const char *, ...);
+extern char	*_mxml_vstrdupf(const char *, va_list);
+
+#  ifndef HAVE_SNPRINTF
+extern int	_mxml_snprintf(char *, size_t, const char *, ...);
+#    define snprintf _mxml_snprintf
+#  endif /* !HAVE_SNPRINTF */
 
 #  ifndef HAVE_VSNPRINTF
-extern int	mxml_vsnprintf(char *, size_t, const char *, va_list);
-#    define vsnprintf mxml_vsnprintf
+extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
+#    define vsnprintf _mxml_vsnprintf
 #  endif /* !HAVE_VSNPRINTF */
 
 /*
- * End of "$Id: config.h.in,v 1.1 2007/05/23 20:43:27 david_ko Exp $".
+ * End of "$Id: config.h.in 408 2010-09-19 05:26:46Z mike $".
  */

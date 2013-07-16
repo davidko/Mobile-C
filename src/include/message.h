@@ -45,7 +45,9 @@
 #endif
 
 
+#ifdef MC_SECURITY
 #include "security/interface.h"
+#endif
 struct asm_node_s;
 
 

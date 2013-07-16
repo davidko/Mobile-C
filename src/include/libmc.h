@@ -420,6 +420,7 @@ EXPORTMC extern int MC_AclSend(MCAgency_t attr, struct fipa_acl_message_s* acl);
 EXPORTMC extern struct fipa_acl_message_s* MC_AclWaitRetrieve(MCAgent_t agent);
 
 /* ACL Helper Functions Here */
+#include "fipa_acl.h"
 enum fipa_performative_e;
 enum fipa_protocol_e;
 
@@ -865,6 +866,7 @@ EXPORTMC extern int MC_ChInitializeOptions(MCAgency_t attr, ChOptions_t *options
  * \section Example
  * \include persistent_example/host.c
  */
+#ifndef SWIG
 EXPORTMC int
 MC_CallAgentFunc(
     MCAgent_t agent,
@@ -872,6 +874,7 @@ MC_CallAgentFunc(
     void* returnVal,
     int numArgs,
     ...);
+#endif
 
 /**
  * \brief           Calls a function defined in an agent
@@ -906,11 +909,13 @@ EXPORTMC extern int MC_CallAgentFuncArg(
  *
  * \return          0 if successful, error_code_t type on failure
  */
+#ifndef SWIG
 EXPORTMC extern int MC_CallAgentFuncV(
     MCAgent_t agent,
     const char* funcName,
     void* returnVal,
     va_list ap);
+#endif
 
   /*
     \brief          Calls a function defined in an agent

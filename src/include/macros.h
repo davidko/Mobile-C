@@ -86,7 +86,6 @@
 #ifndef _WIN32
 #include <pthread.h>
 #include <semaphore.h>
-#include "config.h"
 #include <errno.h>
 #else
 #include <windows.h>
