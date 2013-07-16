@@ -68,7 +68,7 @@ add_library(mc_static STATIC
   xml_helper.c
   xml_parser.c
 )
-
 target_link_libraries(mc mc_list mc_sync b64 mxml)
 
+set_target_properties(mc_static PROPERTIES COMPILE_FLAGS "-fPIC")
 target_link_libraries(mc_static mc_list_static mc_sync_static b64_static mxml)

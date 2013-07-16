@@ -453,6 +453,7 @@ message_Destroy(message_p message)
   return MC_SUCCESS;
 }
 
+#ifdef NEW_SECURITY
 // authenticating receiver and send message
 int
 auth_rece_send_msg(int sockfd, char *hostname, char *message, char *privkey, char *known_host_filename){
@@ -570,6 +571,7 @@ auth_rece_send_msg(int sockfd, char *hostname, char *message, char *privkey, cha
   //  free(tempfile);
   return ret;
 }
+#endif // NEW_SECURITY
 
 #define MSG_THREADS 40
 int message_Send(mc_platform_t* mc_platform, message_p message, char *privatekey)

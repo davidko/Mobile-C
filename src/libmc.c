@@ -482,6 +482,14 @@ EXPORTMC int MC_AddAgentInitCallback(
   return 0;
 }
 
+EXPORTMC MCAgencyOptions_t* MC_AgencyOptions_New()
+{
+  MCAgencyOptions_t* options;
+  options = (MCAgencyOptions_t*)malloc(sizeof(MCAgencyOptions_t));
+  MC_InitializeAgencyOptions(options);
+  return options;
+}
+
 EXPORTMC MCAgency_t MC_AgentInfo_GetAgency(stationary_agent_info_t* stationary_agent_info)
 {
   return stationary_agent_info->agency;
@@ -1193,6 +1201,32 @@ MC_ComposeAgentWithWorkgroup(
   agent_p agent;
   agent = agent_New();
   if (agent == NULL) return NULL;
+  MC_InitializeAgentWithWorkgroup(
+      agent,
+      name,
+      home,
+      owner,
+      code,
+      return_var_name,
+      server,
+      persistent,
+      workgroup_code);
+  return agent;
+}
+
+EXPORTMC int
+MC_InitializeAgentWithWorkgroup(
+    MCAgent_t agent,
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* code,
+    const char* return_var_name,
+    const char* server,
+    int persistent,
+		const char* workgroup_code
+    )
+{
   agent->name = strdup(name);
   agent->home = strdup(home);
   agent->owner = strdup(owner);
@@ -1252,8 +1286,7 @@ MC_ComposeAgentWithWorkgroup(
 		}
 	}
   agent->datastate->tasks[0]->persistent = persistent;
- 
-  return agent;
+  return 0;
 }
 
 EXPORTMC MCAgent_t MC_ComposeAgentFromFile(
@@ -1276,6 +1309,31 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFile(
       persistent,
       NULL
       );
+}
+
+EXPORTMC int MC_InitializeAgentFromFile(
+    MCAgent_t agent,
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* filename,
+    const char* return_var_name,
+    const char* server,
+    int persistent
+    )
+{
+  MC_InitializeAgentFromFileWithWorkgroup(
+      agent,
+      name,
+      home,
+      owner,
+      filename,
+      return_var_name,
+      server,
+      persistent,
+      NULL
+      );
+  return 0;
 }
 
 EXPORTMC MCAgent_t MC_ComposeAgentFromFileS(
@@ -1346,6 +1404,53 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFileWithWorkgroup(
   free(code);
 
   return agent;
+}
+
+EXPORTMC int MC_InitializeAgentFromFileWithWorkgroup(
+    MCAgent_t agent,
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* filename,
+    const char* return_var_name,
+    const char* server,
+    int persistent,
+		const char* workgroup_code
+    )
+{
+  struct stat buffer;
+  char *code;
+  int codesize;
+  FILE* fptr;
+  size_t len;
+  int rc;
+
+  if(stat(filename, &buffer)) {
+    /* Stat failed. Maybe file does not exist? */
+    return -1;
+  }
+  codesize = buffer.st_size;
+  code = (char *)malloc((codesize+1)*sizeof(char));
+  memset(code, 0, codesize+1);
+  fptr = fopen(filename, "r");
+  len = fread(code, sizeof(char), codesize, fptr);
+  fclose(fptr);
+  if(len <= 0) {return -1;}
+
+  rc = MC_InitializeAgentWithWorkgroup(
+      agent,
+      name, 
+      home, 
+      owner, 
+      code, 
+      return_var_name, 
+      server,
+      persistent,
+      workgroup_code
+      );
+  free(code);
+
+  return rc;
 }
 
 EXPORTMC int 
@@ -2961,6 +3066,16 @@ MC_MainLoop(MCAgency_t attr)
   }
   MUTEX_UNLOCK( attr->mc_platform->quit_lock );
   return 0;
+} /*}}}*/
+
+EXPORTMC int 
+MC_QuitFlag(MCAgency_t attr) 
+{
+  int rc;
+  MUTEX_LOCK( attr->mc_platform->quit_lock );
+  rc = attr->mc_platform->quit_lock;
+  MUTEX_UNLOCK( attr->mc_platform->quit_lock );
+  return rc;
 } /*}}}*/
 
 EXPORTMC int

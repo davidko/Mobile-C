@@ -119,6 +119,8 @@ agent_AddPersistentVariable(agent_p agent, int task_num, const char* var_name);
 agent_p
 agent_New(void);
 
+int agent_Init(agent_p agent);
+
 agent_p 
 agent_NewBinary( struct mc_platform_s *mc_platform);
 

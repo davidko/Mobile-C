@@ -592,7 +592,7 @@ acc_Start(mc_platform_p mc_platform)
 #ifndef _WIN32
   pthread_attr_t attr;
   pthread_attr_init(&attr);
-  if(mc_platform->stack_size[MC_THREAD_ACC] != -1) {
+  if(mc_platform->stack_size[MC_THREAD_ACC] > 0) {
   pthread_attr_setstacksize
     (
      &attr,
@@ -634,6 +634,7 @@ acc_Start(mc_platform_p mc_platform)
     );
 }
 
+#ifdef NEW_SECURITY
 int
 auth_conn_rece_key(int sockfd, char *peer_name, int *nonce, unsigned char *aes_key, char *privkey, char* known_host_filename){
 	int ret = -1;
@@ -670,7 +671,7 @@ auth_conn_rece_key(int sockfd, char *peer_name, int *nonce, unsigned char *aes_k
   }
  return ret;
 }
-
+#endif
 
 #ifndef _WIN32
   void*

@@ -218,6 +218,12 @@ agent_New(void)
         __FILE__, __LINE__);
     return NULL;
   }
+  agent_Init(agent);
+  return agent;
+}
+
+int agent_Init(agent_p agent)
+{
   /* Just init everything to zero */
   memset(agent, 0, sizeof(agent_t));
 
@@ -236,8 +242,7 @@ agent_New(void)
   agent->mailbox = ListInitialize();
 
   agent->agent_share_data_queue = ListInitialize();
-
-  return agent;
+  return 0;
 }
 
   agent_p 

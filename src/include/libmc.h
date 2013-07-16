@@ -523,6 +523,8 @@ int MC_AddAgentInitCallback(
     MC_AgentInitCallbackFunc_t function,
     void* user_data);
 
+MCAgencyOptions_t* MC_AgencyOptions_New();
+
 /**
  * \brief           Add a new task to an already existing agent
  *                  
@@ -1012,6 +1014,19 @@ MC_ComposeAgentWithWorkgroup(
 		const char* workgroup_code
     );
 
+EXPORTMC int
+MC_InitializeAgentWithWorkgroup(
+    MCAgent_t agent,
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* code,
+    const char* return_var_name,
+    const char* server,
+    int persistent,
+		const char* workgroup_code
+    );
+
 /**
  * \brief           Compose a new agent dynamically from a source code file
  *
@@ -1028,6 +1043,17 @@ MC_ComposeAgentWithWorkgroup(
  */
 EXPORTMC extern MCAgent_t
 MC_ComposeAgentFromFile(
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* filename,
+    const char* return_var_name,
+    const char* server,
+    int persistent
+    );
+
+EXPORTMC int MC_InitializeAgentFromFile(
+    MCAgent_t agent,
     const char* name,
     const char* home,
     const char* owner, 
@@ -1093,6 +1119,17 @@ MC_ComposeAgentFromFileWithWorkgroup(
 		const char* workgroup_code
     );
 
+EXPORTMC int MC_InitializeAgentFromFileWithWorkgroup(
+    MCAgent_t agent,
+    const char* name,
+    const char* home,
+    const char* owner, 
+    const char* filename,
+    const char* return_var_name,
+    const char* server,
+    int persistent,
+		const char* workgroup_code
+    );
 /**
  * \brief           Wakes up all agents/threads waiting on a condition variable
  *
@@ -1394,6 +1431,7 @@ EXPORTMC extern int MC_InitializeAgencyOptions(struct MCAgencyOptions_s* options
  * \note            This function is intended to block the calling thread forever.
  */
  EXPORTMC extern int MC_MainLoop(MCAgency_t attr);
+ EXPORTMC extern int MC_QuitFlag(MCAgency_t attr);
 
 /**
  * \brief           Load an agent from a file into an agency

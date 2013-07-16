@@ -98,6 +98,7 @@ mtp_http_New(void)
   return http;
 }
 
+#ifdef NEW_SECURITY
 int 
 rece_de_msg(char *buffer, connection_p con, char *privatekey){
 
@@ -177,6 +178,8 @@ rece_de_msg(char *buffer, connection_p con, char *privatekey){
   if( remove(outfile) ) printf("mtp_http.c : remove error 7");
   return strlen(buffer);
 }
+#endif
+
 int
 mtp_http_InitializeFromConnection
 (
