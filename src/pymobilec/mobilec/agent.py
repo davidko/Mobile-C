@@ -32,4 +32,11 @@ class PyAgent(mc.stationary_agent_info_t):
     else:
       return None
 
+  def waitRetrieveMessage(self):
+    msg = mc.MC_AclWaitRetrieve(self.agent)
+    if msg is not None:
+      return message.Message(msg)
+    else:
+      return None
+
 
