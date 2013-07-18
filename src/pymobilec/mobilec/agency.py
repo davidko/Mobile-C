@@ -50,6 +50,9 @@ class Agency():
   def addAgent(self, agent):
     mc.MC_AddAgent(self._agency, agent)
 
+  def getNumAgents(self):
+    return mc.MC_GetAllAgents(self._agency)
+
   def mainloop(self):
     while mc.MC_QuitFlag(self._agency) == 0:
       time.sleep(0.5)

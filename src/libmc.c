@@ -472,6 +472,22 @@ EXPORTMC int MC_AddStationaryAgent(
   return 0;
 }
 
+EXPORTMC int MC_StationaryAgent_Init(stationary_agent_info_t* stationary_agent_info)
+{
+	stationary_agent_info = (stationary_agent_info_t*)malloc(sizeof(stationary_agent_info_t));
+	stationary_agent_info->args = agent_args;
+	stationary_agent_info->agent = agent_NewBinary(agency->mc_platform);
+	stationary_agent_info->agent->name = strdup(name);
+	stationary_agent_info->attr = agency;
+	stationary_agent_info->agency = agency;
+  if(!agency->mc_platform->agent_processing)
+    ListWRLock(agency->mc_platform->agent_queue);
+	ListAdd(agency->mc_platform->agent_queue, stationary_agent_info->agent);
+  if(!agency->mc_platform->agent_processing)
+    ListWRUnlock(agency->mc_platform->agent_queue);
+  return 0;
+}
+
 EXPORTMC int MC_AddAgentInitCallback(
     MCAgency_t agency,
     MC_AgentInitCallbackFunc_t function,

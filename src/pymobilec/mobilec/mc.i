@@ -3,9 +3,11 @@
 %{
 #include "../include/libmc.h"
 #include "../include/agent.h"
+#include "../include/fipa_acl.h"
 %}
 %include "../include/libmc.h"
 %include "../include/agent.h"
+%include "../include/fipa_acl.h"
 typedef struct ChOptions_ {
    int shelltype;        /* shell type: CH_REGULARCH or CH_SAFECH */
    /* int chrc; */       /* deprecated, use default value */

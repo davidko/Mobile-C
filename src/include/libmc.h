@@ -505,6 +505,7 @@ int MC_AddStationaryAgent(
     void* (*agent_thread)(stationary_agent_info_t*), 
     const char* name, 
     void* agent_args);
+EXPORTMC int MC_StationaryAgent_Init(stationary_agent_info_t* stationary_agent_info);
 
 /**
  * \brief         Add an agenct initialization callback function
@@ -1378,6 +1379,9 @@ MC_GetAllAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents);
  *
  * \return          Returns 0 on success, non-zero on failure.
  */
+#ifdef SWIG
+%apply int* OUTPUT {int* num_agents};
+#endif
 EXPORTMC int
 MC_GetNumAgents(MCAgency_t attr, int* num_agents);
 
