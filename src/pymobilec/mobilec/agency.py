@@ -59,3 +59,9 @@ class Agency():
 
   def end(self):
     mc.MC_End(self._agency)
+
+  def registerPyAgent(self, pyagent):
+    mc.MC_StationaryAgent_Register(self._agency, pyagent, pyagent.name)
+
+  def sendMessage(self, message):
+    mc.MC_AclSend(self._agency, message)

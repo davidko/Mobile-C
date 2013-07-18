@@ -3,3 +3,4 @@
 from .agency import *
 from .agent import *
 from .mc import *
+from .message import *

@@ -433,6 +433,24 @@ EXPORTMC char* MC_AclGetConversationID(
 EXPORTMC enum fipa_performative_e MC_AclGetPerformative(
     struct fipa_acl_message_s* acl);
 
+
+#ifdef SWIG
+%include <cstring.i>
+%cstring_output_allocate(char** name, free(*$1));
+%cstring_output_allocate(char** address, free(*$1));
+#endif
+EXPORTMC int MC_AclGetSenderName(
+    struct fipa_acl_message_s* acl,
+    char** name /* OUT: Will allocate a text string to be freed by the
+                          user. */
+    );
+
+EXPORTMC int MC_AclGetSenderAddress(
+    struct fipa_acl_message_s* acl,
+    char** address/* OUT: Will allocate a text string to be freed by the
+                          user. */
+    );
+
 EXPORTMC int MC_AclGetSender(
     struct fipa_acl_message_s* acl,
     char** name, /* OUT: Will allocate a text string to be freed by the
@@ -505,7 +523,10 @@ int MC_AddStationaryAgent(
     void* (*agent_thread)(stationary_agent_info_t*), 
     const char* name, 
     void* agent_args);
-EXPORTMC int MC_StationaryAgent_Init(stationary_agent_info_t* stationary_agent_info);
+int MC_StationaryAgent_Register(
+    MCAgency_t agency, 
+    stationary_agent_info_t* stationary_agent_info,
+    const char* name);
 
 /**
  * \brief         Add an agenct initialization callback function

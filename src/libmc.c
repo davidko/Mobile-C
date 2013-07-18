@@ -250,6 +250,26 @@ EXPORTMC enum fipa_performative_e MC_AclGetPerformative(
   return acl->performative;
 }
 
+EXPORTMC int MC_AclGetSenderName(
+    struct fipa_acl_message_s* acl,
+    char** name /* OUT: Will allocate a text string to be freed by the
+                          user. */
+    )
+{
+  *name = strdup(acl->sender->name);
+  return 0;
+}
+
+EXPORTMC int MC_AclGetSenderAddress(
+    struct fipa_acl_message_s* acl,
+    char** address /* OUT: Will allocate a text string to be freed by the user
+                    */
+    )
+{
+  *address = strdup( acl->sender->addresses->urls[0]->str );
+  return 0;
+}
+
 EXPORTMC int MC_AclGetSender(
     struct fipa_acl_message_s* acl,
     char** name, /* OUT: Will allocate a text string to be freed by the
@@ -472,10 +492,12 @@ EXPORTMC int MC_AddStationaryAgent(
   return 0;
 }
 
-EXPORTMC int MC_StationaryAgent_Init(stationary_agent_info_t* stationary_agent_info)
+EXPORTMC int MC_StationaryAgent_Register(
+    MCAgency_t agency, 
+    stationary_agent_info_t* stationary_agent_info,
+    const char* name )
 {
-	stationary_agent_info = (stationary_agent_info_t*)malloc(sizeof(stationary_agent_info_t));
-	stationary_agent_info->args = agent_args;
+	stationary_agent_info->args = NULL;
 	stationary_agent_info->agent = agent_NewBinary(agency->mc_platform);
 	stationary_agent_info->agent->name = strdup(name);
 	stationary_agent_info->attr = agency;

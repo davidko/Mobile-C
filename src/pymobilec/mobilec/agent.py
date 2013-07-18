@@ -16,8 +16,9 @@ class Agent(mc.agent_s):
     return mc.MC_AclRetrieve(self)
 
 class PyAgent(mc.stationary_agent_info_t):
-  def __init__(self):
+  def __init__(self, name):
     mc.stationary_agent_info_t.__init__(self)
+    self.name = name
 
   def retrieveMessage(self):
     return mc.MC_AclRetrieve(self.agent)
