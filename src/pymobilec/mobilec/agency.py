@@ -64,4 +64,4 @@ class Agency():
     mc.MC_StationaryAgent_Register(self._agency, pyagent, pyagent.name)
 
   def sendMessage(self, message):
-    mc.MC_AclSend(self._agency, message)
+    mc.MC_AclSend(self._agency, message._message)

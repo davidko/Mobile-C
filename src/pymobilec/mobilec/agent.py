@@ -1,4 +1,5 @@
 import mc
+import message
 
 class Agent(mc.agent_s):
   def __init__(self):
@@ -13,7 +14,11 @@ class Agent(mc.agent_s):
         self, name, home, owner, filename, return_var_name, server, persistent, workgroup)
 
   def retrieveMessage(self):
-    return mc.MC_AclRetrieve(self)
+    msg = mc.MC_AclRetrieve(self)
+    if msg is not None:
+      return message.Message(msg)
+    else:
+      return None
 
 class PyAgent(mc.stationary_agent_info_t):
   def __init__(self, name):
@@ -21,5 +26,10 @@ class PyAgent(mc.stationary_agent_info_t):
     self.name = name
 
   def retrieveMessage(self):
-    return mc.MC_AclRetrieve(self.agent)
+    msg = mc.MC_AclRetrieve(self.agent)
+    if msg is not None:
+      return message.Message(msg)
+    else:
+      return None
+
 

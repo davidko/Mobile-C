@@ -17,5 +17,5 @@ while True:
     break
   msg = agent.retrieveMessage()
   if msg:
-    print mc.MC_AclGetSender(msg)
+    print msg.getSenderName()
 
