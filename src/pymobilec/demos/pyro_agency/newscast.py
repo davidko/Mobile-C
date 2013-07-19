@@ -8,8 +8,9 @@ import threading
 class NewsCastPeer():
   MAX_PEERS = 10
   BROADCAST_INTERVAL = 5
-  def __init__(self):
-    self.peers = [] # List of tuples (time, uri)
+  def __init__(self, name):
+    self.peers = [] # List of tuples (time, uri, name)
+    self.myname = name
     self.uri = None
 
   def set_uri(self, uri):
@@ -19,19 +20,16 @@ class NewsCastPeer():
     return self.uri
 
   def get_peers(self):
-    return self.peers + [(time.time(), self.uri)]
+    return self.peers + [(time.time(), self.uri, self.myname)]
 
   def set_peers(self, peers):
-    print "Adding {0} to peers...".format(peers)
     self.peers += peers
     self.peers.sort(key=lambda peer: peer[0], reverse=True)
     self._filter_duplicates()
     self.peers = self.peers[0:self.MAX_PEERS]
 
   def transact_with_other(self, uri):
-    print "{0} transacting with {1}!".format(self.uri, uri)
     try:
-      print "Trying to make a proxy with uri: {0}".format(uri)
       other = Pyro4.Proxy(uri[1])
     except:
       self.peers = filter(lambda peer: peer[1] != uri, self.peers)
@@ -42,18 +40,20 @@ class NewsCastPeer():
     self._filter_duplicates()
     self.peers = self.peers[0:self.MAX_PEERS]
     # Push our peers onto the other guy
-    other.set_peers(self.peers + [(time.time(), self.uri)])
+    other.set_peers(self.peers + [(time.time(), self.uri, self.myname)])
     
   def _filter_duplicates(self):
     newtimes = []
     newuris = []
+    newnames = []
     self.peers.sort(key=lambda peer: peer[0], reverse=True)
-    for time,uri in self.peers:
+    for time,uri,name in self.peers:
       if uri in newuris:
         continue
       newtimes.append(time)
       newuris.append(uri)
-    self.peers = zip(newtimes, newuris)
+      newnames.append(name)
+    self.peers = zip(newtimes, newuris, newnames)
 
   def start_newscast(self):
     def thread_func():
