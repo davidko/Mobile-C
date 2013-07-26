@@ -22,6 +22,7 @@ int main()
     printf("This is mobagent1 from the agency at port 5050.\n");
     printf("I am performing the task on the agency at port 5051 now.\n");
     printf("%f\n", hypot(1,2)); 
+    sleep(2);
     if(mc_host_port == 5050) {
       mc_MigrateAgent(mc_current_agent, "localhost", 5051);
     } else if (mc_host_port == 5051) {

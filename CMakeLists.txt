@@ -9,3 +9,4 @@ set(LIBMC_VERSION
     ${LIBMC_MAJOR_VERSION}.${LIBMC_MINOR_VERSION}.${LIBMC_PATCH_VERSION})
 
 add_subdirectory(src)
+#add_subdirectory(demos)

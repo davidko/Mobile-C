@@ -15,7 +15,7 @@ typedef dynstring_t* dynstring_p;
 
 dynstring_t* dynstring_New(void);
 
-int dynstring_Append(dynstring_t* msg, char* str);
+int dynstring_Append(dynstring_t* msg, const char* str);
 
 int dynstring_Destroy(dynstring_t* dynstring);
 

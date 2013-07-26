@@ -8,25 +8,22 @@
 int main()
 {
   srand(time(NULL));
-  while(1) {
-    /* Talk with the newscast manager and get a list of its peers */
-    fipa_acl_message_t* message;
-    message = mc_AclNew();
-    mc_AclSetPerformative(message, FIPA_INFORM);
-    mc_AclSetSender(message, mc_agent_name, mc_agent_address);
-    mc_AclAddReceiver(message, "Manager", mc_agent_address);
-    mc_AclSetContent(message, "get peers");
-    mc_AclSend(message);
-    mc_AclDestroy(message);
-    /* Now wait for a message to come back */
-    printf("%s: Waiting for a message.\n", mc_agent_name);
-    message = mc_AclWaitRetrieve(mc_current_agent);
+  /* Talk with the newscast manager and get a list of its peers */
+  fipa_acl_message_t* message;
+  message = mc_AclNew();
+  mc_AclSetPerformative(message, FIPA_INFORM);
+  mc_AclSetSender(message, mc_agent_name, mc_agent_address);
+  mc_AclAddReceiver(message, "Manager", mc_agent_address);
+  mc_AclSetContent(message, "get peers");
+  mc_AclSend(message);
+  mc_AclDestroy(message);
+  /* Now wait for a message to come back */
+  printf("%s: Waiting for a message.\n", mc_agent_name);
+  message = mc_AclWaitRetrieve(mc_current_agent);
 
-    printf("\tContent is '%s'.\n", mc_AclGetContent(message));
-    int mytime = time(NULL);
-    while(time(NULL) < mytime+3);
-  }
-#if 0
+  printf("\tContent is '%s'.\n", mc_AclGetContent(message));
+  int mytime = time(NULL);
+  while(time(NULL) < mytime+3);
   char* hosts = strdup(mc_AclGetContent(message));
   char *host[128];
   char *saveptr;
@@ -48,5 +45,4 @@ int main()
   }
 
   mc_AclDestroy(message);
-#endif
 }
