@@ -785,11 +785,19 @@ agent_ChScriptInitVar(ChInterp_t* interp)
       "int mc_AgentAttachFile(void* agent, const char* name, const char* filepath);",
       (ChFuncdl_t)MC_AgentAttachFile_chdl
       );
-  Ch_DeclareFunc(
-      *interp,
-      "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned int size);",
-      (ChFuncdl_t)MC_AgentDataShare_Add_chdl
-      );
+  if(sizeof(size_t) == 8) {
+    Ch_DeclareFunc(
+        *interp,
+        "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned long long size);",
+        (ChFuncdl_t)MC_AgentDataShare_Add_chdl
+        );
+  } else {
+    Ch_DeclareFunc(
+        *interp,
+        "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned int size);",
+        (ChFuncdl_t)MC_AgentDataShare_Add_chdl
+        );
+  }
   Ch_DeclareFunc(
       *interp,
       "int mc_AgentListFiles(void* agent, int task_num, char*** names, int* num_files);",

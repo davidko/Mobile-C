@@ -77,6 +77,9 @@
 /* The Global platform variable */
 mc_platform_p g_mc_platform;
 
+/* The global agent-callback lock */
+pthread_mutex_t* g_agent_callback_lock = NULL;
+
 /* **************************** *
  * Libmc Binary Space Functions *
  * **************************** */
@@ -2122,6 +2125,11 @@ MC_Initialize( /*{{{*/
     return NULL;
   }
 
+  if(g_agent_callback_lock == NULL) {
+    g_agent_callback_lock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(g_agent_callback_lock, NULL);
+  }
+
   memset(privkey, '\0', 1210);
   ret = (MCAgency_t)malloc(sizeof(struct agency_s));
   if (ret == NULL) {return NULL;}
@@ -3564,6 +3572,7 @@ MC_AgentAddTask_chdl(void *varg) /*{{{*/
 EXPORTCH int
 MC_AgentDataShare_Add_chdl(void *varg)
 {
+  pthread_mutex_lock(g_agent_callback_lock);
   int retval;
   MCAgent_t agent;
   const char* name;
@@ -3581,6 +3590,7 @@ MC_AgentDataShare_Add_chdl(void *varg)
 
   retval = MC_AgentDataShare_Add(agent, name, data, size);
   Ch_VaEnd(interp, ap);
+  pthread_mutex_unlock(g_agent_callback_lock);
   return retval;
 }
 

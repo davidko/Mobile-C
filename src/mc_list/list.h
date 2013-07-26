@@ -86,12 +86,7 @@ void  ListRDLock(list_p list);
 void  ListRDUnlock(list_p list);
 void  ListWRLock(list_p list);
 void  ListWRUnlock(list_p list);
-void  ListWRWait(list_p list); /* Call this function if you currently have a
-                                  write lock on the list but need to wait for
-                                  someone else to touch it. */
-void  ListRDWait(list_p list); /* Similar to above, except if you have a read
-                                  lock */
-void  ListRDtoWR(list_p list); /* Upgrade lock from reader to writer atomically */
-void  ListWRtoRD(list_p list); /* Downgrade lock from writer to reader atomically */
 
+void ListWRWait(list_p list);
+void ListRDWait(list_p list);
 #endif

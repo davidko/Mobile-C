@@ -119,7 +119,7 @@ ams_ManageAgentList(ams_p ams)
 
   /* looks through the agent list and performs action on agent 
      depending upon the status that the agent displays */
-  ListRDLock(alist);
+  ListWRLock(alist);
   for(index=0; index<alist->size; index++)
   {
     if((current_agent = (MCAgent_t)ListSearch(alist, index)))
@@ -199,9 +199,7 @@ ams_ManageAgentList(ams_p ams)
         case MC_WAIT_FINISHED :
           MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
-          ListRDtoWR(alist);
           ListDelete(alist, index);
-          ListWRtoRD(alist);
           // Change index = 0 to index-- to fix the problem where agents 
           // remain in an agency when they should be removed from the agency.
           // Yu-Cheng Chou July 28, 2009
@@ -219,7 +217,7 @@ ams_ManageAgentList(ams_p ams)
       }
     } 
   }
-  ListRDUnlock(alist);
+  ListWRUnlock(alist);
   return 0 ;
 }
 

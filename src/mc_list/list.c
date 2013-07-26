@@ -441,30 +441,11 @@ void ListWRUnlock(list_p list)
 
 void ListWRWait(list_p list)
 {
-  COND_WAIT(list->rwlock->reader_cond, list->rwlock->lock);
+  rwlock_wrwait(list->rwlock);
 }
 
 void ListRDWait(list_p list)
 {
-  MUTEX_LOCK(list->rwlock->lock);
-  list->rwlock->readers--;
-  COND_WAIT(list->rwlock->reader_cond, list->rwlock->lock);
-  list->rwlock->readers++;
-  MUTEX_UNLOCK(list->rwlock->lock);
+  rwlock_rdwait(list->rwlock);
 }
 
-void ListRDtoWR(list_p list)
-{
-  MUTEX_LOCK(list->rwlock->lock);
-  list->rwlock->readers--;
-  while(list->rwlock->readers > 0) {
-    COND_WAIT(list->rwlock->writer_cond, list->rwlock->lock);
-  }
-}
-
-void ListWRtoRD(list_p list)
-{
-  /* rwlock should already be locked */
-  list->rwlock->readers++;
-  MUTEX_UNLOCK(list->rwlock->lock);
-}

@@ -129,8 +129,7 @@ typedef name##_t* name##_p;
 #ifndef _WIN32
 
 #define SOCKET_ERROR() \
-	printf("Socket error. %s:%d\nerrno:%d", __FILE__, __LINE__, errno); \
-	sleep(500)
+	printf("Socket error. %s:%d\nerrno:%d", __FILE__, __LINE__, errno); 
 
 /* ****** *
  * THREAD *

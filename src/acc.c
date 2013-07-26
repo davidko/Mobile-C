@@ -155,7 +155,7 @@ acc_MessageHandlerThread(LPVOID arg)
     }
     MUTEX_UNLOCK(mc_platform->quit_lock);
     ListWRUnlock(mc_platform->message_queue);
-
+  
     /* Message should not be NULL here */
     if (message == NULL) {
       printf("POP ERROR\n");
@@ -330,11 +330,11 @@ acc_Thread( LPVOID arg )
   while(1) {
     connection = NULL;
     MUTEX_LOCK(mc_platform->quit_lock);
-    ListRDLock(mc_platform->connection_queue);
+    ListWRLock(mc_platform->connection_queue);
     while (
 			(ListGetSize(mc_platform->connection_queue) == 0) && !mc_platform->quit) {
       MUTEX_UNLOCK(mc_platform->quit_lock);
-      ListRDWait(mc_platform->connection_queue);
+      ListWRWait(mc_platform->connection_queue);
       MUTEX_LOCK(mc_platform->quit_lock);
     }
     if 
@@ -343,7 +343,7 @@ acc_Thread( LPVOID arg )
        mc_platform->quit 
       )
       {
-        ListRDUnlock(mc_platform->connection_queue);
+        ListWRUnlock(mc_platform->connection_queue);
         /* Wait for all connection threads to finish */
 				MUTEX_LOCK(&mc_platform->acc->conn_thread_lock);
 				while(mc_platform->acc->num_conn_threads > 0) {
@@ -374,7 +374,6 @@ acc_Thread( LPVOID arg )
     MUTEX_UNLOCK(mc_platform->giant_lock);
 
     /* Continue with normal operation */
-    ListRDtoWR(mc_platform->connection_queue);
     connection = (connection_t*)ListPop(mc_platform->connection_queue);
     ListWRUnlock(mc_platform->connection_queue);
 		connection_thread_arg = (connection_thread_arg_t*)malloc(sizeof(connection_thread_arg_t));

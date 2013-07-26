@@ -76,18 +76,16 @@ void message_queue_SendOutgoing(
        mc_platform->port
       );
 
-    ListRDLock(mqueue);
+    ListWRLock(mqueue);
     while ((message = (message_p)ListSearch(mqueue, index))) {
         if (strcmp(message->to_address, local_address)) {
             message_Send(mc_platform, message, mc_platform -> private_key);
-            ListRDtoWR(mqueue);
             ListDelete(mqueue, index);
-            ListWRtoRD(mqueue);
         } else {
             index++;
         }
     }
-    ListRDUnlock(mqueue);
+    ListWRUnlock(mqueue);
 
     free(local_address);
     return ;

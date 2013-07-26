@@ -19,6 +19,10 @@ int rwlock_rdunlock(rwlock_t* rwlock);
 
 int rwlock_rdwait(rwlock_t* rwlock);
 
+/* Currently own wr lock, but want to wait until something happens, then regain
+ * write-lock */
+int rwlock_wrwait(rwlock_t* rwlock);
+
 rwlock_t* rwlock_New(void);
 
 int rwlock_Destroy(rwlock_t* rwlock);

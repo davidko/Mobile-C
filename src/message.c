@@ -659,6 +659,12 @@ int str2ba(const char *str, bdaddr_t *ba)
 	THREAD_EXIT()
 #endif
 
+#ifdef _WIN32
+#define CLOSESOCKET(x) closeSocket(x)
+#else
+#define CLOSESOCKET(x) close(x)
+#endif
+
 #ifndef _WIN32
   void*
 message_send_Thread(void* arg)
@@ -770,6 +776,14 @@ message_send_Thread( LPVOID arg )
     sktin.sin_port = htons(port);
   }
 
+  /* Put a timeout on the socket */
+#ifndef _WIN32
+  struct timeval tv;
+  tv.tv_sec = 15;
+  tv.tv_usec = 0;
+  setsockopt(skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(struct timeval));
+#endif
+
   if (mc_platform->bluetooth == 0) {
 #ifndef _WIN32
     //if(gethostbyname_r(hostname, &host, hostbuf, hostbuf_len, &host_result, &errnum)) 
@@ -791,6 +805,7 @@ message_send_Thread( LPVOID arg )
       {
         fprintf(stderr, "Error - can't get host entry for %s\n", hostname);
         free(buf);
+        CLOSESOCKET(skt);
         MSG_THREAD_EXIT();
       } 
   }
@@ -847,6 +862,7 @@ message_send_Thread( LPVOID arg )
         port
         );
     free(buf);
+    CLOSESOCKET(skt);
     MSG_THREAD_EXIT();
 	}
 
@@ -917,6 +933,7 @@ message_send_Thread( LPVOID arg )
 					/* There was an error receiving the response. */
 					SOCKET_ERROR();
 					free(buffer);
+          CLOSESOCKET(skt);
 					MSG_THREAD_EXIT();
 				}
 				else if (n==0) {
@@ -941,7 +958,7 @@ message_send_Thread( LPVOID arg )
     }
 
 #ifndef _WIN32
-  if(closeSocket(skt) <0) {
+  if(close(skt) <0) {
 		SOCKET_ERROR();
 	}
 #else

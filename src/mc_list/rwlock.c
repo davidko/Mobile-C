@@ -14,6 +14,7 @@ int rwlock_wrlock(rwlock_t* rwlock)
 int rwlock_wrunlock(rwlock_t* rwlock)
 {
   COND_SIGNAL(rwlock->reader_cond);
+  COND_SIGNAL(rwlock->writer_cond);
   MUTEX_UNLOCK(rwlock->lock);
   return 0;
 }
@@ -39,9 +40,19 @@ int rwlock_rdwait(rwlock_t* rwlock)
 {
   MUTEX_LOCK(rwlock->lock);
   rwlock->readers--;
+  COND_SIGNAL(rwlock->writer_cond);
   COND_WAIT(rwlock->reader_cond, rwlock->lock);
   rwlock->readers++;
   MUTEX_UNLOCK(rwlock->lock);
+  return 0;
+}
+
+int rwlock_wrwait(rwlock_t* rwlock)
+{
+  COND_WAIT(rwlock->reader_cond, rwlock->lock);
+  while(rwlock->readers > 0) {
+    COND_WAIT(rwlock->writer_cond, rwlock->lock);
+  }
   return 0;
 }
 
