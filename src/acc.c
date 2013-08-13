@@ -553,6 +553,8 @@ acc_connection_Thread( LPVOID arg )
 		default:
 			fprintf(stderr, "unsupported http performative. %s:%d\n",
 					__FILE__, __LINE__);
+      mtp_http_Destroy(mtp_http);
+      CONNECT_THREAD_EXIT();
 	}
 
 	/* If we get here, then we have an incoming message for the ams */
