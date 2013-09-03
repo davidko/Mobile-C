@@ -160,7 +160,7 @@ agent_task_Destroy( agent_task_p agent_task )
   ListClearCB(agent_task->agent_variable_list, 
       (ListElemDestroyFunc_t)interpreter_variable_data_Destroy);
   ListTerminate(agent_task->agent_variable_list);
-  ListWRUnlock(agent_task->agent_variable_list);
+  //ListWRUnlock(agent_task->agent_variable_list);
 
   if(agent_task->saved_variables != NULL) {
     for(i = 0; agent_task->saved_variables[i] != NULL; i++) {
@@ -175,7 +175,7 @@ agent_task_Destroy( agent_task_p agent_task )
   ListClearCB(agent_task->agent_file_list, 
       (ListElemDestroyFunc_t)agent_file_data_Destroy);
   ListTerminate(agent_task->agent_file_list);
-  ListWRUnlock(agent_task->agent_file_list);
+  //ListWRUnlock(agent_task->agent_file_list);
 
   free(agent_task);
 

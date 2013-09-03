@@ -70,13 +70,13 @@ add_library(mc_static STATIC
   xml_helper.c
   xml_parser.c
 )
-target_link_libraries(mc mc_list_static mc_sync_static b64_static mxml -Wl,--whole-archive -lembedch -lchsdk -Wl,--no-whole-archive)
+target_link_libraries(mc mc_list_static mc_sync_static b64_static mxml -Wl,--whole-archive -lembedch -lchsdk -Wl,--no-whole-archive -ldl)
 set_target_properties(mc PROPERTIES COMPILE_FLAGS "-pthread")
 set_target_properties(mc PROPERTIES LINK_FLAGS "-pthread -rdynamic")
 
 set_target_properties(mc_static PROPERTIES COMPILE_FLAGS "-pthread -fPIC")
 set_target_properties(mc_static PROPERTIES LINK_FLAGS "-pthread -rdynamic")
-target_link_libraries(mc_static mc_list_static mc_sync_static b64_static mxml embedch)
+target_link_libraries(mc_static mc_list_static mc_sync_static b64_static mxml embedch dl)
 
 install(TARGETS mc DESTINATION lib)
 

@@ -781,7 +781,9 @@ message_send_Thread( LPVOID arg )
   struct timeval tv;
   tv.tv_sec = 15;
   tv.tv_usec = 0;
-  setsockopt(skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(struct timeval));
+  if(setsockopt(skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(struct timeval))) {
+    perror("setsockopt:Setting Recv Timeout");
+  }
 #endif
 
   if (mc_platform->bluetooth == 0) {
@@ -932,6 +934,7 @@ message_send_Thread( LPVOID arg )
 				if (n<0) {
 					/* There was an error receiving the response. */
 					SOCKET_ERROR();
+          perror("recv");
 					free(buffer);
           CLOSESOCKET(skt);
 					MSG_THREAD_EXIT();

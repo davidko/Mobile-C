@@ -2530,6 +2530,7 @@ MC_ResumeAgency(MCAgency_t attr) /*{{{*/
 {
   MUTEX_LOCK(attr->mc_platform->giant_lock);
   attr->mc_platform->giant = 1;
+  COND_SIGNAL(attr->mc_platform->giant_cond);
   MUTEX_UNLOCK(attr->mc_platform->giant_lock);
   return 0;
 } /*}}}*/

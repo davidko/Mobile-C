@@ -200,6 +200,8 @@ ams_ManageAgentList(ams_p ams)
           MUTEX_UNLOCK(current_agent->agent_status_lock);
           MUTEX_UNLOCK(current_agent->lock);
           ListDelete(alist, index);
+          /* Free the agent memory */
+          agent_Destroy(current_agent);
           // Change index = 0 to index-- to fix the problem where agents 
           // remain in an agency when they should be removed from the agency.
           // Yu-Cheng Chou July 28, 2009
