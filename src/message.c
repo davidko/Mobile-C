@@ -573,7 +573,7 @@ auth_rece_send_msg(int sockfd, char *hostname, char *message, char *privkey, cha
 }
 #endif // NEW_SECURITY
 
-#define MSG_THREADS 40
+#define MSG_THREADS 200
 int message_Send(mc_platform_t* mc_platform, message_p message, char *privatekey)
 {
 	THREAD_T msg_thread;
@@ -910,6 +910,8 @@ message_send_Thread( LPVOID arg )
       CHECK_NULL(buffer, exit(0););
       mtp_http = mtp_http_New();
 			message_string = dynstring_New();
+      int numtries = 0;
+      int maxtries = 10;
 			while(1) {
 #ifndef _WIN32
 /*				n = recvfrom(skt,
@@ -932,6 +934,10 @@ message_send_Thread( LPVOID arg )
 				n = recv( skt, (char*)buffer, sizeof(char)*SOCKET_INPUT_SIZE, 0);
 #endif
 				if (n<0) {
+          if(numtries < maxtries) {
+            numtries++;
+            continue;
+          }
 					/* There was an error receiving the response. */
 					SOCKET_ERROR();
           perror("recv");

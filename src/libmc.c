@@ -151,6 +151,10 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
      * local and try to send to that agent. */
     if (acl->receiver->fipa_agent_identifiers[i]->addresses == NULL) {
       num_addresses = 0;
+    } else if(
+        !strcmp(acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str, "localhost"))
+    {
+      num_addresses = 0;
     } else {
       num_addresses = acl->receiver->fipa_agent_identifiers[i]->addresses->num;
     }
