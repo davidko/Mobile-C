@@ -942,6 +942,7 @@ message_send_Thread( LPVOID arg )
 					SOCKET_ERROR();
           perror("recv");
 					free(buffer);
+          dynstring_Destroy(message_string);
           CLOSESOCKET(skt);
 					MSG_THREAD_EXIT();
 				}
