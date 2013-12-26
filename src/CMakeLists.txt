@@ -9,6 +9,7 @@ add_subdirectory(libb64-1.2)
 add_subdirectory(mc_list)
 add_subdirectory(mc_sync)
 
+include_directories(${LIBMC_BINARY_DIR}/src)
 include_directories(${LIBB64_SOURCE_DIR}/include)
 include_directories(${MXML_SOURCE_DIR})
 include_directories(${LIBMC_LIST_SOURCE_DIR})

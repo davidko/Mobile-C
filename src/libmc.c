@@ -967,11 +967,18 @@ EXPORTMC int MC_AgentVariableSave(MCAgent_t agent, const char* var_name)
 {
   int current_task = agent->datastate->task_progress;
   const int default_num_vars = 50;
+  int i;
   agent_task_p task = agent->datastate->tasks[current_task];
 
   if(task->num_saved_variables == 0) {
     task->saved_variables = (char**)malloc(sizeof(char*)*default_num_vars);
     memset(task->saved_variables, 0, sizeof(char*)*default_num_vars);
+  }
+  /* Make sure the variable is not in the list already */
+  for(i = 0; i < task->num_saved_variables; i++) {
+    if( !strcmp(task->saved_variables[i], var_name) ) {
+      return 1;
+    }
   }
   task->saved_variables[task->num_saved_variables] = strdup(var_name);
   if(task->saved_variables[task->num_saved_variables] == NULL) {
