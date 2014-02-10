@@ -151,9 +151,13 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
      * local and try to send to that agent. */
     if (acl->receiver->fipa_agent_identifiers[i]->addresses == NULL) {
       num_addresses = 0;
-    } else if(
-        !strcmp(acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str, "localhost"))
+    } else if
+      (
+        !strcmp(acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str, "localhost") ||
+        !strcmp(acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str, attr->mc_platform->hostname)
+      ) 
     {
+      printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
       num_addresses = 0;
     } else {
       num_addresses = acl->receiver->fipa_agent_identifiers[i]->addresses->num;
@@ -172,6 +176,7 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
 			tmp = fipa_acl_message_Copy(acl);
       MC_AclPost(agent, tmp);
     } else {
+      printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
       msg = mtp_http_New();
       /* Send to the first address listed */
       err = http_to_hostport(
@@ -1015,6 +1020,7 @@ EXPORTMC int MC_AgentDataShare_Retrieve(MCAgent_t agent, const char* name, void*
   if(sharedata == NULL) {
     *data = NULL;
     *size = 0;
+    fprintf(stderr, "Did not find data: %s\n", name);
     return -1;
   }
   *data = malloc(sharedata->size);
@@ -1823,17 +1829,19 @@ MC_FindAgentByName( MCAgency_t attr, /*{{{*/
 {
   MCAgent_t agent;
   list_t* list;
+  int agent_processing;
   extern mc_platform_p g_mc_platform;
   if (attr == NULL) {
     list = g_mc_platform->agent_queue;
   } else {
     list = attr->mc_platform->agent_queue;
   }
-  if(!attr->mc_platform->agent_processing)
+  agent_processing = attr->mc_platform->agent_processing;
+  if(!agent_processing)
     ListRDLock(list);
   agent = (agent_t*)ListSearchCB(
       list, name, (ListSearchFunc_t)agent_CmpName);
-  if(!attr->mc_platform->agent_processing)
+  if(!agent_processing)
     ListRDUnlock(list);
   return agent;
 } /*}}}*/
@@ -3131,7 +3139,7 @@ MC_QuitFlag(MCAgency_t attr)
 {
   int rc;
   MUTEX_LOCK( attr->mc_platform->quit_lock );
-  rc = attr->mc_platform->quit_lock;
+  rc = attr->mc_platform->quit;
   MUTEX_UNLOCK( attr->mc_platform->quit_lock );
   return rc;
 } /*}}}*/
@@ -3601,6 +3609,32 @@ MC_AgentDataShare_Add_chdl(void *varg)
   size = Ch_VaArg(interp, ap, size_t);
 
   retval = MC_AgentDataShare_Add(agent, name, data, size);
+  Ch_VaEnd(interp, ap);
+  pthread_mutex_unlock(g_agent_callback_lock);
+  return retval;
+}
+
+/* MC_AgentDataShare_Retrieve */
+EXPORTCH int
+MC_AgentDataShare_Retrieve_chdl(void *varg)
+{
+  pthread_mutex_lock(g_agent_callback_lock);
+  int retval;
+  MCAgent_t agent;
+  const char* name;
+  void** data;
+  size_t* size;
+
+  ChInterp_t interp;
+  ChVaList_t ap;
+  Ch_VaStart(interp, ap, varg);
+
+  agent = Ch_VaArg(interp, ap, MCAgent_t);
+  name = Ch_VaArg(interp, ap, const char*);
+  data = Ch_VaArg(interp, ap, void**);
+  size = Ch_VaArg(interp, ap, size_t*);
+
+  retval = MC_AgentDataShare_Retrieve(agent, name, data, size);
   Ch_VaEnd(interp, ap);
   pthread_mutex_unlock(g_agent_callback_lock);
   return retval;

@@ -94,6 +94,12 @@ int mc_rwlock_rdlock(mc_rwlock_p rwlock)
 int mc_rwlock_rdunlock(mc_rwlock_p rwlock)
 {
     MUTEX_LOCK(rwlock->lock);
+    if(rwlock->num_readers <= 0) {
+      fprintf(stderr, "WARNING: Unlocking rwlock that is already unlocked.\n");
+      MUTEX_UNLOCK(rwlock->lock);
+      return -1;
+    }
+
     if (rwlock->num_readers > 0) {
         rwlock->num_readers--;
     }

@@ -791,11 +791,21 @@ agent_ChScriptInitVar(ChInterp_t* interp)
         "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned long long size);",
         (ChFuncdl_t)MC_AgentDataShare_Add_chdl
         );
+    Ch_DeclareFunc(
+        *interp,
+        "int mc_AgentDataShare_Retrieve(void* agent, const char* name, const void** data, unsigned long long *size);",
+        (ChFuncdl_t)MC_AgentDataShare_Retrieve_chdl
+        );
   } else {
     Ch_DeclareFunc(
         *interp,
         "int mc_AgentDataShare_Add(void* agent, const char* name, const void* data, unsigned int size);",
         (ChFuncdl_t)MC_AgentDataShare_Add_chdl
+        );
+    Ch_DeclareFunc(
+        *interp,
+        "int mc_AgentDataShare_Retrieve(void* agent, const char* name, const void** data, unsigned int* size);",
+        (ChFuncdl_t)MC_AgentDataShare_Retrieve_chdl
         );
   }
   Ch_DeclareFunc(
