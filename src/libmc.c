@@ -157,7 +157,7 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
         !strcmp(acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str, attr->mc_platform->hostname)
       ) 
     {
-      printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
+      //printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
       num_addresses = 0;
     } else {
       num_addresses = acl->receiver->fipa_agent_identifiers[i]->addresses->num;
@@ -176,7 +176,7 @@ MC_AclSend(MCAgency_t attr, fipa_acl_message_t* acl)
 			tmp = fipa_acl_message_Copy(acl);
       MC_AclPost(agent, tmp);
     } else {
-      printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
+      //printf("SENDING Message to: %s\n", acl->receiver->fipa_agent_identifiers[i]->addresses->urls[0]->str);
       msg = mtp_http_New();
       /* Send to the first address listed */
       err = http_to_hostport(

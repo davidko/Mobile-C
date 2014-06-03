@@ -553,6 +553,7 @@ acc_connection_Thread( LPVOID arg )
 			fprintf(stderr, "unsupported http performative. %s:%d\n",
 					__FILE__, __LINE__);
       mtp_http_Destroy(mtp_http);
+      connection_Destroy(connection);
       CONNECT_THREAD_EXIT();
 	}
 
