@@ -127,19 +127,24 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
   mc_platform->agent_processing = 0;
   //printf("Mobile-C:  Initializing %d interpreters\n", mc_platform->initInterps);
   /* Fill the interpreter queue with interpreters, initialized and ready to go. */
+  printf("Initializing interpreters...\n");
   for(i = 0; i < mc_platform->initInterps; i++) {
     interp = (ChInterp_t*)malloc(sizeof(ChInterp_t));
     if( mc_platform->interp_options == NULL ) {
+      printf("Calling Ch_Initialize...\n");
       if(Ch_Initialize(interp, NULL)) {
         printf("CH INIT ERROR \n");
         exit(EXIT_FAILURE);
       }
+      printf("Done.\n");
     } 
     else {
+      printf("Calling Ch_Initialize...\n");
       if(Ch_Initialize(interp, mc_platform->interp_options)) {
         printf("CH INIT ERROR \n");
         exit(EXIT_FAILURE);
       }
+      printf("Done.\n");
     }
 
     // Initialize all of the global variables
@@ -149,6 +154,7 @@ mc_platform_Initialize(MCAgency_t agency, ChOptions_t* ch_options)
     ListAdd(mc_platform->interpreter_queue, (void*)interp);
     ListWRUnlock(mc_platform->interpreter_queue);
   }
+  printf("Done Initializing interpreters.\n");
 
   /* Allocate sync variables */
   mc_platform->MC_signal_cond = (COND_T*)malloc(sizeof(COND_T));

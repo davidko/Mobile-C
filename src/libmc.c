@@ -78,7 +78,7 @@
 mc_platform_p g_mc_platform;
 
 /* The global agent-callback lock */
-pthread_mutex_t* g_agent_callback_lock = NULL;
+MUTEX_T* g_agent_callback_lock = NULL;
 
 /* **************************** *
  * Libmc Binary Space Functions *
@@ -1439,6 +1439,7 @@ EXPORTMC MCAgent_t MC_ComposeAgentFromFileWithWorkgroup(
 
   if(stat(filename, &buffer)) {
     /* Stat failed. Maybe file does not exist? */
+    fprintf(stderr, "ERROR: Could not open file: %s\n", filename);
     return NULL;
   }
   codesize = buffer.st_size;
@@ -2029,9 +2030,9 @@ MC_GetAgents(MCAgency_t attr, MCAgent_t **agents, int* num_agents, unsigned int 
 {
   int index = 0;
   int i;
+  int total_agents;
   MCAgent_t agent;
   *num_agents = 0;
-  int total_agents;
   /* Count the number of agents */
   if(!attr->mc_platform->agent_processing)
     ListRDLock(attr->mc_platform->agent_queue);
@@ -2144,9 +2145,10 @@ MC_Initialize( /*{{{*/
     return NULL;
   }
 
+  printf("Initializing callback lock...\n");
   if(g_agent_callback_lock == NULL) {
-    g_agent_callback_lock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
-    pthread_mutex_init(g_agent_callback_lock, NULL);
+    g_agent_callback_lock = (MUTEX_T*)malloc(sizeof(MUTEX_T));
+    MUTEX_INIT(g_agent_callback_lock);
   }
 
   memset(privkey, '\0', 1210);
@@ -2179,8 +2181,10 @@ MC_Initialize( /*{{{*/
   /* End agency options */
 
   ret->bluetooth = options->bluetooth;
+  printf("Initializing platform...\n");
   ret->mc_platform = mc_platform_Initialize(ret, options->ch_options);
   //ret->mc_platform->interp_options = options->ch_options;
+  printf("Done.\n");
 
 #ifdef NEW_SECURITY
 	if (options->priv_key_filename != NULL) {
@@ -3592,7 +3596,6 @@ MC_AgentAddTask_chdl(void *varg) /*{{{*/
 EXPORTCH int
 MC_AgentDataShare_Add_chdl(void *varg)
 {
-  pthread_mutex_lock(g_agent_callback_lock);
   int retval;
   MCAgent_t agent;
   const char* name;
@@ -3601,6 +3604,8 @@ MC_AgentDataShare_Add_chdl(void *varg)
 
   ChInterp_t interp;
   ChVaList_t ap;
+
+  MUTEX_LOCK(g_agent_callback_lock);
   Ch_VaStart(interp, ap, varg);
 
   agent = Ch_VaArg(interp, ap, MCAgent_t);
@@ -3610,7 +3615,7 @@ MC_AgentDataShare_Add_chdl(void *varg)
 
   retval = MC_AgentDataShare_Add(agent, name, data, size);
   Ch_VaEnd(interp, ap);
-  pthread_mutex_unlock(g_agent_callback_lock);
+  MUTEX_UNLOCK(g_agent_callback_lock);
   return retval;
 }
 
@@ -3618,7 +3623,6 @@ MC_AgentDataShare_Add_chdl(void *varg)
 EXPORTCH int
 MC_AgentDataShare_Retrieve_chdl(void *varg)
 {
-  pthread_mutex_lock(g_agent_callback_lock);
   int retval;
   MCAgent_t agent;
   const char* name;
@@ -3627,6 +3631,7 @@ MC_AgentDataShare_Retrieve_chdl(void *varg)
 
   ChInterp_t interp;
   ChVaList_t ap;
+  MUTEX_LOCK(g_agent_callback_lock);
   Ch_VaStart(interp, ap, varg);
 
   agent = Ch_VaArg(interp, ap, MCAgent_t);
@@ -3636,7 +3641,7 @@ MC_AgentDataShare_Retrieve_chdl(void *varg)
 
   retval = MC_AgentDataShare_Retrieve(agent, name, data, size);
   Ch_VaEnd(interp, ap);
-  pthread_mutex_unlock(g_agent_callback_lock);
+  MUTEX_UNLOCK(g_agent_callback_lock);
   return retval;
 }
 

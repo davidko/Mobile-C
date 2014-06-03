@@ -58,6 +58,12 @@
 #endif
 #endif
 
+#ifdef _MSC_VER
+typedef unsigned char bool;
+#define true 1
+#define false 0
+#endif
+
 
 #include <stdlib.h>
 #include "include/acc.h"
@@ -756,7 +762,7 @@ listen_Thread( LPVOID arg )
     sockfd = socket(PF_INET, SOCK_STREAM, 0);
   }
 	if (sockfd < 0) {
-		SOCKET_ERROR();
+		MC_SOCKET_ERROR();
 	}  
 
   mc_platform->sockfd = sockfd;

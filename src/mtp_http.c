@@ -231,7 +231,7 @@ mtp_http_InitializeFromConnection
     received_len += n;
     if (n < 0) {
       free(buffer);
-			SOCKET_ERROR();
+			MC_SOCKET_ERROR();
       return MC_ERR_CONNECT;
     } 
     else if (n == 0 || n < SOCKET_INPUT_SIZE) {
@@ -302,13 +302,13 @@ mtp_http_InitializeFromConnection
 							buffer,
 							sizeof(char)*strlen(buffer),
 							0 ) < 0) {
-						SOCKET_ERROR();
+						MC_SOCKET_ERROR();
 					}
 #ifdef _WIN32
 					closeSocket(connection->clientfd);
 #else
 					if(closeSocket(connection->clientfd) < 0) {
-						SOCKET_ERROR();
+						MC_SOCKET_ERROR();
 					}
 #endif
 					free(buffer);
@@ -320,13 +320,13 @@ mtp_http_InitializeFromConnection
 							buffer,
 							sizeof(char)*strlen(buffer),
 							0 ) < 0 ) {
-						SOCKET_ERROR();
+						MC_SOCKET_ERROR();
 					}
 #ifdef _WIN32
 					closeSocket(connection->clientfd);
 #else
 					if(closeSocket(connection->clientfd) < 0) {
-						SOCKET_ERROR();
+						MC_SOCKET_ERROR();
 					}
 #endif
 					free(buffer);

@@ -518,12 +518,12 @@ EXPORTMC extern int MC_AddAgent(
  *
  * \return        0 if successful, or error_code_t type
  */
-int MC_AddStationaryAgent(
+EXPORTMC int MC_AddStationaryAgent(
     MCAgency_t agency, 
     void* (*agent_thread)(stationary_agent_info_t*), 
     const char* name, 
     void* agent_args);
-int MC_StationaryAgent_Register(
+EXPORTMC int MC_StationaryAgent_Register(
     MCAgency_t agency, 
     stationary_agent_info_t* stationary_agent_info,
     const char* name);
@@ -540,12 +540,12 @@ int MC_StationaryAgent_Register(
  *
  * \return        0 if successful, or error_code_t type
  */
-int MC_AddAgentInitCallback(
+EXPORTMC int MC_AddAgentInitCallback(
     MCAgency_t agency,
     MC_AgentInitCallbackFunc_t function,
     void* user_data);
 
-MCAgencyOptions_t* MC_AgencyOptions_New();
+EXPORTMC MCAgencyOptions_t* MC_AgencyOptions_New();
 
 /**
  * \brief           Add a new task to an already existing agent
@@ -559,7 +559,7 @@ MCAgencyOptions_t* MC_AgencyOptions_New();
  *                  persistent, and '0' indicates not-persistent (the default)
  * \return          Returns a valid agency handle or NULL on failure.
  */
-int MC_AgentAddTask(
+EXPORTMC int MC_AgentAddTask(
     MCAgent_t agent, 
     const char* code, 
     const char* return_var_name, 
@@ -631,7 +631,7 @@ EXPORTMC int MC_AgentRetrieveFile(
  *                  persistent, and '0' indicates not-persistent (the default)
  * \return          Returns a valid agency handle or NULL on failure.
  */
-int MC_AgentAddTaskFromFile(
+EXPORTMC int MC_AgentAddTaskFromFile(
     MCAgent_t agent, 
     const char* filename, 
     const char* return_var_name, 
@@ -649,7 +649,7 @@ EXPORTMC int MC_AgentDataShare_Retrieve(MCAgent_t agent, const char* name, void*
  *                  provided to a stationary agent function
  * \return          Returns a valid agency handle or NULL on failure.
  */
-extern MCAgency_t 
+EXPORTMC extern MCAgency_t 
 MC_AgentInfo_GetAgency(stationary_agent_info_t* stationary_agent_info);
 
 /**
@@ -662,7 +662,7 @@ MC_AgentInfo_GetAgency(stationary_agent_info_t* stationary_agent_info);
  * The following example demonstrates usage of MC_AgentInfo_GetAgent()
  * \include stationary_agent_communication/server.c
  */
-extern MCAgent_t 
+EXPORTMC extern MCAgent_t 
 MC_AgentInfo_GetAgent(stationary_agent_info_t* stationary_agent_info);
 
 /**
@@ -673,7 +673,7 @@ MC_AgentInfo_GetAgent(stationary_agent_info_t* stationary_agent_info);
  *                  provided to a stationary agent function
  * \return          Returns a valid pointer or NULL on failure.
  */
-extern void*
+EXPORTMC extern void*
 MC_AgentInfo_GetAgentArgs(stationary_agent_info_t* stationary_agent_info);
 
 /**
@@ -684,7 +684,7 @@ MC_AgentInfo_GetAgentArgs(stationary_agent_info_t* stationary_agent_info);
  *
  * \return          Returns a positive integer on success or -1 on failure.
  */
-extern int MC_AgentReturnArrayDim(
+EXPORTMC extern int MC_AgentReturnArrayDim(
     MCAgent_t agent,
     int task_num );
 
@@ -697,7 +697,7 @@ extern int MC_AgentReturnArrayDim(
  *
  * \return          Returns a positive integer on success or -1 on failure.
  */
-extern int MC_AgentReturnArrayExtent(
+EXPORTMC extern int MC_AgentReturnArrayExtent(
     MCAgent_t agent,
     int task_num,
     int index);
@@ -711,7 +711,7 @@ extern int MC_AgentReturnArrayExtent(
  *
  * \return          Returns a positive integer on success or -1 on failure.
  */
-extern int MC_AgentReturnArrayNum(
+EXPORTMC extern int MC_AgentReturnArrayNum(
     MCAgent_t agent,
     int task_num);
 
@@ -724,7 +724,7 @@ extern int MC_AgentReturnArrayNum(
  * \return          Returns a pointer to the beginning of the task's return
  *                  data on success. Returns NULL on failure.
  */
-extern const void* MC_AgentReturnDataGetSymbolAddr(
+EXPORTMC extern const void* MC_AgentReturnDataGetSymbolAddr(
     MCAgent_t agent,
     int task_num );
 
@@ -736,7 +736,7 @@ extern const void* MC_AgentReturnDataGetSymbolAddr(
  *
  * \return          Returns a positive integer on success or -1 on failure.
  */
-extern size_t MC_AgentReturnDataSize(
+EXPORTMC extern size_t MC_AgentReturnDataSize(
     MCAgent_t agent,
     int task_num );
 
@@ -749,7 +749,7 @@ extern size_t MC_AgentReturnDataSize(
  * \return          Returns a positive integer on success or -1 on failure.
  *                  The return type is of type ChType_t, defined in ch.h
  */
-extern int MC_AgentReturnDataType(
+EXPORTMC extern int MC_AgentReturnDataType(
     MCAgent_t agent,
     int task_num );
 
@@ -762,7 +762,7 @@ extern int MC_AgentReturnDataType(
  * \return          Returns 1 if the return variable is an array, 0 if it is
  *                  not an array, or -1 on failure.
  */
-extern int MC_AgentReturnIsArray(
+EXPORTMC extern int MC_AgentReturnIsArray(
     MCAgent_t agent,
     int task_num );
 
@@ -781,7 +781,7 @@ extern int MC_AgentReturnIsArray(
  * from agent space.
  * \include agent_saved_variables_example/test1.xml
  */
-extern const void* 
+EXPORTMC extern const void* 
 MC_AgentVariableRetrieve(
     MCAgent_t agent,
     const char* var_name,
@@ -801,7 +801,7 @@ MC_AgentVariableRetrieve(
  *
  * \return          Error code.
  */
-int
+EXPORTMC int
 MC_AgentVariableRetrieveInfo(
     MCAgent_t agent,
     const char* var_name,
@@ -828,7 +828,7 @@ MC_AgentVariableRetrieveInfo(
  * from agent space.
  * \include agent_saved_variables_example/test1.xml
  */
-extern int 
+EXPORTMC extern int 
 MC_AgentVariableSave(MCAgent_t agent, const char* var_name);
 
 EXPORTMC int 
@@ -1217,7 +1217,7 @@ EXPORTMC extern int MC_CondWait(MCAgency_t attr, int id);
  * \return          0 on success, error_code_t type on failure.
  *
  */
-int MC_CopyAgent(MCAgent_t* agent_out, const MCAgent_t agent_in);
+EXPORTMC int MC_CopyAgent(MCAgent_t* agent_out, const MCAgent_t agent_in);
 
 /**
  * \brief           Stop and remove an agent
@@ -1264,7 +1264,7 @@ EXPORTMC extern int MC_End(MCAgency_t attr);
  *
  * \return          0 on success, error code on failure.
  */
-int MC_DestroyServiceSearchResult(
+EXPORTMC int MC_DestroyServiceSearchResult(
     char** agentName,
     char** serviceName,
     int* agentID,

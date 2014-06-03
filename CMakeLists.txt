@@ -12,4 +12,4 @@ include_directories($ENV{CHHOME}/extern/include)
 link_directories($ENV{CHHOME}/extern/lib)
 
 add_subdirectory(src)
-#add_subdirectory(demos)
+add_subdirectory(demos)

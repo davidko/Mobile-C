@@ -128,7 +128,7 @@ typedef name##_t* name##_p;
  * * * * * * * * * * * * */               /* Windows macros follow */
 #ifndef _WIN32
 
-#define SOCKET_ERROR() \
+#define MC_SOCKET_ERROR() \
 	printf("Socket error. %s:%d\nerrno:%d", __FILE__, __LINE__, errno); 
 
 /* ****** *
@@ -321,7 +321,7 @@ pthread_cond_wait( queue->touched_signal, queue->thread_mutex )
  * W I N D O W S   M A C R O S *
  * * * * * * * * * * * * * * * */
 
-#define SOCKET_ERROR() \
+#define MC_SOCKET_ERROR() \
   fprintf(stderr, "Socket error: %d\n", WSAGetLastError())
 /* ******* *
  * THREADS *

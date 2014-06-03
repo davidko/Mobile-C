@@ -255,7 +255,7 @@ message_InitializeFromConnection(
 #endif
     if (n < 0) {
       free(buffer);
-			SOCKET_ERROR();
+			MC_SOCKET_ERROR();
       return MC_ERR_CONNECT;
     } 
     else if (n == 0) {
@@ -712,6 +712,8 @@ message_send_Thread( LPVOID arg )
 #ifdef NEW_SECURITY
   int ret;
 #endif
+  int numtries = 0;
+  int maxtries = 10;
 
 	mc_platform = ((message_send_arg_t*)arg)->mc_platform;
 	message = ((message_send_arg_t*)arg)->message;
@@ -875,7 +877,7 @@ message_send_Thread( LPVOID arg )
     printf("Successfull Authenticate and but send of MA is failed \n");
 #ifndef _WIN32
     if(closeSocket(skt) < 0) {
-			SOCKET_ERROR();
+			MC_SOCKET_ERROR();
 		}
 #else
     closeSocket(skt);
@@ -886,7 +888,7 @@ message_send_Thread( LPVOID arg )
   }else if(ret != 2){
 #ifndef _WIN32
     if(closeSocket(skt) < 0) {
-			SOCKET_ERROR();
+			MC_SOCKET_ERROR();
 		}
 #else
     closeSocket(skt);
@@ -910,8 +912,6 @@ message_send_Thread( LPVOID arg )
       CHECK_NULL(buffer, exit(0););
       mtp_http = mtp_http_New();
 			message_string = dynstring_New();
-      int numtries = 0;
-      int maxtries = 10;
 			while(1) {
 #ifndef _WIN32
 /*				n = recvfrom(skt,
@@ -939,7 +939,7 @@ message_send_Thread( LPVOID arg )
             continue;
           }
 					/* There was an error receiving the response. */
-					SOCKET_ERROR();
+					MC_SOCKET_ERROR();
           perror("recv");
 					free(buffer);
           dynstring_Destroy(message_string);
@@ -969,7 +969,7 @@ message_send_Thread( LPVOID arg )
 
 #ifndef _WIN32
   if(close(skt) <0) {
-		SOCKET_ERROR();
+		MC_SOCKET_ERROR();
 	}
 #else
   closeSocket(skt);

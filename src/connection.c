@@ -53,7 +53,7 @@ connection_Destroy(connection_p connection)
   /* Close the connection, just to make sure. */
 #ifndef _WIN32
   /*if(close(connection->clientfd) <0) 
-		SOCKET_ERROR(); */
+		MC_SOCKET_ERROR(); */
 #else
   closeSocket(connection->clientfd);
 #endif
