@@ -235,21 +235,11 @@ The system directory for Unix systems is usually `/usr/local/lib' or
   `/usr/lib' depending on your system.
 
 \begin{verbatim}
-    cd <MCPACKAGE>/src
-    ./configure
-    make
-    make install
-\end{verbatim}
-
-The following commands will install the Mobile-C library in the system 
-  directory for {\bf 64-bit} Unix systems. 
-The only difference between the above and below commands is that `fPIC' is 
-  added into CFLAGS for compilation.
-
-\begin{verbatim}
-    cd <MCPACKAGE>/src
-    ./configure CFLAGS=-fPIC
-    make
+    cd <MCPACKAGE>
+    mkdir build
+    cd build
+    cmake ..
+    make 
     make install
 \end{verbatim}
 
@@ -269,12 +259,13 @@ Also note that the above commands will automatically compile all the included
 demos automatically after compiling the Mobile-C library. The demos will
 run even if the 'make install' step is omitted.
 
-The `--prefix' option can be used to specify the home directory to 
+The `-DCMAKE\_INSTALL\_PREFIX' option can be used to specify the home directory to 
 install the Mobile-C files, as shown in the following commands.
 
 \begin{verbatim}
-    cd <MCPACKAGE>/src
-    ./configure --prefix=<MCHOME>
+    cd <MCPACKAGE>
+    mkdir build
+    cmake .. -DCMAKE_INSTALL_PREFIX=<MCHOME>
     make
     make install
 \end{verbatim}
@@ -312,7 +303,11 @@ The following steps are suggested to build the Mobile-C library.
 \item Navigate to the \texttt{<MCPACKAGE>} directory in your Ch terminal. For
   example, if you unpacked Mobile-C to the \texttt{C:$\backslash$Mobile-C} directory, type
   \texttt{cd C:$\backslash$Mobile-C} in your Ch terminal.
-\item Type the command \texttt{nmake -f makefile.win32} to build the Mobile-C
+\item Type the command \texttt{mkdir build}
+\item Type the command \texttt{cd build}
+\item Generate the build files with the command \texttt{cmake .. -G "NMake
+    Makefiles"}
+\item Type the command \texttt{nmake} to build the Mobile-C
   library, as well as all of the demos in the \texttt{<MCPACKAGE>/demos/}
   directory.
 \end{enumerate}
