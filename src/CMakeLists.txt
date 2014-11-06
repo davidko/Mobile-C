@@ -82,6 +82,7 @@ if(WIN32)
   target_link_libraries(mc_static mc_list_static mc_sync_static b64_static mxml embedch chsdk )
 
   install(TARGETS mc DESTINATION lib)
+  install(FILES ../src/include/libmc.h DESTINATION include)
 else()
   target_link_libraries(mc mc_list_static mc_sync_static b64_static mxml -Wl,--whole-archive -lembedch -lchsdk -Wl,--no-whole-archive -ldl)
   set_target_properties(mc PROPERTIES COMPILE_FLAGS "-pthread")
@@ -92,6 +93,7 @@ else()
   target_link_libraries(mc_static mc_list_static mc_sync_static b64_static mxml embedch dl)
 
   install(TARGETS mc DESTINATION lib)
+  install(FILES ../src/include/libmc.h DESTINATION include)
 endif()
 
 
