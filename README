@@ -42,39 +42,31 @@ correctly and function. The software you will need to run Mobile C are:
     (1) Ch : Obtain from http://www.softintegration.com
     (2) Embedded Ch: Obtain from http://www.softintegration.com
 
-Mobile C Library Compilation For Windows
+Mobile-C Library Compilation
 ----------------------------------------------------------
-The following steps are suggested to build the Mobile-C library.
-- Ensure that your "_chrc" file is up to date. Specifically, make sure that the
-  "_chrc" file options regarding the Visual C++ version and location are
-  correct.
-- Unpack the Mobile-C source code. Ensure that you have write permissions
-  for the directory you are unpacking Mobile-C into, or you may encounter 
-  compile-time errors.
-- Open a Ch Terminal
-- Navigate to the Mobile-C directory in the Ch terminal. For instance, if
-  Mobile-C was unpacked into a directory called "C:\MobileC", type the command
-  "cd C:\MobileC" in the Ch terminal.
-- Execute the command "nmake -f makefile.win32". This will build Mobile-C and
-  all of the demo programs located in the "demos" directory.
+- Install CMake, if it is not already installed. 
+  http://www.cmake.org
 
-New users are advised to try the "hello world" demo located an the
-"demos/getting_started/hello_world" directory. In order to run the demo, first
-run the program "server.exe" in a terminal window. Then, in a second terminal
-window, run the program "client.exe". The "client.exe" program sends a mobile
-agent to the "server.exe" agency where it prints out a brief message. 
+- Open a Ch terminal. Make sure the "cmake" binary executable is in the path.
 
-Mobile C Library Compilation For Unix
-----------------------------------------------------------
-The following commands compile and install the Mobile-C library into
-the directory $HOME/sys. If you wish to install Mobile-C into the default
-system directories, simply remove the '--prefix=$HOME/sys' argument from
-the './configure' command on the first step. From the MobileC root 
-directory, execute the following commands:
+- Navigate to the Mobile-C directory. 
 
-    ./configure --prefix=$HOME/sys
+- Create a "build" directory
+
+    mkdir build
+
+- Go into the "build" directory
+
+    cd build
+
+- Configure the build system
+
+    cmake .. 
+
+- Compile Mobile-C
+
     make
-    make install
+
 
 These commands will build the Mobile-C library as well as all of the 
 demonstration programs located in the 'demos' directory. For more
@@ -107,6 +99,9 @@ http://www.doxygen.org
 **********************************************************
 Release Notes for the Mobile-C
 **********************************************************
+Version MobileC v2.1.5, August 12, 2014
+*)  Now uses CMake build system.
+
 Version MobileC v2.1.4, June 17, 2011
 *)  Modified internal linked list structure to be simpler, more responsive, and
     more stable.
